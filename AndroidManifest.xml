@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ota.updater.two"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="15" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="OTA Updater" >
+        <activity
+            android:name=".TabDisplay"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:name=".KernelTab"
+            android:label="@string/app_name" >
+        </activity>
+        
+        <activity 
+            android:name=".FeedbackTab"
+            android:label="@string/app_name" >
+        </activity>
+        
+        <activity 
+            android:name=".License"
+            android:label="@string/app_name" >
+        </activity>
+        
+        <activity
+            android:name=".UpdateSettings"
+            android:label="@string/app_name" >
+        </activity>
+        
+        <activity
+            android:name="com.ota.updater.two.stats.AnonymousStats"
+            android:label="@string/app_name" >
+        </activity>
+      
+        
+        <activity
+            android:name="com.ota.updater.two.stats.PreviewData"
+            android:label="@string/app_name" >
+        </activity>
+        
+        <activity
+            android:name="com.ota.updater.two.stats.Utilities"
+            android:label="@string/app_name" >
+        </activity>
+        
+        
+      	<receiver 
+      	    android:name="com.ota.updater.two.stats.ReportingServiceManager"
+            android:enabled="true"
+          	android:exported="false"
+            android:label="ReportingServiceManager">
+          <intent-filter>
+              <action android:name="android.intent.action.BOOT_COMPLETED" />
+              <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+           </intent-filter>
+
+        </receiver>
+        
+       	<service 
+           android:label="ReportingService"
+           android:enabled="true"
+           android:exported="false"
+           android:name="com.ota.updater.two.stats.ReportingService">
+      	</service>
+        
+        <activity
+            android:name="com.ota.updater.two.utils.MD5hash"
+            android:label="@string/app_name" >
+        </activity>
+        
+       <activity
+           android:name=".Settings"
+           android:label="@string/app_name" >          
+       </activity> 
+        
+       <activity
+           android:name=".Accounts"
+           android:label="@string/app_name" >          
+       </activity>
+       
+       <activity
+           android:name=".Downloads"
+           android:label="@string/app_name" >          
+       </activity> 
+        
+        <activity
+            android:name=".ROMTab"
+            android:label="@string/app_name" >
+        </activity>
+        
+        <activity
+            android:name=".AccountsScreen"
+            android:label="@string/app_name" >
+        </activity>
+        
+        <activity
+            android:name=".TweaksTab"
+            android:label="@string/app_name" >
+        </activity>
+        
+        <activity
+            android:name="com.ota.updater.two.AboutTab"
+            android:label="@string/app_name" >
+        </activity>
+    </application>
+    
+
+</manifest>
