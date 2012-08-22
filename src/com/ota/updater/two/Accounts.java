@@ -10,8 +10,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 public class Accounts extends DialogPreference implements OnSharedPreferenceChangeListener {
-    private static AutoCompleteTextView user;
-    private static EditText pass;
+    private AutoCompleteTextView user;
+    private EditText pass;
 
     public Accounts(Context context, AttributeSet attrs) {
         super(context, attrs);

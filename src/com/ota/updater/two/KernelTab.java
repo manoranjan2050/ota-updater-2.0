@@ -53,7 +53,7 @@ public class KernelTab extends PreferenceFragment {
             kernelCustom.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    AlertDialog alertDialog = new AlertDialog.Builder(TabDisplay.mContext).create();
+                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                     alertDialog.setTitle("Why is my kernel unsupported?");
                     alertDialog.setMessage("Unfortunately due to hosting and compatibility, not all kernels for your device can be supported in this application. While we would like to include as many as possible, it is not viable to include all custom kernels for a myriad of devices. Sorry!");
                     alertDialog.setButton("OK", new DialogInterface.OnClickListener() {

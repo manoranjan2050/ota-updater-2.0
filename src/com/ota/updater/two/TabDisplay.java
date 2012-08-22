@@ -25,11 +25,10 @@ import com.ota.updater.two.utils.Config;
 import com.ota.updater.two.utils.Utils;
 
 public class TabDisplay extends FragmentActivity {
+    public static final String NOTIF_ACTION = "com.updater.ota.two.action.NOTIF_ACTION";
 
     private ViewPager mViewPager;
     private TabsAdapter mTabsAdapter;
-    static Context mContext;
-    public static final String NOTIF_ACTION = "com.updater.ota.two.action.NOTIF_ACTION";
     private Config cfg;
 
     @Override
@@ -124,6 +123,7 @@ public class TabDisplay extends FragmentActivity {
     public static class TabsAdapter extends FragmentPagerAdapter
             implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
 
+        private Context ctx;
         private final ActionBar mActionBar;
         private final ViewPager mViewPager;
         private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
@@ -140,7 +140,7 @@ public class TabDisplay extends FragmentActivity {
 
         public TabsAdapter(Activity activity, ViewPager pager) {
             super(activity.getFragmentManager());
-            mContext = activity;
+            ctx = activity;
             mActionBar = activity.getActionBar();
             mViewPager = pager;
             mViewPager.setAdapter(this);
@@ -164,7 +164,7 @@ public class TabDisplay extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
             TabInfo info = mTabs.get(position);
-            return Fragment.instantiate(mContext, info.clss.getName(), info.args);
+            return Fragment.instantiate(ctx, info.clss.getName(), info.args);
         }
 
         @Override

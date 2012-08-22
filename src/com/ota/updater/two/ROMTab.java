@@ -69,7 +69,7 @@ public class ROMTab extends PreferenceFragment {
         test.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference arg0) {
-                dialog = new Dialog(TabDisplay.mContext);
+                dialog = new Dialog(getActivity());
                 dialog.setTitle("Loading..");
                 dialog.setContentView(R.layout.spinner_dialog);
                 @SuppressWarnings("unused")
@@ -167,7 +167,7 @@ public class ROMTab extends PreferenceFragment {
                 if (version.equals(ROM)) {
                     Toast.makeText(ctx, "No new version", Toast.LENGTH_LONG);
                 } else {
-                    final AlertDialog newvDialog = new AlertDialog.Builder(TabDisplay.mContext).create();
+                    final AlertDialog newvDialog = new AlertDialog.Builder(getActivity()).create();
                     newvDialog.setTitle("New version!");
                     newvDialog.setMessage("Build: " + BUILD + "\nChangelog: " + CHANGELOG);
                     newvDialog.setButton("Download", new DialogInterface.OnClickListener() {
@@ -193,7 +193,7 @@ public class ROMTab extends PreferenceFragment {
 
                             CharSequence contentTitle = "VR Toolkit";
                             CharSequence contentText = "New update for: " + ROM;
-                            Intent notificationIntent = new Intent(TabDisplay.mContext, ROMTab.class);
+                            Intent notificationIntent = new Intent(getActivity(), ROMTab.class);
                             PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
 
                             notification.setLatestEventInfo(ctx, contentTitle, contentText, contentIntent);
@@ -206,7 +206,7 @@ public class ROMTab extends PreferenceFragment {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                AlertDialog alertDialog = new AlertDialog.Builder(TabDisplay.mContext).create();
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setTitle("Device not found!");
                 alertDialog.setMessage("Couldn't find your device/ROM on our servers! If you think we did something wrong, feel free to abuse us on IRC.");
                 alertDialog.setButton("OK", new DialogInterface.OnClickListener() {

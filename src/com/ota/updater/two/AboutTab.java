@@ -64,12 +64,12 @@ public class AboutTab extends PreferenceFragment implements OnPreferenceClickLis
 
             return true;
         } else if (preference == license) {
-            Intent i = new Intent(TabDisplay.mContext, License.class);
+            Intent i = new Intent(getActivity(), License.class);
             startActivity(i);
 
             return true;
         } else if (preference == stats) {
-            Intent i = new Intent(TabDisplay.mContext, AnonymousStats.class);
+            Intent i = new Intent(getActivity(), AnonymousStats.class);
             startActivity(i);
 
             return true;
