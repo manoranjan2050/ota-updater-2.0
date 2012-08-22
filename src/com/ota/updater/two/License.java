@@ -12,8 +12,6 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 public class License extends Activity {
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +20,7 @@ public class License extends Activity {
         StringBuilder data = null;
         try {
             data = new StringBuilder(2048);
-            char tmp[] = new char[2048];
+            char[] tmp = new char[2048];
             int numRead;
             inputReader = new BufferedReader(new InputStreamReader(getAssets().open("NOTICE.txt")));
             while ((numRead = inputReader.read(tmp)) >= 0) {
@@ -52,16 +50,14 @@ public class License extends Activity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-            	setContentView(view);
+                setContentView(view);
             }
         });
 
     }
 
     private void showErrorAndFinish() {
-        Toast.makeText(this, "Error loading file.", Toast.LENGTH_LONG)
-                .show();
+        Toast.makeText(this, "Error loading file.", Toast.LENGTH_LONG).show();
         finish();
     }
-
 }

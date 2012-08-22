@@ -28,7 +28,7 @@ public class Utilities {
 
         String device_id = digest(tm.getDeviceId());
         if (device_id == null) {
-        	device_id = "Unable to generate Device ID";
+            device_id = "Unable to generate Device ID";
         }
 
         return device_id;
@@ -65,8 +65,8 @@ public class Utilities {
     }
 
     public static String getDevice() {
-		String device = Build.MODEL;
-		return device;
+        String device = Build.MODEL;
+        return device;
     }
 
 

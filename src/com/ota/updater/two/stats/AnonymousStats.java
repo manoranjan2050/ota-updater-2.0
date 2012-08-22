@@ -51,7 +51,7 @@ public class AnonymousStats extends PreferenceActivity
     private SharedPreferences mPrefs;
     private Context cx;
 
-	@Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getPreferenceManager() != null) {
@@ -59,7 +59,7 @@ public class AnonymousStats extends PreferenceActivity
             PreferenceScreen prefSet = getPreferenceScreen();
             mPrefs = this.getSharedPreferences("VRToolkit", Context.MODE_PRIVATE);
             mEnableReporting = (CheckBoxPreference) prefSet.findPreference(ANONYMOUS_OPT_IN);
-            mViewStats = (Preference) prefSet.findPreference(VIEW_STATS);
+            mViewStats = prefSet.findPreference(VIEW_STATS);
             boolean firstBoot = mPrefs.getBoolean(ANONYMOUS_FIRST_BOOT, true);
             if (mEnableReporting.isChecked() && firstBoot) {
                 mPrefs.edit().putBoolean(ANONYMOUS_FIRST_BOOT, false).apply();
@@ -68,18 +68,15 @@ public class AnonymousStats extends PreferenceActivity
             NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             nm.cancel(1);
         }
-        
-        Preference view = (Preference) findPreference("preview");
-        view.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				// TODO Auto-generated method stub
-				Intent i = new Intent(AnonymousStats.this, PreviewData.class);
-				startActivity(i);
-				return false;
-			}
-        	
+        Preference view = findPreference("preview");
+        view.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent i = new Intent(AnonymousStats.this, PreviewData.class);
+                startActivity(i);
+                return false;
+            }
         });
     }
 
@@ -138,10 +135,9 @@ public class AnonymousStats extends PreferenceActivity
         } else if (which == DialogInterface.BUTTON_NEGATIVE){
             mEnableReporting.setChecked(false);
         } else {
-        	//will add later
+            //will add later
             Uri uri = Uri.parse("");
             startActivity(new Intent(Intent.ACTION_VIEW, uri));
         }
     }
-
 }

@@ -53,10 +53,10 @@ public class PreviewData extends PreferenceActivity
             addPreferencesFromResource(R.xml.preview_data);
             PreferenceScreen prefSet = getPreferenceScreen();
 
-            mId = (Preference) prefSet.findPreference(UNIQUE_ID);
-            mDevice = (Preference) prefSet.findPreference(DEVICE);
-            mCountry = (Preference) prefSet.findPreference(COUNTRY);
-            mCarrier = (Preference) prefSet.findPreference(CARRIER);
+            mId = prefSet.findPreference(UNIQUE_ID);
+            mDevice = prefSet.findPreference(DEVICE);
+            mCountry = prefSet.findPreference(COUNTRY);
+            mCarrier = prefSet.findPreference(CARRIER);
 
             mId.setSummary(Utilities.getUniqueID(getApplicationContext()));
             mDevice.setSummary(Utilities.getDevice());

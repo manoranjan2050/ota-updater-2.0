@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <PreferenceCategory
         android:title="License" />
-    
-   <Preference 
-       android:title="APACHE LICENSE" 
-       android:summary="Copyright (C) 2012 Jordan Craig and Villain Media\nThis software is licenced under the Apache/JieeHD licence, which is the Apache licence, except that where this code is distributed, its name must remain as VillainROM Tweaks\n Version 2.0 (the 'License'); You may not use this file except in compliance with the License." /> 
+
+   <Preference
+       android:title="APACHE LICENSE"
+       android:summary="Copyright (C) 2012 Jordan Craig and Villain Media\nThis software is licenced under the Apache/JieeHD licence, which is the Apache licence, except that where this code is distributed, its name must remain as VillainROM Tweaks\n Version 2.0 (the 'License'); You may not use this file except in compliance with the License." />
 
    <Preference
        android:key="obtain"

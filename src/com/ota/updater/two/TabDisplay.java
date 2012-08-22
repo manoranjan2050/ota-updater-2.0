@@ -2,8 +2,6 @@ package com.ota.updater.two;
 
 import java.util.ArrayList;
 
-import com.ota.updater.two.R;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -56,7 +54,7 @@ public class TabDisplay extends FragmentActivity {
 
     public static class TabsAdapter extends FragmentPagerAdapter
             implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
-        
+
         private final ActionBar mActionBar;
         private final ViewPager mViewPager;
         private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
@@ -100,16 +98,20 @@ public class TabDisplay extends FragmentActivity {
             return Fragment.instantiate(mContext, info.clss.getName(), info.args);
         }
 
+        @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         }
 
+        @Override
         public void onPageSelected(int position) {
             mActionBar.setSelectedNavigationItem(position);
         }
 
+        @Override
         public void onPageScrollStateChanged(int state) {
         }
 
+        @Override
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
             Object tag = tab.getTag();
             for (int i=0; i<mTabs.size(); i++) {
@@ -119,37 +121,39 @@ public class TabDisplay extends FragmentActivity {
             }
         }
 
+        @Override
         public void onTabUnselected(Tab tab, FragmentTransaction ft) {
         }
 
+        @Override
         public void onTabReselected(Tab tab, FragmentTransaction ft) {
         }
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.actionbar_menu, menu);  
+        inflater.inflate(R.menu.actionbar_menu, menu);
         return true;
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.settings:
-            	Intent settingsIntent = new Intent(this, Settings.class);
-            	startActivity(settingsIntent);
-                return true;
-            case R.id.downloads:
-            	Intent downloadsIntent = new Intent(this, Downloads.class);
-            	startActivity(downloadsIntent);
-            	return true;
-            case R.id.accounts:
-            	Intent accountsIntent = new Intent(this, AccountsScreen.class);
-            	startActivity(accountsIntent);
-            	return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        case R.id.settings:
+            Intent settingsIntent = new Intent(this, Settings.class);
+            startActivity(settingsIntent);
+            return true;
+        case R.id.downloads:
+            Intent downloadsIntent = new Intent(this, Downloads.class);
+            startActivity(downloadsIntent);
+            return true;
+        case R.id.accounts:
+            Intent accountsIntent = new Intent(this, AccountsScreen.class);
+            startActivity(accountsIntent);
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
         }
     }
 }

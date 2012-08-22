@@ -82,7 +82,7 @@ public class ReportingServiceManager extends BroadcastReceiver {
             } else if (System.currentTimeMillis() - lastSynced >= tFrame) {
                 shouldSync = true;
             }
-            
+
             if ((shouldSync && optedIn) || firstBoot) {
                 Intent sIntent = new Intent();
                 sIntent.setComponent(new ComponentName(ctx.getPackageName(), ReportingService.class.getName()));
