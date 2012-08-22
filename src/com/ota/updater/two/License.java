@@ -19,10 +19,10 @@ public class License extends Activity {
         BufferedReader in = null;
         StringBuilder data = null;
         try {
-            data = new StringBuilder(2048);
-            char[] buf = new char[2048];
+            data = new StringBuilder();
+            char[] buf = new char[4096];
             int numRead;
-            in = new BufferedReader(new InputStreamReader(getAssets().open("NOTICE.txt")));
+            in = new BufferedReader(new InputStreamReader(getAssets().open("license.txt")));
             while ((numRead = in.read(buf)) >= 0) {
                 data.append(buf, 0, numRead);
             }
