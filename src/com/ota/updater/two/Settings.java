@@ -6,8 +6,9 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 
-public class Settings extends PreferenceActivity {
-    public static final String KEY_UPDATE_SETTINGS = "update_settings_pref";
+public class Settings extends PreferenceActivity implements OnPreferenceClickListener {
+
+    private Preference updatePref;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -15,15 +16,19 @@ public class Settings extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
-        Preference update_pref = findPreference(KEY_UPDATE_SETTINGS);
-        update_pref.setOnPreferenceClickListener(new OnPreferenceClickListener () {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent();
-                intent.setClass(getApplicationContext(), UpdateSettings.class);
-                startActivity(intent);
-                return true;
-            }
-        });
+        updatePref = findPreference("update_settings_pref");
+        updatePref.setOnPreferenceClickListener(this);
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        if (preference == updatePref) {
+            Intent i = new Intent();
+            i.setClass(getApplicationContext(), UpdateSettings.class);
+            startActivity(i);
+
+            return true;
+        }
+        return false;
     }
 }

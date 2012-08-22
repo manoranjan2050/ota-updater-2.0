@@ -13,19 +13,15 @@ public class Utils {
         protected String doInBackground(String... params) {
             ShellCommand cmd = new ShellCommand();
             CommandResult modversion = cmd.sh.runWaitFor("getprop ro.modversion");
-            if (modversion.stdout.equals("")) {
-                CommandResult cmversion = cmd.sh.runWaitFor("getprop ro.cm.version");
-                if (cmversion.stdout.equals("")) {
-                    CommandResult aokpversion = cmd.sh.runWaitFor("getprop ro.aokp.version");
-                    if (aokpversion.stdout.equals(""))
-                        return Build.DISPLAY;
-                    else
-                        return aokpversion.stdout;
-                } else {
-                    return cmversion.stdout;
-                }
-            }
-            return modversion.stdout;
+            if (modversion.stdout.length() != 0) return modversion.stdout;
+
+            CommandResult cmversion = cmd.sh.runWaitFor("getprop ro.cm.version");
+            if (cmversion.stdout.length() != 0) return cmversion.stdout;
+
+            CommandResult aokpversion = cmd.sh.runWaitFor("getprop ro.aokp.version");
+            if (aokpversion.stdout.length() != 0) return aokpversion.stdout;
+
+            return Build.DISPLAY;
         }
     }
 }

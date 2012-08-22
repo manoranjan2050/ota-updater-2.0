@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 @SuppressWarnings("deprecation")
 public class KernelTab extends PreferenceFragment {
-    JSONObject json;
     public final static String URL = "http://dl.dropbox.com/u/44265003/update.json";
     public static Context cx;
 
@@ -35,14 +34,14 @@ public class KernelTab extends PreferenceFragment {
 
         final String kernelVersion = System.getProperty("os.version");
 
-        Preference kernel_ver = findPreference("kernel_version");
-        kernel_ver.setSummary(kernelVersion);
+        Preference kernelVer = findPreference("kernel_version");
+        kernelVer.setSummary(kernelVersion);
 
-        Preference kernel_is_custom = findPreference("kernel_custom");
+        Preference kernelCustom = findPreference("kernel_custom");
 
         if (kernelVersion.toLowerCase().contains("ninphetamin3")) {
-            kernel_is_custom.setSummary("VillainROM supported kernel!\nClick here to check for updates.");
-            kernel_is_custom.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            kernelCustom.setSummary("VillainROM supported kernel!\nClick here to check for updates.");
+            kernelCustom.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     new Read().execute();
@@ -50,19 +49,18 @@ public class KernelTab extends PreferenceFragment {
                 }
             });
         } else {
-            kernel_is_custom.setSummary("Not a VillainROM supported kernel." + "\n" + "What does this mean?");
-            kernel_is_custom.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            kernelCustom.setSummary("Not a VillainROM supported kernel." + "\n" + "What does this mean?");
+            kernelCustom.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     AlertDialog alertDialog = new AlertDialog.Builder(TabDisplay.mContext).create();
                     alertDialog.setTitle("Why is my kernel unsupported?");
                     alertDialog.setMessage("Unfortunately due to hosting and compatibility, not all kernels for your device can be supported in this application. While we would like to include as many as possible, it is not viable to include all custom kernels for a myriad of devices. Sorry!");
                     alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                          @Override
+                        @Override
                         public void onClick(DialogInterface dialog, int which) {
-
-                           //here you can add functions
-                          }
+                            //here you can add functions
+                        }
                     });
                     alertDialog.show();
                     return false;
@@ -72,13 +70,13 @@ public class KernelTab extends PreferenceFragment {
     }
 
     public class Display {
-          public String mKernel;
-          public String mUrl;
+        public String mKernel;
+        public String mUrl;
 
-          public Display (String rom, String downurl) {
-              mKernel = rom;
-              mUrl = downurl;
-          }
+        public Display (String rom, String downurl) {
+            mKernel = rom;
+            mUrl = downurl;
+        }
     }
 
     // A class that will run Toast messages in the main GUI context
@@ -91,16 +89,15 @@ public class KernelTab extends PreferenceFragment {
             return toastMessage;
         }
 
-        @SuppressWarnings("unused")
-        protected void OnProgressUpdate(String... values) {
+        @Override
+        protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
         }
 
         // This is executed in the context of the main GUI thread
         @Override
         protected void onPostExecute(String result) {
-            Toast toast = Toast.makeText(cx.getApplicationContext(), result, Toast.LENGTH_SHORT);
-            toast.show();
+            Toast.makeText(cx.getApplicationContext(), result, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -126,9 +123,9 @@ public class KernelTab extends PreferenceFragment {
         protected Display doInBackground(String... params) {
             final String device = params[0];
             try {
-                json = getKernelV();
-                String downurl = json.getJSONObject("device").getJSONArray(device).getJSONObject(0).getString("url");
-                String build = json.getJSONObject("device").getJSONArray(device).getJSONObject(0).getString("rom");
+                JSONObject json = getKernelV().getJSONObject("device").getJSONArray(device).getJSONObject(0);
+                String downurl = json.getString("url");
+                String build = json.getString("rom");
 
                 return new Display(downurl, build);
             } catch (ClientProtocolException e) {

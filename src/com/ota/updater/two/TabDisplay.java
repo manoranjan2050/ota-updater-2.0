@@ -139,18 +139,19 @@ public class TabDisplay extends FragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i;
         switch (item.getItemId()) {
         case R.id.settings:
-            Intent settingsIntent = new Intent(this, Settings.class);
-            startActivity(settingsIntent);
+            i = new Intent(this, Settings.class);
+            startActivity(i);
             return true;
         case R.id.downloads:
-            Intent downloadsIntent = new Intent(this, Downloads.class);
-            startActivity(downloadsIntent);
+            i = new Intent(this, Downloads.class);
+            startActivity(i);
             return true;
         case R.id.accounts:
-            Intent accountsIntent = new Intent(this, AccountsScreen.class);
-            startActivity(accountsIntent);
+            i = new Intent(this, AccountsScreen.class);
+            startActivity(i);
             return true;
         default:
             return super.onOptionsItemSelected(item);

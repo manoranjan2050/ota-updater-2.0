@@ -36,7 +36,6 @@ import android.widget.Toast;
 
 public class TweaksTab extends ListActivity {
     public static String URL = "http://dl.dropbox.com/u/44265003/tweaks.json";
-    public static JSONObject json;
     public static Preference avail_tweaks;
     public static String device = Build.MODEL.toUpperCase();
     public static String name;
@@ -104,8 +103,7 @@ public class TweaksTab extends ListActivity {
         // This is executed in the context of the main GUI thread
         @Override
         protected void onPostExecute(String result) {
-            Toast toast = Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT);
-            toast.show();
+            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -139,16 +137,16 @@ public class TweaksTab extends ListActivity {
                         switch(which) {
                         case 0:
                             String url = urlItems.get(pos);
-                            String zip_name = listItems.get(pos);
-                            new FetchFile().execute(zip_name,url);
+                            String zipName = listItems.get(pos);
+                            new FetchFile().execute(zipName, url);
                             break;
                         case 1:
                             break;
                         case 2:
                             //TODO: Fix broken favorites method
-                            String tweak_name = listItems.get(pos);
+                            String tweakName = listItems.get(pos);
                             AddFavorite addFav = new AddFavorite();
-                            addFav.addPref(tweak_name);
+                            addFav.addPref(tweakName);
                             break;
                         case 3:
                             String name = listItems.get(pos);
@@ -173,17 +171,16 @@ public class TweaksTab extends ListActivity {
         protected Display doInBackground(String... params) {
             final String device = params[0];
             try {
-                json = getTweak();
-                JSONArray avail_tweaks = null;
-                HashMap<String, String> tweaks_list = new HashMap<String,String>();
-                avail_tweaks = json.getJSONObject("device").getJSONArray(device);
-                for (int i = 0; i < avail_tweaks.length(); i++) {
-                    JSONObject row = avail_tweaks.getJSONObject(i);
+                JSONObject json = getTweak();
+                HashMap<String, String> tweaksList = new HashMap<String,String>();
+                JSONArray availTweaks = json.getJSONObject("device").getJSONArray(device);
+                for (int i = 0; i < availTweaks.length(); i++) {
+                    JSONObject row = availTweaks.getJSONObject(i);
                     String name = row.getString("tweak");
                     String url = row.getString("url");
-                    tweaks_list.put(name, url);
+                    tweaksList.put(name, url);
                 }
-                return new Display(tweaks_list);
+                return new Display(tweaksList);
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
                 new ToastMessageTask().execute("A server issue occured, please try again.");

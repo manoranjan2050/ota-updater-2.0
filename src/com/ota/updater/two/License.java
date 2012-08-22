@@ -16,25 +16,23 @@ public class License extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        BufferedReader inputReader = null;
+        BufferedReader in = null;
         StringBuilder data = null;
         try {
             data = new StringBuilder(2048);
-            char[] tmp = new char[2048];
+            char[] buf = new char[2048];
             int numRead;
-            inputReader = new BufferedReader(new InputStreamReader(getAssets().open("NOTICE.txt")));
-            while ((numRead = inputReader.read(tmp)) >= 0) {
-                data.append(tmp, 0, numRead);
+            in = new BufferedReader(new InputStreamReader(getAssets().open("NOTICE.txt")));
+            while ((numRead = in.read(buf)) >= 0) {
+                data.append(buf, 0, numRead);
             }
         } catch (IOException e) {
             showErrorAndFinish();
             return;
         } finally {
-            try {
-                if (inputReader != null) {
-                    inputReader.close();
-                }
-            } catch (IOException e) {
+            if (in != null) {
+                try { in.close(); }
+                catch (IOException e) { }
             }
         }
 

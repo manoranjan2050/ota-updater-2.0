@@ -9,11 +9,9 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
-@SuppressWarnings("unused")
 public class Accounts extends DialogPreference implements OnSharedPreferenceChangeListener {
     private static AutoCompleteTextView user;
     private static EditText pass;
-    private static Context cx;
 
     public Accounts(Context context, AttributeSet attrs) {
         super(context, attrs);

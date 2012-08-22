@@ -54,8 +54,7 @@ public class ROMTab extends PreferenceFragment {
     public static View view;
     public static Activity ac;
 
-    JSONObject json;
-    TextView tv_display;
+    TextView displayView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,11 +132,12 @@ public class ROMTab extends PreferenceFragment {
         protected Display doInBackground(String... params) {
             final String device = params[0];
             try {
-                json = getVersion();
-                String version = json.getJSONObject("device").getJSONArray(device).getJSONObject(0).getString("version");
-                String changelog = json.getJSONObject("device").getJSONArray(device).getJSONObject(0).getString("changelog");
-                String downurl = json.getJSONObject("device").getJSONArray(device).getJSONObject(0).getString("url");
-                String build = json.getJSONObject("device").getJSONArray(device).getJSONObject(0).getString("rom");
+                JSONObject json = getVersion().getJSONObject("device").getJSONArray(device).getJSONObject(0);
+                String version = json.getString("version");
+                String changelog = json.getString("changelog");
+                String downurl = json.getString("url");
+                String build = json.getString("rom");
+
                 return new Display(version, changelog, downurl, build);
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
@@ -182,9 +182,9 @@ public class ROMTab extends PreferenceFragment {
             cx = cx.getApplicationContext();
 
             boolean file = new File(PATH).exists();
-            if (file == true) {
+            if (file) {
 
-            } else if (file == false) {
+            } else {
                 new File(PATH).mkdirs();
             }
 

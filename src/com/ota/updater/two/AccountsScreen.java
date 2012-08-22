@@ -6,8 +6,10 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 
-public class AccountsScreen extends PreferenceActivity {
-    public static Dialog dialog;
+public class AccountsScreen extends PreferenceActivity implements OnPreferenceClickListener {
+    private Dialog dialog;
+
+    private Preference viewProfile;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -20,13 +22,16 @@ public class AccountsScreen extends PreferenceActivity {
         dialog.setTitle("Profile");
         dialog.setContentView(R.layout.profile_dialog);
 
-        Preference view_profile = findPreference("view_account_pref");
-        view_profile.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference arg0) {
-                dialog.show();
-                return false;
-            }
-        });
+        viewProfile = findPreference("view_account_pref");
+        viewProfile.setOnPreferenceClickListener(this);
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        if (preference == viewProfile) {
+            dialog.show();
+            return true;
+        }
+        return false;
     }
 }
