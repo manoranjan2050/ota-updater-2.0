@@ -90,8 +90,8 @@ public class ROMTab extends PreferenceFragment {
 			        	@SuppressWarnings("unused")
 						Spinner spin = (Spinner) view.findViewById(R.id.spinner);
 						dialog.show();
-						Log.d(Utils.LOGTAG, device);
-						Log.d(Utils.LOGTAG, version);
+						Log.d(Utils.TAG, device);
+						Log.d(Utils.TAG, version);
 						new Read().execute(device);
 					return true;
 				}

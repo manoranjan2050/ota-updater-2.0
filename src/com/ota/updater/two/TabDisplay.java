@@ -7,9 +7,11 @@ import com.ota.updater.two.R;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -18,16 +20,45 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import com.ota.updater.two.utils.*;
 
 public class TabDisplay extends FragmentActivity {
 
     ViewPager mViewPager;
     TabsAdapter mTabsAdapter;
     static Context mContext;
+    public static final String NOTIF_ACTION = "com.updater.ota.action.NOTIF_ACTION";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        if (!Utils.isROMSupported()) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle(R.string.alert_unsupported_title);
+            alert.setMessage(R.string.alert_unsupported_message);
+            alert.setCancelable(false);
+            alert.setNegativeButton(R.string.alert_exit, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    finish();
+                }
+            });
+            
+            //Allow the user to bypass the prompt which takes them out of the app. Let's them get a feel of the application.
+            alert.setPositiveButton(R.string.alert_ignore, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+				}
+			});
+            alert.create().show();
+        
+        }
+        
 
         mViewPager = new ViewPager(this);
         mViewPager.setId(R.id.pager);

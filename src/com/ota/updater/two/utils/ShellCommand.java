@@ -79,7 +79,7 @@ public class ShellCommand {
                 toProcess.writeBytes("exec " + s + "\n");
                 toProcess.flush();
             } catch(Exception e) {
-                Log.e(Utils.LOGTAG, "Exception while trying to run: '" + s + "' " + e.getMessage());
+                Log.e(Utils.TAG, "Exception while trying to run: '" + s + "' " + e.getMessage());
                 process = null;
             }
             return process;
