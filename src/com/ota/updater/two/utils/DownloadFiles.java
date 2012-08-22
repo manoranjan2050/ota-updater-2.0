@@ -2,6 +2,7 @@ package com.ota.updater.two.utils;
 
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
@@ -9,13 +10,17 @@ import java.net.URLConnection;
 
 import android.os.AsyncTask;
 
-//usually, subclasses of AsyncTask are declared inside the activity class.
-//that way, you can easily modify the UI thread from here
 public class DownloadFiles extends AsyncTask<String, Integer, String> {
-    public static String mPath;
+    private String path;
+
+    public DownloadFiles(String path) {
+        this.path = path;
+    }
 
     @Override
     protected String doInBackground(String... sUrl) {
+        InputStream in = null;
+        OutputStream out = null;
         try {
             URL url = new URL(sUrl[0]);
             URLConnection connection = url.openConnection();
@@ -24,23 +29,28 @@ public class DownloadFiles extends AsyncTask<String, Integer, String> {
             int fileLength = connection.getContentLength();
 
             // download the file
-            InputStream input = new BufferedInputStream(url.openStream());
-            OutputStream output = new FileOutputStream(mPath);
+            in = new BufferedInputStream(url.openStream());
+            out = new FileOutputStream(path);
 
-            byte[] data = new byte[1024];
+            byte[] buf = new byte[1024];
             long total = 0;
-            int count;
-            while ((count = input.read(data)) != -1) {
-                total += count;
+            int nRead = -1;
+            while ((nRead = in.read(buf)) != -1) {
+                total += nRead;
                 // publishing the progress....
                 publishProgress((int) (total * 100 / fileLength));
-                output.write(data, 0, count);
+                out.write(buf, 0, nRead);
             }
-
-            output.flush();
-            output.close();
-            input.close();
         } catch (Exception e) {
+        } finally {
+            if (in != null) {
+                try { in.close(); }
+                catch (IOException e) { }
+            }
+            if (out != null) {
+                try { out.flush(); out.close(); }
+                catch (IOException e) { }
+            }
         }
         return null;
     }

@@ -20,34 +20,29 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.ota.updater.two.utils.Utils;
 
 public class TweaksTab extends ListActivity {
     public static String URL = "http://dl.dropbox.com/u/44265003/tweaks.json";
-    public static Preference avail_tweaks;
     public static String device = Build.MODEL.toUpperCase();
-    public static String name;
-    public static ListView showTweaks;
-    public static List<String> listItems = new ArrayList<String>();
-    public static List<String> urlItems = new ArrayList<String>();
-    public static ArrayAdapter<String> adapter;
-    public static Dialog dialog;
-    public static Context cx;
+
+    private List<String> listItems = new ArrayList<String>();
+    private List<String> urlItems = new ArrayList<String>();
+    private ArrayAdapter<String> adapter;
+    private Dialog dialog;
 
     @Override
-    @SuppressWarnings("unused")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new ArrayAdapter<String>(this,R.layout.row, R.id.filename,listItems);
@@ -56,7 +51,7 @@ public class TweaksTab extends ListActivity {
         dialog = new Dialog(this);
         dialog.setTitle(getString(R.string.loading_dialog_title));
         dialog.setContentView(R.layout.spinner_dialog);
-        Spinner spin = (Spinner) findViewById(R.id.spinner);
+        //Spinner spin = (Spinner) findViewById(R.id.spinner);
         dialog.show();
 
         listItems.clear();
@@ -82,28 +77,6 @@ public class TweaksTab extends ListActivity {
                     }
                 });
             }
-        }
-    }
-
-    // A class that will run Toast messages in the main GUI context
-    private class ToastMessageTask extends AsyncTask<String, String, String> {
-        String toastMessage;
-
-        @Override
-        protected String doInBackground(String... params) {
-            toastMessage = params[0];
-            return toastMessage;
-        }
-
-        @SuppressWarnings("unused")
-        protected void OnProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-        }
-
-        // This is executed in the context of the main GUI thread
-        @Override
-        protected void onPostExecute(String result) {
-            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -138,7 +111,7 @@ public class TweaksTab extends ListActivity {
                         case 0:
                             String url = urlItems.get(pos);
                             String zipName = listItems.get(pos);
-                            new FetchFile().execute(zipName, url);
+                            new FetchFile(getApplicationContext()).execute(zipName, url);
                             break;
                         case 1:
                             break;
@@ -183,13 +156,13 @@ public class TweaksTab extends ListActivity {
                 return new Display(tweaksList);
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
-                new ToastMessageTask().execute("A server issue occured, please try again.");
+                Utils.toastWrapper(TweaksTab.this, "A server issue occured, please try again.", Toast.LENGTH_LONG);
             } catch (IOException e) {
                 e.printStackTrace();
-                new ToastMessageTask().execute("Error whilst reading content.");
+                Utils.toastWrapper(TweaksTab.this, "Error whilst reading content.", Toast.LENGTH_LONG);
             } catch (JSONException e) {
                 e.printStackTrace();
-                new ToastMessageTask().execute("No content for your device.");
+                Utils.toastWrapper(TweaksTab.this, "No content for your device.", Toast.LENGTH_LONG);
             }
 
             return null;

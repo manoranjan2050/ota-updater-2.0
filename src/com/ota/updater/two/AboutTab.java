@@ -1,5 +1,6 @@
 package com.ota.updater.two;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -30,7 +31,8 @@ public class AboutTab extends PreferenceFragment implements OnPreferenceClickLis
 
         PackageInfo pInfo = null;
         try {
-            pInfo = TabDisplay.mContext.getPackageManager().getPackageInfo(TabDisplay.mContext.getPackageName(), 0);
+            Context ctx = getActivity().getApplicationContext();
+            pInfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }

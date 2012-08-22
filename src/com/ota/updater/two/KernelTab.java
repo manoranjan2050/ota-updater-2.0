@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,10 +21,11 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
+import com.ota.updater.two.utils.Utils;
+
 @SuppressWarnings("deprecation")
 public class KernelTab extends PreferenceFragment {
     public final static String URL = "http://dl.dropbox.com/u/44265003/update.json";
-    public static Context cx;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,28 +79,6 @@ public class KernelTab extends PreferenceFragment {
         }
     }
 
-    // A class that will run Toast messages in the main GUI context
-    private class ToastMessageTask extends AsyncTask<String, String, String> {
-        String toastMessage;
-
-        @Override
-        protected String doInBackground(String... params) {
-            toastMessage = params[0];
-            return toastMessage;
-        }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-        }
-
-        // This is executed in the context of the main GUI thread
-        @Override
-        protected void onPostExecute(String result) {
-            Toast.makeText(cx.getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public JSONObject getKernelV() throws ClientProtocolException, IOException, JSONException{
         HttpClient client = new DefaultHttpClient();
         StringBuilder url = new StringBuilder(URL);
@@ -130,13 +108,13 @@ public class KernelTab extends PreferenceFragment {
                 return new Display(downurl, build);
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
-                new ToastMessageTask().execute("A server issue occured, please try again.");
+                Utils.toastWrapper(getActivity(), "A server issue occured, please try again.", Toast.LENGTH_LONG);
             } catch (IOException e) {
                 e.printStackTrace();
-                new ToastMessageTask().execute("Error whilst reading content.");
+                Utils.toastWrapper(getActivity(), "Error whilst reading content.", Toast.LENGTH_LONG);
             } catch (JSONException e) {
                 e.printStackTrace();
-                new ToastMessageTask().execute("No content for your device.");
+                Utils.toastWrapper(getActivity(), "No content for your device.", Toast.LENGTH_LONG);
             }
             return null;
         }

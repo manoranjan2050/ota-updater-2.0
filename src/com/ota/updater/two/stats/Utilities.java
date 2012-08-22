@@ -16,17 +16,17 @@
 
 package com.ota.updater.two.stats;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import android.content.Context;
 import android.os.Build;
 import android.telephony.TelephonyManager;
+
+import com.ota.updater.two.utils.Utils;
 
 public class Utilities {
     public static String getUniqueID(Context ctx) {
         TelephonyManager tm = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
 
-        String device_id = digest(tm.getDeviceId());
+        String device_id = Utils.md5(tm.getDeviceId());
         if (device_id == null) {
             device_id = "Unable to generate Device ID";
         }
@@ -67,16 +67,5 @@ public class Utilities {
     public static String getDevice() {
         String device = Build.MODEL;
         return device;
-    }
-
-
-    public static String digest(String input) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            return new BigInteger(1, md.digest(input.getBytes())).toString(16)
-                    .toUpperCase();
-        } catch (Exception e) {
-            return null;
-        }
     }
 }

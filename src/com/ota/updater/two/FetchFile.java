@@ -9,6 +9,12 @@ import android.os.Build;
 public class FetchFile extends AsyncTask<String, String, String> {
     public static final String PATH = "/VillainToolkit/ROMs/";
 
+    private Context ctx;
+
+    public FetchFile(Context ctx) {
+        this.ctx = ctx;
+    }
+
     @Override
     protected String doInBackground(String... params) {
         final String ROMname = params[0];
@@ -22,7 +28,7 @@ public class FetchFile extends AsyncTask<String, String, String> {
         }
         request.setDestinationInExternalPublicDir(PATH, ROMname + ".zip");
 
-        DownloadManager manager = (DownloadManager) ROMTab.cx.getSystemService(Context.DOWNLOAD_SERVICE);
+        DownloadManager manager = (DownloadManager) ctx.getSystemService(Context.DOWNLOAD_SERVICE);
         manager.enqueue(request);
         return null;
     }

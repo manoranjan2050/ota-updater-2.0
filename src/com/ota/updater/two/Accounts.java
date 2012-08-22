@@ -34,7 +34,7 @@ public class Accounts extends DialogPreference implements OnSharedPreferenceChan
             String username = user.getText().toString();
             String password = pass.getText().toString();
 
-            SharedPreferences prefs = ROMTab.cx.getSharedPreferences("VRToolkit", Context.MODE_PRIVATE);
+            SharedPreferences prefs = getContext().getSharedPreferences("VRToolkit", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("key_username", username);
             editor.putString("key_password", password);

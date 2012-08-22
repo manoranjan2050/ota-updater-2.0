@@ -13,7 +13,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
@@ -29,12 +28,12 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ota.updater.two.utils.Config;
 import com.ota.updater.two.utils.Utils;
 
 @SuppressWarnings("deprecation")
@@ -47,12 +46,8 @@ public class ROMTab extends PreferenceFragment {
     public static final String PATH = sdDir + "/VillainToolKit/ROMs/";
     public static final String device = android.os.Build.MODEL.toUpperCase();
     public String version;
-    public static MenuItem refresh;
-    public static final Utils utils = new Utils();
-    public static Dialog dialog;
-    static Context cx;
-    public static View view;
-    public static Activity ac;
+    private Dialog dialog;
+    private View view;
 
     TextView displayView;
 
@@ -63,7 +58,7 @@ public class ROMTab extends PreferenceFragment {
         addPreferencesFromResource(R.xml.rom);
 
         try {
-            version = utils.new Read().execute().get().toString();
+            version = Utils.getVersion();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,8 +75,8 @@ public class ROMTab extends PreferenceFragment {
                 @SuppressWarnings("unused")
                 Spinner spin = (Spinner) view.findViewById(R.id.spinner);
                 dialog.show();
-                Log.d(Utils.LOGTAG, device);
-                Log.d(Utils.LOGTAG, version);
+                Log.d(Config.LOG_TAG, device);
+                Log.d(Config.LOG_TAG, version);
                 new Read().execute(device);
                 return true;
             }
@@ -150,36 +145,14 @@ public class ROMTab extends PreferenceFragment {
             return null;
         }
 
-        // A class that will run Toast messages in the main GUI context
-        private class ToastMessageTask extends AsyncTask<String, String, String> {
-            String toastMessage;
-
-            @Override
-            protected String doInBackground(String... params) {
-                toastMessage = params[0];
-                return toastMessage;
-            }
-
-            @SuppressWarnings("unused")
-            protected void OnProgressUpdate(String... values) {
-                super.onProgressUpdate(values);
-            }
-            // This is executed in the context of the main GUI thread
-            @Override
-            protected void onPostExecute(String result) {
-                Toast toast = Toast.makeText(cx, result, Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        }
-
         @Override
         public void onPostExecute(final Display result) {
+            dialog.dismiss();
+
             final String ROM = result.mRom;
             final String CHANGELOG = result.mChange;
             final String BUILD = result.mBuild;
             final String URL = result.mUrl;
-
-            cx = cx.getApplicationContext();
 
             boolean file = new File(PATH).exists();
             if (file) {
@@ -189,9 +162,10 @@ public class ROMTab extends PreferenceFragment {
             }
 
             try {
-                dialog.dismiss();
+                final Context ctx = getActivity().getApplicationContext();
+
                 if (version.equals(ROM)) {
-                    new ToastMessageTask().execute("No new version!");
+                    Toast.makeText(ctx, "No new version", Toast.LENGTH_LONG);
                 } else {
                     final AlertDialog newvDialog = new AlertDialog.Builder(TabDisplay.mContext).create();
                     newvDialog.setTitle("New version!");
@@ -199,7 +173,7 @@ public class ROMTab extends PreferenceFragment {
                     newvDialog.setButton("Download", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            new FetchFile().execute(ROM, URL);
+                            new FetchFile(getActivity().getApplicationContext()).execute(ROM, URL);
                         }
                     });
                     newvDialog.setButton2("Cancel", new DialogInterface.OnClickListener() {
@@ -211,9 +185,6 @@ public class ROMTab extends PreferenceFragment {
                     newvDialog.setButton3("Remind Me", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            String ns = Context.NOTIFICATION_SERVICE;
-                            NotificationManager mNotificationManager = (NotificationManager) cx.getSystemService(ns);
-
                             int icon = R.drawable.ic_stat_ic_notify_reminder;
                             CharSequence tickerText = "VR Toolkit - Update Reminder";
                             long when = System.currentTimeMillis();
@@ -223,13 +194,12 @@ public class ROMTab extends PreferenceFragment {
                             CharSequence contentTitle = "VR Toolkit";
                             CharSequence contentText = "New update for: " + ROM;
                             Intent notificationIntent = new Intent(TabDisplay.mContext, ROMTab.class);
-                            PendingIntent contentIntent = PendingIntent.getActivity(cx, 0, notificationIntent, 0);
+                            PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
 
-                            notification.setLatestEventInfo(cx, contentTitle, contentText, contentIntent);
+                            notification.setLatestEventInfo(ctx, contentTitle, contentText, contentIntent);
 
-                            final int NOTIFY = 1;
-
-                            mNotificationManager.notify(NOTIFY, notification);
+                            NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+                            nm.notify(1, notification);
                         }
                     });
                     newvDialog.show();
