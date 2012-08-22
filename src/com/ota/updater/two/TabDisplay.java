@@ -2,6 +2,7 @@ package com.ota.updater.two;
 
 import java.util.ArrayList;
 
+import com.google.android.gcm.GCMRegistrar;
 import com.ota.updater.two.R;
 
 import android.app.ActionBar;
@@ -17,6 +18,7 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,14 +26,17 @@ import com.ota.updater.two.utils.*;
 
 public class TabDisplay extends FragmentActivity {
 
-    ViewPager mViewPager;
-    TabsAdapter mTabsAdapter;
+    private ViewPager mViewPager;
+    private TabsAdapter mTabsAdapter;
     static Context mContext;
-    public static final String NOTIF_ACTION = "com.updater.ota.action.NOTIF_ACTION";
+    public static final String NOTIF_ACTION = "com.updater.ota.two.action.NOTIF_ACTION";
+    private Config cfg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        cfg = Config.getInstance(getApplicationContext());
         
         if (!Utils.isROMSupported()) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -56,7 +61,38 @@ public class TabDisplay extends FragmentActivity {
 				}
 			});
             alert.create().show();
+            
+            if (Utils.marketAvailable(this)) {
+                GCMRegistrar.checkDevice(getApplicationContext());
+                GCMRegistrar.checkManifest(getApplicationContext());
+                final String regId = GCMRegistrar.getRegistrationId(getApplicationContext());
+                if (regId.length() != 0) {
+                    GCMRegistrar.unregister(getApplicationContext());
+                }
+            }
         
+        } else {
+            if (Utils.marketAvailable(this)) {
+                GCMRegistrar.checkDevice(getApplicationContext());
+                GCMRegistrar.checkManifest(getApplicationContext());
+                final String regId = GCMRegistrar.getRegistrationId(getApplicationContext());
+                if (regId.length() != 0) {
+                    if (cfg.upToDate()) {
+                        Log.v("OTAUpdater::GCMRegister", "Already registered");
+                    } else {
+                        Log.v("OTAUpdater::GCMRegister", "Already registered, out-of-date, reregistering");
+                        GCMRegistrar.unregister(getApplicationContext());
+                        GCMRegistrar.register(getApplicationContext(), Config.GCM_SENDER_ID);
+                        cfg.setValuesToCurrent();
+                        Log.v("OTAUpdater::GCMRegister", "GCM registered");
+                    }
+                } else {
+                    GCMRegistrar.register(getApplicationContext(), Config.GCM_SENDER_ID);
+                    Log.v("OTAUpdater::GCMRegister", "GCM registered");
+                }
+            } else {
+                UpdateCheckReceiver.setAlarm(getApplicationContext());
+            }
         }
         
 
