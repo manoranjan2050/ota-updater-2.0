@@ -18,6 +18,7 @@ package com.ota.updater.two.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.text.ParseException;
@@ -79,6 +80,11 @@ public class Utils {
             return byteArrToStr(digest.digest());
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (in != null) {
+                try { in.close(); }
+                catch (IOException e) { }
+            }
         }
         return "";
     }
