@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="VillainToolkit Settings" />
+        android:title="@string/settings_title">
 
-    <Preference
-        android:key="update_settings_pref"
-        android:title="Update Settings"
-        android:summary="Configure update settings." />
+        <com.ota.updater.two.Accounts
+            android:title="@string/settings_account_title"
+            android:summary="@string/settings_account_summary" />
 
-    <com.jieehd.villain.toolkit.Accounts
-        android:title="Add account"
-        android:summary="Log into your VillainROM account." />
+        <CheckBoxPreference
+            android:title="@string/settings_notif_title"
+            android:summary="@string/settings_notif_summary"
+            android:defaultValue="true" />
 
-    <Preference
-        android:key="notif_settings_pref"
-        android:title="Notification Settings"
-        android:summary="Configure notification settings." />
+        <Preference
+            android:key="device_settings_pref"
+            android:title="@string/settings_device_title"
+            android:summary="@string/settings_device_summary" />
 
-    <Preference
-        android:key="device_settings_pref"
-        android:title="Device settings"
-        android:summary="Configure device-specific settings.\n(Caution: Only for advanced users!)" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

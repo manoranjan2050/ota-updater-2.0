@@ -33,6 +33,9 @@ import android.widget.Toast;
 
 import com.ota.updater.two.utils.Utils;
 
+//TODO make backend, make it work, fix, fix, fix
+//XXX do not use for now...
+
 public class TweaksTab extends ListActivity {
     public static String URL = "http://dl.dropbox.com/u/44265003/tweaks.json";
     public static String device = Build.MODEL.toUpperCase();

@@ -49,13 +49,9 @@ public class TabDisplay extends FragmentActivity {
                     finish();
                 }
             });
-
-            //Allow the user to bypass the prompt which takes them out of the app. Let's them get a feel of the application.
             alert.setPositiveButton(R.string.alert_ignore, new DialogInterface.OnClickListener() {
-
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
 					dialog.dismiss();
 				}
 			});
@@ -94,7 +90,6 @@ public class TabDisplay extends FragmentActivity {
             }
         }
 
-
         mViewPager = new ViewPager(this);
         mViewPager.setId(R.id.pager);
         setContentView(mViewPager);
@@ -105,9 +100,9 @@ public class TabDisplay extends FragmentActivity {
         bar.setTitle(R.string.app_name);
 
         mTabsAdapter = new TabsAdapter(this, mViewPager);
-        mTabsAdapter.addTab(bar.newTab().setText("Kernel"), KernelTab.class, null);
-        mTabsAdapter.addTab(bar.newTab().setText("ROM"), ROMTab.class, null);
-        mTabsAdapter.addTab(bar.newTab().setText("About"), AboutTab.class, null);
+        //mTabsAdapter.addTab(bar.newTab().setText(R.string.main_kernel), KernelTab.class, null);
+        mTabsAdapter.addTab(bar.newTab().setText(R.string.main_rom), ROMTab.class, null);
+        mTabsAdapter.addTab(bar.newTab().setText(R.string.main_about), AboutTab.class, null);
 
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));

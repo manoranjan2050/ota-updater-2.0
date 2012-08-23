@@ -25,9 +25,13 @@ import android.content.pm.PackageManager.NameNotFoundException;
 public class Config {
     public static final String LOG_TAG = "OTA::";
 
+    public static final String WEB_HOME_URL = "https://www.otaupdatecenter.pro/";
+    public static final String GPLUS_URL = "https://plus.google.com/102074511541445644953/posts";
+
     public static final String GCM_SENDER_ID = "1068482628480";
     public static final String GCM_REGISTER_URL = "https://www.otaupdatecenter.pro/pages/regdevice2.php";
     public static final String PULL_URL = "https://www.otaupdatecenter.pro/pages/romupdate.php";
+
     public static final String OTA_ID_PROP = "otaupdater.otaid";
     public static final String OTA_VER_PROP = "otaupdater.otaver";
     public static final String OTA_DATE_PROP = "otaupdater.otatime";
@@ -42,6 +46,8 @@ public class Config {
     static {
         DL_PATH_FILE.mkdirs();
     }
+
+    private boolean showNotif = true;
 
     private int lastVersion = -1;
     private String lastDevice = null;
@@ -58,6 +64,8 @@ public class Config {
 
     private Config(Context ctx) {
         PREFS = ctx.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+
+        showNotif = PREFS.getBoolean("showNotif", showNotif);
 
         lastVersion = PREFS.getInt("version", lastVersion);
         lastDevice = PREFS.getString("device", lastDevice);
@@ -83,6 +91,19 @@ public class Config {
     public static synchronized Config getInstance(Context ctx) {
         if (instance == null) instance = new Config(ctx);
         return instance;
+    }
+
+    public boolean getShowNotif() {
+        return showNotif;
+    }
+
+    public void setShowNotif(boolean showNotif) {
+        this.showNotif = showNotif;
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.putBoolean("showNotif", showNotif);
+            editor.commit();
+        }
     }
 
     public int getLastVersion() {

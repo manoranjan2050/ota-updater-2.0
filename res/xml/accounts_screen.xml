@@ -3,15 +3,16 @@
     android:key="accounts_screen">
 
     <PreferenceCategory
-        android:title="@string/account_screen_title" />
+        android:title="@string/account_screen_title">
 
-    <Preference
-        android:key="view_account_pref"
-        android:title="Example"
-        android:summary="@string/view_profile_summary_text"
-        android:icon="@drawable/ic_account" />
+        <Preference
+            android:key="view_account_pref"
+            android:title="@string/account_profile_view_title"
+            android:icon="@drawable/ic_account" />
+
+    </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="MY FAVORITES" />
+        android:title="@string/account_favorites" />
 
 </PreferenceScreen>

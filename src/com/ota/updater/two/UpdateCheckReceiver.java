@@ -28,9 +28,9 @@ import android.util.Log;
 import com.google.android.gcm.GCMRegistrar;
 import com.ota.updater.two.utils.Config;
 import com.ota.updater.two.utils.FetchRomInfoTask;
+import com.ota.updater.two.utils.FetchRomInfoTask.RomInfoListener;
 import com.ota.updater.two.utils.RomInfo;
 import com.ota.updater.two.utils.Utils;
-import com.ota.updater.two.utils.FetchRomInfoTask.RomInfoListener;
 
 public class UpdateCheckReceiver extends BroadcastReceiver {
     @Override
@@ -40,38 +40,42 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
         if (cfg.hasStoredUpdate()) {
             RomInfo info = cfg.getStoredUpdate();
             if (Utils.isUpdate(info)) {
-                Log.v("OTAUpdater", "Found stored update");
-                Utils.showUpdateNotif(context, info);
+                if (cfg.getShowNotif()) {
+                    Utils.showUpdateNotif(context, info);
+                    Log.v("OTA::Receiver", "Found stored update");
+                } else {
+                    Log.v("OTA::Receiver", "Found stored update, notif not shown");
+                }
             } else {
-                Log.v("OTAUpdater", "Found invalid stored update");
+                Log.v("OTA::Receiver", "Found invalid stored update");
                 cfg.clearStoredUpdate();
             }
         } else {
-            Log.v("OTAUpdater", "No stored update");
+            Log.v("OTA::Receiver", "No stored update");
         }
 
         if (Utils.isROMSupported()) {
             if (Utils.marketAvailable(context)) {
-                Log.v("OTAUpdater", "Found market, trying GCM");
+                Log.v("OTA::Receiver", "Found market, trying GCM");
                 GCMRegistrar.checkDevice(context.getApplicationContext());
                 GCMRegistrar.checkManifest(context.getApplicationContext());
                 final String regId = GCMRegistrar.getRegistrationId(context.getApplicationContext());
                 if (regId.length() != 0) {
                     if (cfg.upToDate()) {
-                        Log.v("OTAUpdater::GCMRegister", "Already registered");
+                        Log.v("OTA::GCMRegister", "Already registered");
                     } else {
-                        Log.v("OTAUpdater::GCMRegister", "Already registered, out-of-date, reregistering");
+                        Log.v("OTA::GCMRegister", "Already registered, out-of-date, reregistering");
                         GCMRegistrar.unregister(context.getApplicationContext());
                         GCMRegistrar.register(context.getApplicationContext(), Config.GCM_SENDER_ID);
                         cfg.setValuesToCurrent();
-                        Log.v("OTAUpdater::GCMRegister", "GCM registered");
+                        Log.v("OTA::GCMRegister", "GCM registered");
                     }
                 } else {
                     GCMRegistrar.register(context.getApplicationContext(), Config.GCM_SENDER_ID);
-                    Log.v("OTAUpdater::GCMRegister", "GCM registered");
+                    Log.v("OTA::GCMRegister", "GCM registered");
                 }
             } else {
-                Log.v("OTAUpdater", "No market, using pull method");
+                Log.v("OTA::Receiver", "No market, using pull method");
                 if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
                     setAlarm(context);
                 }
@@ -87,7 +91,11 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                     public void onLoaded(RomInfo info) {
                         if (Utils.isUpdate(info)) {
                             cfg.storeUpdate(info);
-                            Utils.showUpdateNotif(context, info);
+                            if (cfg.getShowNotif()) {
+                                Utils.showUpdateNotif(context, info);
+                            } else {
+                                Log.v("OTA::Receiver", "found update, notif not shown");
+                            }
                         } else {
                             cfg.clearStoredUpdate();
                         }
@@ -101,7 +109,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                 }).execute();
             }
         } else {
-            Log.w("OTAUpdater", "Unsupported ROM");
+            Log.w("OTA::Receiver", "Unsupported ROM");
         }
     }
 

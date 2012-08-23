@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="Recent Downloads" />
+        android:title="@string/downloads_recent_title" />
 
     <PreferenceCategory
-        android:title="Pending Downloads" />
+        android:title="@string/downloads_pending_title" />
 
 </PreferenceScreen>

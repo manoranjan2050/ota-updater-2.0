@@ -1,38 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <PreferenceCategory
-        android:title="About" />
-
-    <Preference
-        android:key="about_toolkit"
-        android:title="Villain Toolkit"
-        android:summary="" />
-
-    <Preference
-        android:key="about_app"
-        android:title="Application Version"
-        android:summary="" />
-
-    <Preference
-        android:key="opensource_license"
-        android:title="Open source license" />
-
-    <Preference
-        android:key="toolkit_stats"
-        android:title="Statistics"
-        android:summary="Help us improve the app by opting into annonymous statistics reporting." />
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="Keep up to date!" />
+        android:title="@string/about_title">
 
-    <Preference
-        android:key="follow_jieehd_pref"
-        android:title="Twitter"
-        android:summary="Follow JieeHD on Twitter." />
+        <Preference android:key="about_toolkit"
+            android:title="@string/about_ota_title"
+            android:summary="@string/about_ota_summary" />
 
-    <Preference
-        android:key="follow_vr_pref"
-        android:title="VillainROM"
-        android:summary="Follow VillainROM on Twitter." />
+        <Preference android:key="about_app"
+            android:title="@string/about_version_title"
+            android:summary="" />
+
+        <Preference
+            android:key="opensource_license"
+            android:title="@string/about_license_title" />
+
+        <Preference
+            android:key="toolkit_stats"
+            android:title="@string/about_stats_title"
+            android:summary="@string/about_stats_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/about_uptodate">
+
+        <Preference
+            android:key="follow_gplus_pref"
+            android:title="@string/about_follow_title" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

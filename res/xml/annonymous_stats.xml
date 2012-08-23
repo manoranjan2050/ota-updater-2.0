@@ -16,20 +16,19 @@
 
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:title="Annonymous Statistics"
-    xmlns:settings="http://schemas.android.com/apk/res/com.android.settings">
+    android:title="@string/stats_title">
 
     <CheckBoxPreference
         android:key="pref_anonymous_opt_in"
         android:defaultValue="true"
-        android:title="Enable Reporting" />
+        android:title="@string/stats_optin_title" />
 
     <PreferenceScreen
         android:key="preview"
-        android:title="Preview Data" />
+        android:title="@string/stats_preview_title" />
 
     <Preference
         android:key="pref_view_stats"
-        android:title="View Stats" />
+        android:title="@string/stats_view_title" />
 
 </PreferenceScreen>

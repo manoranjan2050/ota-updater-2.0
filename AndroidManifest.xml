@@ -6,6 +6,8 @@
 
     <uses-sdk android:minSdkVersion="15" />
 
+    <permission android:name="com.ota.updater.two.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+
     <uses-permission android:name="android.permission.REBOOT" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -30,9 +32,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <receiver android:name="com.google.android.gcm.GCMBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
@@ -40,15 +42,15 @@
                 <category android:name="com.ota.updater.two" />
             </intent-filter>
         </receiver>
-        
+
         <service android:name=".GCMIntentService" />
-        
+
         <receiver android:name=".UpdateCheckReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>
         </receiver>
-        
+
         <activity
             android:name=".KernelTab"
             android:label="@string/app_name">
@@ -65,15 +67,9 @@
         </activity>
 
         <activity
-            android:name=".UpdateSettings"
-            android:label="@string/app_name">
-        </activity>
-
-        <activity
             android:name="com.ota.updater.two.stats.AnonymousStats"
             android:label="@string/app_name">
         </activity>
-
 
         <activity
             android:name="com.ota.updater.two.stats.PreviewData"
@@ -84,7 +80,6 @@
             android:name="com.ota.updater.two.stats.Utilities"
             android:label="@string/app_name">
         </activity>
-
 
         <receiver
             android:name="com.ota.updater.two.stats.ReportingServiceManager"
@@ -141,7 +136,7 @@
         </activity>
 
         <activity
-            android:name="com.ota.updater.two.AboutTab"
+            android:name=".AboutTab"
             android:label="@string/app_name">
          </activity>
 

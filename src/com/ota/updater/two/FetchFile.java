@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 public class FetchFile extends AsyncTask<String, String, String> {
-    public static final String PATH = "/VillainToolkit/ROMs/";
+    public static final String PATH = "/OTA-Updater/download";
 
     private Context ctx;
 
@@ -21,7 +21,7 @@ public class FetchFile extends AsyncTask<String, String, String> {
         final String URL = params[1];
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(URL));
         request.setDescription(ROMname);
-        request.setTitle("VR Toolkit");
+        request.setTitle(ctx.getString(R.string.notif_download));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             request.allowScanningByMediaScanner();
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);

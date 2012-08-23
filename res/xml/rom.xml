@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="ROM" />
+        android:title="@string/main_rom">
 
-    <Preference
-        android:key="rom_version_pref"
-        android:title="ROM Version"
-        android:summary="" />
+        <Preference
+            android:key="rom_version_pref"
+            android:title="@string/main_version" />
 
-    <Preference
-        android:key="test_pref"
-        android:title="Check for new version" />
+        <Preference
+            android:key="test_pref"
+            android:title="@string/main_updates_check" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

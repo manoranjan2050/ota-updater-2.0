@@ -19,7 +19,7 @@ public class AccountsScreen extends PreferenceActivity implements OnPreferenceCl
         addPreferencesFromResource(R.xml.accounts_screen);
 
         dialog = new Dialog(this);
-        dialog.setTitle("Profile");
+        dialog.setTitle(R.string.alert_profile_title);
         dialog.setContentView(R.layout.profile_dialog);
 
         viewProfile = findPreference("view_account_pref");

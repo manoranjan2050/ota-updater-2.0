@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
     <PreferenceCategory
-        android:title="Kernel" />
+        android:title="@string/kernel_title">
 
-    <Preference
-        android:key="kernel_version"
-        android:title="Kernel Version"
-        android:summary="" />
+        <Preference
+            android:key="kernel_version"
+            android:title="@string/kernel_ver_title" />
 
-    <Preference
-        android:key="kernel_custom"
-        android:title="Supported Kernel"
-        android:summary="" />
+        <Preference
+            android:key="kernel_custom"
+            android:title="@string/kernel_supported_title" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

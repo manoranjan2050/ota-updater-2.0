@@ -16,32 +16,31 @@
 
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:title="Preview Data"
-    xmlns:settings="http://schemas.android.com/apk/res/com.android.settings">
+    android:title="@string/stats_preview_title">
 
     <Preference
         android:key="preview_id"
         style="?android:preferenceInformationStyle"
-        android:title="Device ID"
+        android:title="@string/stats_preview_device_id_title"
         android:summary="%s" />
 
     <Preference
         android:key="preview_device"
         style="?android:preferenceInformationStyle"
-        android:title="Device"
+        android:title="@string/stats_preview_device_title"
         android:summary="%s" />
 
 
     <Preference
         android:key="preview_country"
         style="?android:preferenceInformationStyle"
-        android:title="Country"
+        android:title="@string/stats_preview_country_title"
         android:summary="%s" />
 
     <Preference
         android:key="preview_carrier"
         style="?android:preferenceInformationStyle"
-        android:title="Carrier"
+        android:title="@string/stats_preview_carrier_title"
         android:summary="%s" />
 
 </PreferenceScreen>

@@ -23,6 +23,9 @@ import android.widget.Toast;
 
 import com.ota.updater.two.utils.Utils;
 
+//TODO make backend, make it work, fix, fix, fix
+//XXX do not use for now...
+
 @SuppressWarnings("deprecation")
 public class KernelTab extends PreferenceFragment {
     public final static String URL = "http://dl.dropbox.com/u/44265003/update.json";

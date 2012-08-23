@@ -11,14 +11,14 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 
 import com.ota.updater.two.stats.AnonymousStats;
+import com.ota.updater.two.utils.Config;
 
 public class AboutTab extends PreferenceFragment implements OnPreferenceClickListener {
 
     private Preference aboutOtaUpdater;
     private Preference license;
     private Preference stats;
-    private Preference followJieeHD;
-    private Preference followVr;
+    private Preference followGPlus;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,6 @@ public class AboutTab extends PreferenceFragment implements OnPreferenceClickLis
         addPreferencesFromResource(R.xml.about);
 
         aboutOtaUpdater = findPreference("about_toolkit");
-        aboutOtaUpdater.setSummary(" Copyright (C) 2012 - VillainROM \n Fully open-source \n Tap to visit our website");
         aboutOtaUpdater.setOnPreferenceClickListener(this);
 
         PackageInfo pInfo = null;
@@ -36,7 +35,7 @@ public class AboutTab extends PreferenceFragment implements OnPreferenceClickLis
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
-        String version = pInfo == null ? "" : pInfo.versionName;
+        String version = pInfo == null ? getString(R.string.about_version_unknown) : pInfo.versionName;
 
         Preference aboutAppVersion = findPreference("about_app");
         aboutAppVersion.setSummary(version);
@@ -47,19 +46,15 @@ public class AboutTab extends PreferenceFragment implements OnPreferenceClickLis
         Preference stats = findPreference("toolkit_stats");
         stats.setOnPreferenceClickListener(this);
 
-        followJieeHD = findPreference("follow_jieehd_pref");
-        followJieeHD.setOnPreferenceClickListener(this);
-
-        followVr = findPreference("follow_vr_pref");
-        followVr.setOnPreferenceClickListener(this);
+        followGPlus = findPreference("follow_gplus_pref");
+        followGPlus.setOnPreferenceClickListener(this);
     }
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
         if (preference == aboutOtaUpdater) {
-            String url = "http://www.villainrom.co.uk";
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(url));
+            i.setData(Uri.parse(Config.WEB_HOME_URL));
             startActivity(i);
 
             return true;
@@ -73,17 +68,9 @@ public class AboutTab extends PreferenceFragment implements OnPreferenceClickLis
             startActivity(i);
 
             return true;
-        } else if (preference == followJieeHD) {
-            String url = "http://www.twitter.com/jordancraig94";
+        } else if (preference == followGPlus) {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(url));
-            startActivity(i);
-
-            return true;
-        } else if (preference == followVr) {
-            String url = "http://www.twitter.com/VillainROM";
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(url));
+            i.setData(Uri.parse(Config.GPLUS_URL));
             startActivity(i);
 
             return true;
