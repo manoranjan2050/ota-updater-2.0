@@ -42,40 +42,40 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
             if (Utils.isUpdate(info)) {
                 if (cfg.getShowNotif()) {
                     Utils.showUpdateNotif(context, info);
-                    Log.v("OTA::Receiver", "Found stored update");
+                    Log.v(Config.LOG_TAG + "Receiver", "Found stored update");
                 } else {
-                    Log.v("OTA::Receiver", "Found stored update, notif not shown");
+                    Log.v(Config.LOG_TAG + "Receiver", "Found stored update, notif not shown");
                 }
             } else {
-                Log.v("OTA::Receiver", "Found invalid stored update");
+                Log.v(Config.LOG_TAG + "Receiver", "Found invalid stored update");
                 cfg.clearStoredUpdate();
             }
         } else {
-            Log.v("OTA::Receiver", "No stored update");
+            Log.v(Config.LOG_TAG + "Receiver", "No stored update");
         }
 
         if (Utils.isROMSupported()) {
             if (Utils.marketAvailable(context)) {
-                Log.v("OTA::Receiver", "Found market, trying GCM");
+                Log.v(Config.LOG_TAG + "Receiver", "Found market, trying GCM");
                 GCMRegistrar.checkDevice(context.getApplicationContext());
                 GCMRegistrar.checkManifest(context.getApplicationContext());
                 final String regId = GCMRegistrar.getRegistrationId(context.getApplicationContext());
                 if (regId.length() != 0) {
                     if (cfg.upToDate()) {
-                        Log.v("OTA::GCMRegister", "Already registered");
+                        Log.v(Config.LOG_TAG + "GCMRegister", "Already registered");
                     } else {
-                        Log.v("OTA::GCMRegister", "Already registered, out-of-date, reregistering");
+                        Log.v(Config.LOG_TAG + "GCMRegister", "Already registered, out-of-date, reregistering");
                         GCMRegistrar.unregister(context.getApplicationContext());
                         GCMRegistrar.register(context.getApplicationContext(), Config.GCM_SENDER_ID);
                         cfg.setValuesToCurrent();
-                        Log.v("OTA::GCMRegister", "GCM registered");
+                        Log.v(Config.LOG_TAG + "GCMRegister", "GCM registered");
                     }
                 } else {
                     GCMRegistrar.register(context.getApplicationContext(), Config.GCM_SENDER_ID);
-                    Log.v("OTA::GCMRegister", "GCM registered");
+                    Log.v(Config.LOG_TAG + "GCMRegister", "GCM registered");
                 }
             } else {
-                Log.v("OTA::Receiver", "No market, using pull method");
+                Log.v(Config.LOG_TAG + "Receiver", "No market, using pull method");
                 if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
                     setAlarm(context);
                 }
@@ -94,7 +94,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                             if (cfg.getShowNotif()) {
                                 Utils.showUpdateNotif(context, info);
                             } else {
-                                Log.v("OTA::Receiver", "found update, notif not shown");
+                                Log.v(Config.LOG_TAG + "Receiver", "found update, notif not shown");
                             }
                         } else {
                             cfg.clearStoredUpdate();
@@ -109,7 +109,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                 }).execute();
             }
         } else {
-            Log.w("OTA::Receiver", "Unsupported ROM");
+            Log.w(Config.LOG_TAG + "Receiver", "Unsupported ROM");
         }
     }
 

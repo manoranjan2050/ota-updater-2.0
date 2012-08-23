@@ -46,7 +46,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onError(Context ctx, String errorID) {
-        Log.e("OTA::GCMError", errorID);
+        Log.e(Config.LOG_TAG + "GCMError", errorID);
     }
 
     @Override
@@ -55,23 +55,23 @@ public class GCMIntentService extends GCMBaseIntentService {
         RomInfo info = RomInfo.fromIntent(payload);
 
         if (!Utils.isUpdate(info)) {
-            Log.v("OTA::GCM", "got GCM message, not update");
+            Log.v(Config.LOG_TAG + "GCM", "got GCM message, not update");
             cfg.clearStoredUpdate();
             return;
         }
 
         cfg.storeUpdate(info);
         if (cfg.getShowNotif()) {
-            Log.v("OTA::GCM", "got GCM message");
+            Log.v(Config.LOG_TAG + "GCM", "got GCM message");
             Utils.showUpdateNotif(ctx, info);
         } else {
-            Log.v("OTA::GCM", "got GCM message, notif not shown");
+            Log.v(Config.LOG_TAG + "GCM", "got GCM message, notif not shown");
         }
     }
 
     @Override
     protected void onRegistered(Context ctx, String regID) {
-        Log.v("OTA::GCMRegister", "GCM registered - ID=" + regID);
+        Log.v(Config.LOG_TAG + "GCMRegister", "GCM registered - ID=" + regID);
         ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
         params.add(new BasicNameValuePair("do", "register"));
         params.add(new BasicNameValuePair("reg_id", regID));
@@ -90,18 +90,18 @@ public class GCMIntentService extends GCMBaseIntentService {
             if (status == 200) {
                 String data = EntityUtils.toString(e);
                 if (data.length() == 0) {
-                    Log.w("OTA::GCMRegister", "No response to registration");
+                    Log.w(Config.LOG_TAG + "GCMRegister", "No response to registration");
                     return;
                 }
                 JSONObject json = new JSONObject(data);
 
                 if (json.length() == 0) {
-                    Log.w("OTA::GCMRegister", "Empty response to registration");
+                    Log.w(Config.LOG_TAG + "GCMRegister", "Empty response to registration");
                     return;
                 }
 
                 if (json.has("error")) {
-                    Log.e("OTA::GCMRegister", json.getString("error"));
+                    Log.e(Config.LOG_TAG + "GCMRegister", json.getString("error"));
                     return;
                 }
 
@@ -119,14 +119,14 @@ public class GCMIntentService extends GCMBaseIntentService {
                     if (cfg.getShowNotif()) {
                     	Utils.showUpdateNotif(getApplicationContext(), info);
                     } else {
-                        Log.v("OTA::GCMRegister", "got update response, notif not shown");
+                        Log.v(Config.LOG_TAG + "GCMRegister", "got update response, notif not shown");
                     }
                 } else {
                     cfg.clearStoredUpdate();
                 }
             } else {
                 if (e != null) e.consumeContent();
-                Log.w("OTA::GCMRegister", "registration response " + status);
+                Log.w(Config.LOG_TAG + "GCMRegister", "registration response " + status);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -135,7 +135,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onUnregistered(Context ctx, String regID) {
-        Log.v("OTA::GCMRegister", "GCM unregistered - ID=" + regID);
+        Log.v(Config.LOG_TAG + "GCMRegister", "GCM unregistered - ID=" + regID);
         ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
         params.add(new BasicNameValuePair("do", "unregister"));
         params.add(new BasicNameValuePair("reg_id", regID));
@@ -146,7 +146,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             req.setEntity(new UrlEncodedFormEntity(params));
             HttpResponse resp = http.execute(req);
             if (resp.getStatusLine().getStatusCode() != 200) {
-                Log.w("OTA::GCMRegister", "unregistration response non-200");
+                Log.w(Config.LOG_TAG + "GCMRegister", "unregistration response non-200");
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -24,7 +24,6 @@ import java.io.InputStream;
 import android.util.Log;
 
 public class ShellCommand {
-    private static final String TAG = "ShellCommand.java";
     private Boolean can_su;
 
     public SH sh;
@@ -49,7 +48,7 @@ public class ShellCommand {
             if (r.stderr != null)
                 out.append(r.stderr);
 
-            Log.v(TAG, "canSU() su[" + r.exit_value + "]: " + out);
+            Log.v(Config.LOG_TAG + "ShellCmd", "canSU() su[" + r.exit_value + "]: " + out);
             can_su = r.success();
         }
         return can_su;
@@ -95,7 +94,7 @@ public class ShellCommand {
                 toProcess.writeBytes("exec " + s + "\n");
                 toProcess.flush();
             } catch(Exception e) {
-                Log.e(Config.LOG_TAG, "Exception while trying to run: '" + s + "' " + e.getMessage());
+                Log.e(Config.LOG_TAG + "ShellCmd", "Exception while trying to run: '" + s + "' " + e.getMessage());
                 process = null;
             }
             return process;
@@ -115,7 +114,7 @@ public class ShellCommand {
                 }
                 dis.close();
             } catch (Exception ex) {
-                Log.e(TAG, ex.getMessage());
+                Log.e(Config.LOG_TAG + "ShellCmd", ex.getMessage());
             }
             if (buffer != null)
                 out = buffer.toString();
@@ -135,9 +134,9 @@ public class ShellCommand {
                     stderr = getStreamLines(process.getErrorStream());
 
                 } catch(InterruptedException e) {
-                    Log.e(TAG, "runWaitFor " + e.toString());
+                    Log.e(Config.LOG_TAG + "ShellCmd", "runWaitFor " + e.toString());
                 } catch(NullPointerException e) {
-                    Log.e(TAG, "runWaitFor " + e.toString());
+                    Log.e(Config.LOG_TAG + "ShellCmd", "runWaitFor " + e.toString());
                 }
             }
             return new CommandResult(exit_value, stdout, stderr);

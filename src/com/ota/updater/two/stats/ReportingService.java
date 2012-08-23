@@ -36,8 +36,10 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.ota.updater.two.utils.Config;
+
 public class ReportingService extends Service {
-    protected static final String TAG = "VRStats";
+    protected static final String TAG = Config.LOG_TAG + "OTAStats";
 
     @Override
     public IBinder onBind(Intent intent) {

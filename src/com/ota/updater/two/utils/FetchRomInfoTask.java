@@ -79,7 +79,7 @@ public class FetchRomInfoTask extends AsyncTask<Void, Void, RomInfo> {
                 JSONObject json = new JSONObject(data);
 
                 if (json.has("error")) {
-                    Log.e("OTA::Fetch", json.getString("error"));
+                    Log.e(Config.LOG_TAG + "Fetch", json.getString("error"));
                     error = json.getString("error");
                     return null;
                 }

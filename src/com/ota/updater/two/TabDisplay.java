@@ -89,17 +89,17 @@ public class TabDisplay extends FragmentActivity {
                 final String regId = GCMRegistrar.getRegistrationId(getApplicationContext());
                 if (regId.length() != 0) {
                     if (cfg.upToDate()) {
-                        Log.v("OTAUpdater::GCMRegister", "Already registered");
+                        Log.v(Config.LOG_TAG + "GCMRegister", "Already registered");
                     } else {
-                        Log.v("OTAUpdater::GCMRegister", "Already registered, out-of-date, reregistering");
+                        Log.v(Config.LOG_TAG + "GCMRegister", "Already registered, out-of-date, reregistering");
                         GCMRegistrar.unregister(getApplicationContext());
                         GCMRegistrar.register(getApplicationContext(), Config.GCM_SENDER_ID);
                         cfg.setValuesToCurrent();
-                        Log.v("OTAUpdater::GCMRegister", "GCM registered");
+                        Log.v(Config.LOG_TAG + "GCMRegister", "GCM registered");
                     }
                 } else {
                     GCMRegistrar.register(getApplicationContext(), Config.GCM_SENDER_ID);
-                    Log.v("OTAUpdater::GCMRegister", "GCM registered");
+                    Log.v(Config.LOG_TAG + "GCMRegister", "GCM registered");
                 }
             } else {
                 UpdateCheckReceiver.setAlarm(getApplicationContext());

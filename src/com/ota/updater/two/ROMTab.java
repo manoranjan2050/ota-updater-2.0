@@ -70,7 +70,7 @@ public class ROMTab extends PreferenceFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("ROMTab", "Started DisplayUi");
+        Log.d(Config.LOG_TAG + "ROMTab", "Started DisplayUi");
         addPreferencesFromResource(R.xml.rom);
 
         try {
@@ -91,8 +91,8 @@ public class ROMTab extends PreferenceFragment {
                 @SuppressWarnings("unused")
                 Spinner spin = (Spinner) view.findViewById(R.id.spinner);
                 dialog.show();
-                Log.d(Config.LOG_TAG, device);
-                Log.d(Config.LOG_TAG, version);
+                Log.d(Config.LOG_TAG + "ROMTab", device);
+                Log.d(Config.LOG_TAG + "ROMTab", version);
                 new Read().execute(device);
                 return true;
             }
