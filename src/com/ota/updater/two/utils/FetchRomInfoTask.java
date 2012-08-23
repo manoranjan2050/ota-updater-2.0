@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 OTA Updater
+ * Copyright (C) 2012 OTA Update Center
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * You may only use this file in compliance with the license and provided you are not associated with or are in co-operation anyone by the name 'X Vanderpoel'.
@@ -28,11 +28,11 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import com.ota.updater.two.R;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.ota.updater.two.R;
 
 public class FetchRomInfoTask extends AsyncTask<Void, Void, RomInfo> {
     private RomInfoListener callback = null;
