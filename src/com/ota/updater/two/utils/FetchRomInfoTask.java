@@ -55,8 +55,8 @@ public class FetchRomInfoTask extends AsyncTask<Void, Void, RomInfo> {
 
     @Override
     protected RomInfo doInBackground(Void... notused) {
-        if (!Utils.isROMSupported()) {
-            error = context.getString(R.string.alert_unsupported_title);
+        if (!Utils.isRomOtaEnabled()) {
+            error = context.getString(R.string.alert_unsupported_rom_title);
             return null;
         }
         if (!Utils.dataAvailable(context)) {
@@ -67,7 +67,7 @@ public class FetchRomInfoTask extends AsyncTask<Void, Void, RomInfo> {
         try {
             ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
             params.add(new BasicNameValuePair("device", android.os.Build.DEVICE.toLowerCase()));
-            params.add(new BasicNameValuePair("rom", Utils.getRomID()));
+            params.add(new BasicNameValuePair("rom", Utils.getRomOtaID()));
 
             HttpClient client = new DefaultHttpClient();
             HttpGet get = new HttpGet(Config.PULL_URL + "?" + URLEncodedUtils.format(params, "UTF-8"));

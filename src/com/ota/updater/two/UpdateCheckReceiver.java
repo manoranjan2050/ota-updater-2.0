@@ -27,8 +27,11 @@ import android.util.Log;
 
 import com.google.android.gcm.GCMRegistrar;
 import com.ota.updater.two.utils.Config;
+import com.ota.updater.two.utils.FetchKernelInfoTask;
+import com.ota.updater.two.utils.FetchKernelInfoTask.KernelInfoListener;
 import com.ota.updater.two.utils.FetchRomInfoTask;
 import com.ota.updater.two.utils.FetchRomInfoTask.RomInfoListener;
+import com.ota.updater.two.utils.KernelInfo;
 import com.ota.updater.two.utils.RomInfo;
 import com.ota.updater.two.utils.Utils;
 
@@ -37,24 +40,41 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         final Config cfg = Config.getInstance(context.getApplicationContext());
 
-        if (cfg.hasStoredUpdate()) {
-            RomInfo info = cfg.getStoredUpdate();
-            if (Utils.isUpdate(info)) {
+        if (cfg.hasStoredRomUpdate()) {
+            RomInfo info = cfg.getStoredRomUpdate();
+            if (Utils.isRomUpdate(info)) {
                 if (cfg.getShowNotif()) {
-                    Utils.showUpdateNotif(context, info);
-                    Log.v(Config.LOG_TAG + "Receiver", "Found stored update");
+                    Utils.showRomUpdateNotif(context, info);
+                    Log.v(Config.LOG_TAG + "Receiver", "Found stored rom update");
                 } else {
-                    Log.v(Config.LOG_TAG + "Receiver", "Found stored update, notif not shown");
+                    Log.v(Config.LOG_TAG + "Receiver", "Found stored rom update, notif not shown");
                 }
             } else {
-                Log.v(Config.LOG_TAG + "Receiver", "Found invalid stored update");
-                cfg.clearStoredUpdate();
+                Log.v(Config.LOG_TAG + "Receiver", "Found invalid stored rom update");
+                cfg.clearStoredRomUpdate();
             }
         } else {
-            Log.v(Config.LOG_TAG + "Receiver", "No stored update");
+            Log.v(Config.LOG_TAG + "Receiver", "No stored rom update");
         }
 
-        if (Utils.isROMSupported()) {
+        if (cfg.hasStoredKernelUpdate()) {
+            KernelInfo info = cfg.getStoredKernelUpdate();
+            if (Utils.isKernelUpdate(info)) {
+                if (cfg.getShowNotif()) {
+                    Utils.showKernelUpdateNotif(context, info);
+                    Log.v(Config.LOG_TAG + "Receiver", "Found stored kernel update");
+                } else {
+                    Log.v(Config.LOG_TAG + "Receiver", "Found stored kernel update, notif not shown");
+                }
+            } else {
+                Log.v(Config.LOG_TAG + "Receiver", "Found invalid stored kernel update");
+                cfg.clearStoredKernelUpdate();
+            }
+        } else {
+            Log.v(Config.LOG_TAG + "Receiver", "No stored kernel update");
+        }
+
+        if (Utils.isRomOtaEnabled() || Utils.isKernelOtaEnabled()) {
             if (Utils.marketAvailable(context)) {
                 Log.v(Config.LOG_TAG + "Receiver", "Found market, trying GCM");
                 GCMRegistrar.checkDevice(context.getApplicationContext());
@@ -81,32 +101,64 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                 }
 
                 PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                final WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, UpdateCheckReceiver.class.getName());
-                wl.acquire();
 
-                new FetchRomInfoTask(context, new RomInfoListener() {
-                    @Override
-                    public void onStartLoading() { }
-                    @Override
-                    public void onLoaded(RomInfo info) {
-                        if (Utils.isUpdate(info)) {
-                            cfg.storeUpdate(info);
-                            if (cfg.getShowNotif()) {
-                                Utils.showUpdateNotif(context, info);
+                if (Utils.isRomOtaEnabled()) {
+                    final WakeLock romWL = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, UpdateCheckReceiver.class.getName());
+                    romWL.acquire();
+
+                    new FetchRomInfoTask(context, new RomInfoListener() {
+                        @Override
+                        public void onStartLoading() { }
+                        @Override
+                        public void onLoaded(RomInfo info) {
+                            if (Utils.isRomUpdate(info)) {
+                                cfg.storeRomUpdate(info);
+                                if (cfg.getShowNotif()) {
+                                    Utils.showRomUpdateNotif(context, info);
+                                } else {
+                                    Log.v(Config.LOG_TAG + "Receiver", "found update, notif not shown");
+                                }
                             } else {
-                                Log.v(Config.LOG_TAG + "Receiver", "found update, notif not shown");
+                                cfg.clearStoredRomUpdate();
                             }
-                        } else {
-                            cfg.clearStoredUpdate();
-                        }
 
-                        wl.release();
-                    }
-                    @Override
-                    public void onError(String error) {
-                        wl.release();
-                    }
-                }).execute();
+                            romWL.release();
+                        }
+                        @Override
+                        public void onError(String error) {
+                            romWL.release();
+                        }
+                    }).execute();
+                }
+
+                if (Utils.isKernelOtaEnabled()) {
+                    final WakeLock kernelWL = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, UpdateCheckReceiver.class.getName());
+                    kernelWL.acquire();
+
+                    new FetchKernelInfoTask(context, new KernelInfoListener() {
+                        @Override
+                        public void onStartLoading() { }
+                        @Override
+                        public void onLoaded(KernelInfo info) {
+                            if (Utils.isKernelUpdate(info)) {
+                                cfg.storeKernelUpdate(info);
+                                if (cfg.getShowNotif()) {
+                                    Utils.showKernelUpdateNotif(context, info);
+                                } else {
+                                    Log.v(Config.LOG_TAG + "Receiver", "found update, notif not shown");
+                                }
+                            } else {
+                                cfg.clearStoredKernelUpdate();
+                            }
+
+                            kernelWL.release();
+                        }
+                        @Override
+                        public void onError(String error) {
+                            kernelWL.release();
+                        }
+                    }).execute();
+                }
             }
         } else {
             Log.w(Config.LOG_TAG + "Receiver", "Unsupported ROM");

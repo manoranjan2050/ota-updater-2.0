@@ -41,7 +41,8 @@ import com.ota.updater.two.utils.Config;
 import com.ota.updater.two.utils.Utils;
 
 public class TabDisplay extends FragmentActivity {
-    public static final String NOTIF_ACTION = "com.updater.ota.two.action.NOTIF_ACTION";
+    public static final String ROM_NOTIF_ACTION = "com.updater.ota.two.action.ROM_NOTIF_ACTION";
+    public static final String KERNEL_NOTIF_ACTION = "com.updater.ota.two.action.KERNEL_NOTIF_ACTION";
 
     private ViewPager mViewPager;
     private TabsAdapter mTabsAdapter;
@@ -53,10 +54,10 @@ public class TabDisplay extends FragmentActivity {
 
         cfg = Config.getInstance(getApplicationContext());
 
-        if (!Utils.isROMSupported()) {
+        if (!Utils.isRomOtaEnabled()) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle(R.string.alert_unsupported_title);
-            alert.setMessage(R.string.alert_unsupported_message);
+            alert.setTitle(R.string.alert_unsupported_rom_title);
+            alert.setMessage(R.string.alert_unsupported_rom_message);
             alert.setCancelable(false);
             alert.setNegativeButton(R.string.alert_exit, new DialogInterface.OnClickListener() {
                 @Override

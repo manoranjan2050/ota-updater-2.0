@@ -24,8 +24,9 @@ import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -38,6 +39,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -47,8 +49,13 @@ import com.ota.updater.two.utils.ShellCommand.CommandResult;
 
 public class Utils {
     private static String cachedRomID = null;
-    private static Date cachedOtaDate = null;
-    private static String cachedOtaVer = null;
+    private static Date cachedRomDate = null;
+    private static String cachedRomVer = null;
+
+    private static String cachedKernelID = null;
+    private static Date cachedKernelDate = null;
+    private static String cachedKernelVer = null;
+
     private static String cachedOSSdPath = null;
     private static String cachedRcvrySdPath = null;
 
@@ -145,73 +152,114 @@ public class Utils {
         return true;
     }
 
-    public static boolean isROMSupported() {
-        String romID = getRomID();
-        return romID != null && romID.length() != 0;
+    public static boolean isRomOtaEnabled() {
+        return new File("/system/rom.ota.prop").exists();
     }
 
-    public static String getRomID() {
+    public static boolean isKernelOtaEnabled() {
+        return new File("/system/kernel.ota.prop").exists();
+    }
+
+    public static String getRomOtaID() {
+        if (!isRomOtaEnabled()) return null;
         if (cachedRomID == null) {
-            cachedRomID = getprop(Config.OTA_ID_PROP);
+            readRomOtaProp();
         }
         return cachedRomID;
     }
 
+    public static Date getRomOtaDate() {
+        if (!isRomOtaEnabled()) return null;
+        if (cachedRomDate == null) {
+            readRomOtaProp();
+        }
+        return cachedRomDate;
+    }
+
+    public static String getRomOtaVersion() {
+        if (!isRomOtaEnabled()) return null;
+        if (cachedRomVer == null) {
+            readRomOtaProp();
+        }
+        return cachedRomVer;
+    }
+
+    public static String getKernelOtaID() {
+        if (!isKernelOtaEnabled()) return null;
+        if (cachedKernelID == null) {
+            readKernelOtaProp();
+        }
+        return cachedKernelID;
+    }
+
+    public static Date getKernelOtaDate() {
+        if (!isKernelOtaEnabled()) return null;
+        if (cachedKernelDate == null) {
+            readKernelOtaProp();
+        }
+        return cachedKernelDate;
+    }
+
+    public static String getKernelOtaVersion() {
+        if (!isKernelOtaEnabled()) return null;
+        if (cachedKernelVer == null) {
+            readKernelOtaProp();
+        }
+        return cachedKernelVer;
+    }
+
     public static String getOSSdPath() {
         if (cachedOSSdPath == null) {
-            cachedOSSdPath = getprop(Config.OTA_SD_PATH_OS_PROP);
-            if (cachedOSSdPath == null) return "sdcard";
+            ShellCommand cmd = new ShellCommand();
+            CommandResult propResult = cmd.sh.runWaitFor("getprop " + Config.OTA_SD_PATH_OS_PROP);
+            if (propResult.stdout.length() == 0) return "sdcard";
+            cachedOSSdPath = propResult.stdout;
         }
         return cachedOSSdPath;
     }
 
     public static String getRcvrySdPath() {
         if (cachedRcvrySdPath == null) {
-            cachedRcvrySdPath = getprop(Config.OTA_SD_PATH_RECOVERY_PROP);
-            if (cachedRcvrySdPath == null) return "sdcard";
+            ShellCommand cmd = new ShellCommand();
+            CommandResult propResult = cmd.sh.runWaitFor("getprop " + Config.OTA_SD_PATH_RECOVERY_PROP);
+            if (propResult.stdout.length() == 0) return "sdcard";
+            cachedRcvrySdPath = propResult.stdout;
         }
         return cachedRcvrySdPath;
     }
 
-    public static Date getOtaDate() {
-        if (cachedOtaDate == null) {
-            String otaDateStr = getprop(Config.OTA_DATE_PROP);
-            if (otaDateStr == null) return null;
-            cachedOtaDate = parseDate(otaDateStr);
-        }
-        return cachedOtaDate;
-    }
+    private static void readRomOtaProp() {
+        if (!isRomOtaEnabled()) return;
 
-    public static String getOtaVersion() {
-        if (cachedOtaVer == null) {
-            cachedOtaVer = getprop(Config.OTA_VER_PROP);
-        }
-        return cachedOtaVer;
-    }
+        ShellCommand cmd = new ShellCommand();
+        CommandResult catResult = cmd.sh.runWaitFor("cat /system/rom.ota.prop");
+        if (catResult.stdout.length() == 0) return;
 
-    private static String getprop(String name) {
-        ProcessBuilder pb = new ProcessBuilder("/system/bin/getprop", name);
-        pb.redirectErrorStream(true);
-
-        Process p = null;
-        InputStream is = null;
         try {
-            p = pb.start();
-            is = p.getInputStream();
-            String prop = new Scanner(is).next();
-            if (prop.length() == 0) return null;
-            return prop;
-        } catch (NoSuchElementException e) {
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (is != null) {
-                try { is.close(); }
-                catch (Exception e) { }
-            }
+            JSONObject romOtaProp = new JSONObject(catResult.stdout);
+            cachedRomID = romOtaProp.getString("otaid");
+            cachedRomVer = romOtaProp.getString("otaver");
+            cachedRomDate = parseDate(romOtaProp.getString("otadate"));
+        } catch (JSONException e) {
+            Log.e(Config.LOG_TAG + "ReadOTAProp", "Error in rom.ota.prop file!");
         }
-        return null;
+    }
+
+    private static void readKernelOtaProp() {
+        if (!isKernelOtaEnabled()) return;
+
+        ShellCommand cmd = new ShellCommand();
+        CommandResult catResult = cmd.sh.runWaitFor("cat /system/kernel.ota.prop");
+        if (catResult.stdout.length() == 0) return;
+
+        try {
+            JSONObject romOtaProp = new JSONObject(catResult.stdout);
+            cachedKernelID = romOtaProp.getString("otaid");
+            cachedKernelVer = romOtaProp.getString("otaver");
+            cachedKernelDate = parseDate(romOtaProp.getString("otadate"));
+        } catch (JSONException e) {
+            Log.e(Config.LOG_TAG + "ReadOTAProp", "Error in kernel.ota.prop file!");
+        }
     }
 
     public static boolean dataAvailable(Context ctx) {
@@ -235,20 +283,31 @@ public class Utils {
         return new SimpleDateFormat("yyyyMMdd-kkmm").format(date);
     }
 
-    public static boolean isUpdate(RomInfo info) {
+    public static boolean isRomUpdate(RomInfo info) {
         if (info == null) return false;
         if (info.version != null) {
-            if (getOtaVersion() == null || !info.version.equalsIgnoreCase(getOtaVersion())) return true;
+            if (getRomOtaVersion() == null || !info.version.equalsIgnoreCase(getRomOtaVersion())) return true;
         }
         if (info.date != null) {
-            if (getOtaDate() == null || info.date.after(getOtaDate())) return true;
+            if (getRomOtaDate() == null || info.date.after(getRomOtaDate())) return true;
         }
         return false;
     }
 
-    public static void showUpdateNotif(Context ctx, RomInfo info) {
+    public static boolean isKernelUpdate(KernelInfo info) {
+        if (info == null) return false;
+        if (info.version != null) {
+            if (getKernelOtaVersion() == null || !info.version.equalsIgnoreCase(getKernelOtaVersion())) return true;
+        }
+        if (info.date != null) {
+            if (getKernelOtaDate() == null || info.date.after(getKernelOtaDate())) return true;
+        }
+        return false;
+    }
+
+    public static void showRomUpdateNotif(Context ctx, RomInfo info) {
         Intent i = new Intent(ctx, TabDisplay.class);
-        i.setAction(TabDisplay.NOTIF_ACTION);
+        i.setAction(TabDisplay.ROM_NOTIF_ACTION);
         info.addToIntent(i);
 
         NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -259,6 +318,24 @@ public class Utils {
         builder.setContentTitle(ctx.getString(R.string.notif_source));
         builder.setContentText(ctx.getString(R.string.notif_text_rom));
         builder.setTicker(ctx.getString(R.string.notif_text_rom));
+        builder.setWhen(System.currentTimeMillis());
+        //builder.setSmallIcon(R.drawable.updates);
+        nm.notify(1, builder.getNotification());
+    }
+
+    public static void showKernelUpdateNotif(Context ctx, KernelInfo info) {
+        Intent i = new Intent(ctx, TabDisplay.class);
+        i.setAction(TabDisplay.KERNEL_NOTIF_ACTION);
+        info.addToIntent(i);
+
+        NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        Notification.Builder builder = new Notification.Builder(ctx);
+        builder.setContentIntent(contentIntent);
+        builder.setContentTitle(ctx.getString(R.string.notif_source));
+        builder.setContentText(ctx.getString(R.string.notif_text_kernel));
+        builder.setTicker(ctx.getString(R.string.notif_text_kernel));
         builder.setWhen(System.currentTimeMillis());
         //builder.setSmallIcon(R.drawable.updates);
         nm.notify(1, builder.getNotification());

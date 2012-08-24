@@ -32,9 +32,6 @@ public class Config {
     public static final String GCM_REGISTER_URL = "https://www.otaupdatecenter.pro/pages/regdevice2.php";
     public static final String PULL_URL = "https://www.otaupdatecenter.pro/pages/romupdate.php";
 
-    public static final String OTA_ID_PROP = "otaupdater.otaid";
-    public static final String OTA_VER_PROP = "otaupdater.otaver";
-    public static final String OTA_DATE_PROP = "otaupdater.otatime";
     public static final String OTA_SD_PATH_OS_PROP = "otaupdater.sdcard.os";
     public static final String OTA_SD_PATH_RECOVERY_PROP = "otaupdater.sdcard.recovery";
 
@@ -52,12 +49,15 @@ public class Config {
     private int lastVersion = -1;
     private String lastDevice = null;
     private String lastRomID = null;
+    private String lastKernelID = null;
 
     private int curVersion = -1;
     private String curDevice = null;
     private String curRomID = null;
+    private String curKernelID = null;
 
-    private RomInfo storedUpdate = null;
+    private RomInfo storedRomUpdate = null;
+    private KernelInfo storedKernelUpdate = null;
 
     private static final String PREFS_NAME = "prefs";
     private final SharedPreferences PREFS;
@@ -67,17 +67,27 @@ public class Config {
 
         showNotif = PREFS.getBoolean("showNotif", showNotif);
 
-        lastVersion = PREFS.getInt("version", lastVersion);
         lastDevice = PREFS.getString("device", lastDevice);
-        lastRomID = PREFS.getString("romid", lastRomID);
+        lastVersion = PREFS.getInt("version", lastVersion);
+        lastRomID = PREFS.getString("rom_id", lastRomID);
+        lastKernelID = PREFS.getString("kernel_id", lastKernelID);
 
-        if (PREFS.contains("info_rom")) {
-            storedUpdate = new RomInfo(PREFS.getString("info_rom", null),
-                    PREFS.getString("info_version", null),
-                    PREFS.getString("info_changelog", null),
-                    PREFS.getString("info_url", null),
-                    PREFS.getString("info_md5", null),
-                    Utils.parseDate(PREFS.getString("info_date", null)));
+        if (PREFS.contains("rom_info_name")) {
+            storedRomUpdate = new RomInfo(PREFS.getString("rom_info_name", null),
+                    PREFS.getString("rom_info_version", null),
+                    PREFS.getString("rom_info_changelog", null),
+                    PREFS.getString("rom_info_url", null),
+                    PREFS.getString("rom_info_md5", null),
+                    Utils.parseDate(PREFS.getString("rom_info_date", null)));
+        }
+
+        if (PREFS.contains("kernel_info_name")) {
+            storedKernelUpdate = new KernelInfo(PREFS.getString("kernel_info_name", null),
+                    PREFS.getString("kernel_info_version", null),
+                    PREFS.getString("kernel_info_changelog", null),
+                    PREFS.getString("kernel_info_url", null),
+                    PREFS.getString("kernel_info_md5", null),
+                    Utils.parseDate(PREFS.getString("kernel_info_date", null)));
         }
 
         try {
@@ -85,7 +95,8 @@ public class Config {
         } catch (NameNotFoundException e) {
         }
         curDevice = android.os.Build.DEVICE.toLowerCase();
-        curRomID = Utils.getRomID();
+        curRomID = Utils.isRomOtaEnabled() ? Utils.getRomOtaID() : null;
+        curKernelID = Utils.isKernelOtaEnabled() ? Utils.getKernelOtaID() : null;
     }
     private static Config instance = null;
     public static synchronized Config getInstance(Context ctx) {
@@ -130,41 +141,86 @@ public class Config {
 
     public boolean upToDate() {
         if (lastDevice == null) return false;
-        if (lastRomID == null) return false;
-        if (curRomID == null) return false;
-        return curVersion == lastVersion && curDevice.equals(lastDevice) && curRomID.equals(lastRomID);
+
+        boolean romIdUpToDate = true;
+        if (Utils.isRomOtaEnabled()) {
+            if (lastRomID == null || curRomID == null) romIdUpToDate = false;
+            else romIdUpToDate = curRomID.equals(lastRomID);
+        }
+
+        boolean kernelIdUpToDate = true;
+        if (Utils.isKernelOtaEnabled()) {
+            if (lastKernelID == null || curKernelID == null) romIdUpToDate = false;
+            else kernelIdUpToDate = curKernelID.equals(lastKernelID);
+        }
+
+        return curVersion == lastVersion && curDevice.equals(lastDevice) && romIdUpToDate && kernelIdUpToDate;
     }
 
-    public boolean hasStoredUpdate() {
-        return storedUpdate != null;
+    public boolean hasStoredRomUpdate() {
+        return storedRomUpdate != null;
     }
 
-    public RomInfo getStoredUpdate() {
-        return storedUpdate;
+    public RomInfo getStoredRomUpdate() {
+        return storedRomUpdate;
     }
 
-    public void storeUpdate(RomInfo info) {
+    public void storeRomUpdate(RomInfo info) {
         synchronized (PREFS) {
             SharedPreferences.Editor editor = PREFS.edit();
-            editor.putString("info_rom", info.romName);
-            editor.putString("info_version", info.version);
-            editor.putString("info_changelog", info.changelog);
-            editor.putString("info_url", info.url);
-            editor.putString("info_md5", info.md5);
-            editor.putString("info_date", Utils.formatDate(info.date));
+            editor.putString("rom_info_name", info.romName);
+            editor.putString("rom_info_version", info.version);
+            editor.putString("rom_info_changelog", info.changelog);
+            editor.putString("rom_info_url", info.url);
+            editor.putString("rom_info_md5", info.md5);
+            editor.putString("rom_info_date", Utils.formatDate(info.date));
             editor.commit();
         }
     }
 
-    public void clearStoredUpdate() {
+    public void clearStoredRomUpdate() {
         synchronized (PREFS) {
             SharedPreferences.Editor editor = PREFS.edit();
-            editor.remove("info_rom");
-            editor.remove("info_version");
-            editor.remove("info_changelog");
-            editor.remove("info_url");
-            editor.remove("info_md5");
-            editor.remove("info_date");
+            editor.remove("rom_info_name");
+            editor.remove("rom_info_version");
+            editor.remove("rom_info_changelog");
+            editor.remove("rom_info_url");
+            editor.remove("rom_info_md5");
+            editor.remove("rom_info_date");
+            editor.commit();
+        }
+    }
+
+    public boolean hasStoredKernelUpdate() {
+        return storedKernelUpdate != null;
+    }
+
+    public KernelInfo getStoredKernelUpdate() {
+        return storedKernelUpdate;
+    }
+
+    public void storeKernelUpdate(KernelInfo info) {
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.putString("kernel_info_name", info.kernelName);
+            editor.putString("kernel_info_version", info.version);
+            editor.putString("kernel_info_changelog", info.changelog);
+            editor.putString("kernel_info_url", info.url);
+            editor.putString("kernel_info_md5", info.md5);
+            editor.putString("kernel_info_date", Utils.formatDate(info.date));
+            editor.commit();
+        }
+    }
+
+    public void clearStoredKernelUpdate() {
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.remove("kernel_info_name");
+            editor.remove("kernel_info_version");
+            editor.remove("kernel_info_changelog");
+            editor.remove("kernel_info_url");
+            editor.remove("kernel_info_md5");
+            editor.remove("kernel_info_date");
             editor.commit();
         }
     }

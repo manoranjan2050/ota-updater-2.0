@@ -35,6 +35,7 @@ import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
 import com.ota.updater.two.utils.Config;
+import com.ota.updater.two.utils.KernelInfo;
 import com.ota.updater.two.utils.RomInfo;
 import com.ota.updater.two.utils.Utils;
 
@@ -52,20 +53,44 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onMessage(Context ctx, Intent payload) {
         final Config cfg = Config.getInstance(getApplicationContext());
-        RomInfo info = RomInfo.fromIntent(payload);
 
-        if (!Utils.isUpdate(info)) {
-            Log.v(Config.LOG_TAG + "GCM", "got GCM message, not update");
-            cfg.clearStoredUpdate();
-            return;
-        }
+        String msgType = payload.getStringExtra("type");
+        if (msgType.equals("rom")) {
+            if (!Utils.isRomOtaEnabled()) return;
 
-        cfg.storeUpdate(info);
-        if (cfg.getShowNotif()) {
-            Log.v(Config.LOG_TAG + "GCM", "got GCM message");
-            Utils.showUpdateNotif(ctx, info);
-        } else {
-            Log.v(Config.LOG_TAG + "GCM", "got GCM message, notif not shown");
+            RomInfo info = RomInfo.fromIntent(payload);
+
+            if (!Utils.isRomUpdate(info)) {
+                Log.v(Config.LOG_TAG + "GCM", "got rom GCM message, not update");
+                cfg.clearStoredRomUpdate();
+                return;
+            }
+
+            cfg.storeRomUpdate(info);
+            if (cfg.getShowNotif()) {
+                Log.v(Config.LOG_TAG + "GCM", "got rom GCM message");
+                Utils.showRomUpdateNotif(ctx, info);
+            } else {
+                Log.v(Config.LOG_TAG + "GCM", "got rom GCM message, notif not shown");
+            }
+        } else if (msgType.equals("kernel")) {
+            if (!Utils.isKernelOtaEnabled()) return;
+
+            KernelInfo info = KernelInfo.fromIntent(payload);
+
+            if (!Utils.isKernelUpdate(info)) {
+                Log.v(Config.LOG_TAG + "GCM", "got kernel GCM message, not update");
+                cfg.clearStoredKernelUpdate();
+                return;
+            }
+
+            cfg.storeKernelUpdate(info);
+            if (cfg.getShowNotif()) {
+                Log.v(Config.LOG_TAG + "GCM", "got kernel GCM message");
+                Utils.showKernelUpdateNotif(ctx, info);
+            } else {
+                Log.v(Config.LOG_TAG + "GCM", "got kernel GCM message, notif not shown");
+            }
         }
     }
 
@@ -76,7 +101,8 @@ public class GCMIntentService extends GCMBaseIntentService {
         params.add(new BasicNameValuePair("do", "register"));
         params.add(new BasicNameValuePair("reg_id", regID));
         params.add(new BasicNameValuePair("device", android.os.Build.DEVICE.toLowerCase()));
-        params.add(new BasicNameValuePair("rom_id", Utils.getRomID()));
+        if (Utils.isRomOtaEnabled()) params.add(new BasicNameValuePair("rom_id", Utils.getRomOtaID()));
+        if (Utils.isKernelOtaEnabled()) params.add(new BasicNameValuePair("kernel_id", Utils.getKernelOtaID()));
         params.add(new BasicNameValuePair("device_id", Utils.md5(((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId())));
 
         try {
@@ -105,24 +131,52 @@ public class GCMIntentService extends GCMBaseIntentService {
                     return;
                 }
 
-                RomInfo info = new RomInfo(
-                        json.getString("rom"),
-                        json.getString("version"),
-                        json.getString("changelog"),
-                        json.getString("url"),
-                        json.getString("md5"),
-                        Utils.parseDate(json.getString("date")));
-
                 final Config cfg = Config.getInstance(getApplicationContext());
-                if (Utils.isUpdate(info)) {
-                    cfg.storeUpdate(info);
-                    if (cfg.getShowNotif()) {
-                    	Utils.showUpdateNotif(getApplicationContext(), info);
+
+                if (Utils.isRomOtaEnabled()) {
+                    JSONObject jsonRom = json.getJSONObject("rom");
+
+                    RomInfo info = new RomInfo(
+                            jsonRom.getString("rom"),
+                            jsonRom.getString("version"),
+                            jsonRom.getString("changelog"),
+                            jsonRom.getString("url"),
+                            jsonRom.getString("md5"),
+                            Utils.parseDate(jsonRom.getString("date")));
+
+                    if (Utils.isRomUpdate(info)) {
+                        cfg.storeRomUpdate(info);
+                        if (cfg.getShowNotif()) {
+                        	Utils.showRomUpdateNotif(getApplicationContext(), info);
+                        } else {
+                            Log.v(Config.LOG_TAG + "GCMRegister", "got rom update response, notif not shown");
+                        }
                     } else {
-                        Log.v(Config.LOG_TAG + "GCMRegister", "got update response, notif not shown");
+                        cfg.clearStoredRomUpdate();
                     }
-                } else {
-                    cfg.clearStoredUpdate();
+                }
+
+                if (Utils.isKernelOtaEnabled()) {
+                    JSONObject jsonKernel = json.getJSONObject("rom");
+
+                    KernelInfo info = new KernelInfo(
+                            jsonKernel.getString("rom"),
+                            jsonKernel.getString("version"),
+                            jsonKernel.getString("changelog"),
+                            jsonKernel.getString("url"),
+                            jsonKernel.getString("md5"),
+                            Utils.parseDate(jsonKernel.getString("date")));
+
+                    if (Utils.isKernelUpdate(info)) {
+                        cfg.storeKernelUpdate(info);
+                        if (cfg.getShowNotif()) {
+                            Utils.showKernelUpdateNotif(getApplicationContext(), info);
+                        } else {
+                            Log.v(Config.LOG_TAG + "GCMRegister", "got kernel update response, notif not shown");
+                        }
+                    } else {
+                        cfg.clearStoredKernelUpdate();
+                    }
                 }
             } else {
                 if (e != null) e.consumeContent();
