@@ -77,7 +77,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         params.add(new BasicNameValuePair("reg_id", regID));
         params.add(new BasicNameValuePair("device", android.os.Build.DEVICE.toLowerCase()));
         params.add(new BasicNameValuePair("rom_id", Utils.getRomID()));
-        params.add(new BasicNameValuePair("device_id", ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId()));
+        params.add(new BasicNameValuePair("device_id", Utils.md5(((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId())));
 
         try {
             HttpClient http = new DefaultHttpClient();
