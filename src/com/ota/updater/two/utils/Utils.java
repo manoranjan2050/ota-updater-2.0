@@ -49,8 +49,8 @@ public class Utils {
     private static String cachedRomID = null;
     private static Date cachedOtaDate = null;
     private static String cachedOtaVer = null;
-    private static String cachedOSProp = null;
-    private static String cachedReProp = null;
+    private static String cachedOSSdPath = null;
+    private static String cachedRcvrySdPath = null;
 
     public static String md5(String s) {
         try {
@@ -157,22 +157,20 @@ public class Utils {
         return cachedRomID;
     }
 
-    public static String getOSProp() {
-        if (cachedOSProp == null) {
-            String OSPropStr = getprop(Config.OTA_PATH_OS_PROP);
-            if (OSPropStr != null) return getprop(Config.OTA_PATH_OS_PROP);
-            if (OSPropStr == null) return "sdcard";
+    public static String getOSSdPath() {
+        if (cachedOSSdPath == null) {
+            cachedOSSdPath = getprop(Config.OTA_SD_PATH_OS_PROP);
+            if (cachedOSSdPath == null) return "sdcard";
         }
-        return cachedOSProp;
+        return cachedOSSdPath;
     }
 
-    public static String getReProp() {
-    	if (cachedReProp == null) {
-    		String RePropStr = getprop(Config.OTA_PATH_RECOVERY_PROP);
-    		if (RePropStr != null) return getprop(Config.OTA_PATH_RECOVERY_PROP);
-    		if (RePropStr == null) return "sdcard";
-    	}
-    	return cachedReProp;
+    public static String getRcvrySdPath() {
+        if (cachedRcvrySdPath == null) {
+            cachedRcvrySdPath = getprop(Config.OTA_SD_PATH_RECOVERY_PROP);
+            if (cachedRcvrySdPath == null) return "sdcard";
+        }
+        return cachedRcvrySdPath;
     }
 
     public static Date getOtaDate() {
