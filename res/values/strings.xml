@@ -44,10 +44,8 @@
     <string name="alert_update_title">ROM update available!</string>
     <string name="alert_download">Download</string>
     <string name="alert_downloading">Downloading&#8230;</string>
-    <string name="alert_unsupported_rom_title">Unsupported ROM</string>
-    <string name="alert_unsupported_rom_message">The ROM developer has not enabled support for the OTA Updater! Please ask them (kindly) to add support before using this app!\n\n(rom.ota.prop missing)</string>
-    <string name="alert_unsupported_kernel_title">Unsupported Kernel</string>
-    <string name="alert_unsupported_kernel_message">The Kernel developer has not enabled support for the OTA Updater! Please ask them (kindly) to add support before using this app!\n\n(kernel.ota.prop missing)</string>
+    <string name="alert_unsupported_title">Unsupported ROM/Kernel</string>
+    <string name="alert_unsupported_message">The ROM or Kernel developer has not enabled support in the ROM and/or Kernel for the OTA Updater! Please ask them (kindly) to add support before using this app!\n\n(rom.ota.prop and kernel.ota.prop missing)</string>
     <string name="alert_update_to">This update will update your ROM (%1$s) to version %2$s</string>
     <string name="alert_prune_title">Delete files older than</string>
     <string name="alert_retrieving">Retrieving Data&#8230;</string>

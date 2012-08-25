@@ -56,7 +56,7 @@ public class FetchRomInfoTask extends AsyncTask<Void, Void, RomInfo> {
     @Override
     protected RomInfo doInBackground(Void... notused) {
         if (!Utils.isRomOtaEnabled()) {
-            error = context.getString(R.string.alert_unsupported_rom_title);
+            error = context.getString(R.string.main_rom_unsupported_title);
             return null;
         }
         if (!Utils.dataAvailable(context)) {

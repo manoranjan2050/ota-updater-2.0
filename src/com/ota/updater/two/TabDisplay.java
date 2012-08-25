@@ -54,10 +54,10 @@ public class TabDisplay extends FragmentActivity {
 
         cfg = Config.getInstance(getApplicationContext());
 
-        if (!Utils.isRomOtaEnabled()) {
+        if (!Utils.isRomOtaEnabled() && !Utils.isKernelOtaEnabled()) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle(R.string.alert_unsupported_rom_title);
-            alert.setMessage(R.string.alert_unsupported_rom_message);
+            alert.setTitle(R.string.alert_unsupported_title);
+            alert.setMessage(R.string.alert_unsupported_message);
             alert.setCancelable(false);
             alert.setNegativeButton(R.string.alert_exit, new DialogInterface.OnClickListener() {
                 @Override

@@ -56,7 +56,7 @@ public class FetchKernelInfoTask extends AsyncTask<Void, Void, KernelInfo> {
     @Override
     protected KernelInfo doInBackground(Void... notused) {
         if (!Utils.isKernelOtaEnabled()) {
-            error = context.getString(R.string.alert_unsupported_kernel_title);
+            error = context.getString(R.string.main_kernel_unsupported_title);
             return null;
         }
         if (!Utils.dataAvailable(context)) {
