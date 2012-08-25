@@ -37,8 +37,9 @@ import com.ota.updater.two.utils.Utils;
 
 public class UpdateCheckReceiver extends BroadcastReceiver {
     @Override
-    public void onReceive(final Context context, Intent intent) {
-        final Config cfg = Config.getInstance(context.getApplicationContext());
+    public void onReceive(Context ctx, Intent intent) {
+        final Context context = ctx.getApplicationContext();
+        final Config cfg = Config.getInstance(context);
 
         if (cfg.hasStoredRomUpdate()) {
             RomInfo info = cfg.getStoredRomUpdate();
@@ -79,21 +80,21 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
         if (Utils.isRomOtaEnabled() || Utils.isKernelOtaEnabled()) {
             if (Utils.marketAvailable(context)) {
                 Log.v(Config.LOG_TAG + "Receiver", "Found market, trying GCM");
-                GCMRegistrar.checkDevice(context.getApplicationContext());
-                GCMRegistrar.checkManifest(context.getApplicationContext());
-                final String regId = GCMRegistrar.getRegistrationId(context.getApplicationContext());
+                GCMRegistrar.checkDevice(context);
+                GCMRegistrar.checkManifest(context);
+                final String regId = GCMRegistrar.getRegistrationId(context);
                 if (regId.length() != 0) {
                     if (cfg.upToDate()) {
                         Log.v(Config.LOG_TAG + "GCMRegister", "Already registered");
                     } else {
                         Log.v(Config.LOG_TAG + "GCMRegister", "Already registered, out-of-date, reregistering");
-                        GCMRegistrar.unregister(context.getApplicationContext());
-                        GCMRegistrar.register(context.getApplicationContext(), Config.GCM_SENDER_ID);
+                        GCMRegistrar.unregister(context);
+                        GCMRegistrar.register(context, Config.GCM_SENDER_ID);
                         cfg.setValuesToCurrent();
                         Log.v(Config.LOG_TAG + "GCMRegister", "GCM registered");
                     }
                 } else {
-                    GCMRegistrar.register(context.getApplicationContext(), Config.GCM_SENDER_ID);
+                    GCMRegistrar.register(context, Config.GCM_SENDER_ID);
                     Log.v(Config.LOG_TAG + "GCMRegister", "GCM registered");
                 }
             } else {

@@ -52,7 +52,8 @@ public class TabDisplay extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        cfg = Config.getInstance(getApplicationContext());
+        final Context context = getApplicationContext();
+        cfg = Config.getInstance(context);
 
         if (!Utils.isRomOtaEnabled() && !Utils.isKernelOtaEnabled()) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -75,35 +76,35 @@ public class TabDisplay extends FragmentActivity {
             alert.create().show();
 
             if (Utils.marketAvailable(this)) {
-                GCMRegistrar.checkDevice(getApplicationContext());
-                GCMRegistrar.checkManifest(getApplicationContext());
-                final String regId = GCMRegistrar.getRegistrationId(getApplicationContext());
+                GCMRegistrar.checkDevice(context);
+                GCMRegistrar.checkManifest(context);
+                final String regId = GCMRegistrar.getRegistrationId(context);
                 if (regId.length() != 0) {
-                    GCMRegistrar.unregister(getApplicationContext());
+                    GCMRegistrar.unregister(context);
                 }
             }
 
         } else {
             if (Utils.marketAvailable(this)) {
-                GCMRegistrar.checkDevice(getApplicationContext());
-                GCMRegistrar.checkManifest(getApplicationContext());
-                final String regId = GCMRegistrar.getRegistrationId(getApplicationContext());
+                GCMRegistrar.checkDevice(context);
+                GCMRegistrar.checkManifest(context);
+                final String regId = GCMRegistrar.getRegistrationId(context);
                 if (regId.length() != 0) {
                     if (cfg.upToDate()) {
                         Log.v(Config.LOG_TAG + "GCMRegister", "Already registered");
                     } else {
                         Log.v(Config.LOG_TAG + "GCMRegister", "Already registered, out-of-date, reregistering");
-                        GCMRegistrar.unregister(getApplicationContext());
-                        GCMRegistrar.register(getApplicationContext(), Config.GCM_SENDER_ID);
+                        GCMRegistrar.unregister(context);
+                        GCMRegistrar.register(context, Config.GCM_SENDER_ID);
                         cfg.setValuesToCurrent();
                         Log.v(Config.LOG_TAG + "GCMRegister", "GCM registered");
                     }
                 } else {
-                    GCMRegistrar.register(getApplicationContext(), Config.GCM_SENDER_ID);
+                    GCMRegistrar.register(context, Config.GCM_SENDER_ID);
                     Log.v(Config.LOG_TAG + "GCMRegister", "GCM registered");
                 }
             } else {
-                UpdateCheckReceiver.setAlarm(getApplicationContext());
+                UpdateCheckReceiver.setAlarm(context);
             }
         }
 

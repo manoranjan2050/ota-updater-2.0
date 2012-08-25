@@ -52,7 +52,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onMessage(Context ctx, Intent payload) {
-        final Config cfg = Config.getInstance(getApplicationContext());
+        final Context context = getApplicationContext();
+        final Config cfg = Config.getInstance(context);
 
         String msgType = payload.getStringExtra("type");
         if (msgType.equals("rom")) {
@@ -63,14 +64,14 @@ public class GCMIntentService extends GCMBaseIntentService {
             if (!Utils.isRomUpdate(info)) {
                 Log.v(Config.LOG_TAG + "GCM", "got rom GCM message, not update");
                 cfg.clearStoredRomUpdate();
-                Utils.clearRomUpdateNotif(getApplicationContext());
+                Utils.clearRomUpdateNotif(context);
                 return;
             }
 
             cfg.storeRomUpdate(info);
             if (cfg.getShowNotif()) {
                 Log.v(Config.LOG_TAG + "GCM", "got rom GCM message");
-                Utils.showRomUpdateNotif(ctx, info);
+                Utils.showRomUpdateNotif(context, info);
             } else {
                 Log.v(Config.LOG_TAG + "GCM", "got rom GCM message, notif not shown");
             }
@@ -82,14 +83,14 @@ public class GCMIntentService extends GCMBaseIntentService {
             if (!Utils.isKernelUpdate(info)) {
                 Log.v(Config.LOG_TAG + "GCM", "got kernel GCM message, not update");
                 cfg.clearStoredKernelUpdate();
-                Utils.clearKernelUpdateNotif(getApplicationContext());
+                Utils.clearKernelUpdateNotif(context);
                 return;
             }
 
             cfg.storeKernelUpdate(info);
             if (cfg.getShowNotif()) {
                 Log.v(Config.LOG_TAG + "GCM", "got kernel GCM message");
-                Utils.showKernelUpdateNotif(ctx, info);
+                Utils.showKernelUpdateNotif(context, info);
             } else {
                 Log.v(Config.LOG_TAG + "GCM", "got kernel GCM message, notif not shown");
             }
@@ -133,7 +134,8 @@ public class GCMIntentService extends GCMBaseIntentService {
                     return;
                 }
 
-                final Config cfg = Config.getInstance(getApplicationContext());
+                final Context context = getApplicationContext();
+                final Config cfg = Config.getInstance(context);
 
                 if (Utils.isRomOtaEnabled()) {
                     JSONObject jsonRom = json.getJSONObject("rom");
@@ -149,13 +151,13 @@ public class GCMIntentService extends GCMBaseIntentService {
                     if (Utils.isRomUpdate(info)) {
                         cfg.storeRomUpdate(info);
                         if (cfg.getShowNotif()) {
-                        	Utils.showRomUpdateNotif(getApplicationContext(), info);
+                        	Utils.showRomUpdateNotif(context, info);
                         } else {
                             Log.v(Config.LOG_TAG + "GCMRegister", "got rom update response, notif not shown");
                         }
                     } else {
                         cfg.clearStoredRomUpdate();
-                        Utils.clearRomUpdateNotif(getApplicationContext());
+                        Utils.clearRomUpdateNotif(context);
                     }
                 }
 
@@ -173,13 +175,13 @@ public class GCMIntentService extends GCMBaseIntentService {
                     if (Utils.isKernelUpdate(info)) {
                         cfg.storeKernelUpdate(info);
                         if (cfg.getShowNotif()) {
-                            Utils.showKernelUpdateNotif(getApplicationContext(), info);
+                            Utils.showKernelUpdateNotif(context, info);
                         } else {
                             Log.v(Config.LOG_TAG + "GCMRegister", "got kernel update response, notif not shown");
                         }
                     } else {
                         cfg.clearStoredKernelUpdate();
-                        Utils.clearKernelUpdateNotif(getApplicationContext());
+                        Utils.clearKernelUpdateNotif(context);
                     }
                 }
             } else {
