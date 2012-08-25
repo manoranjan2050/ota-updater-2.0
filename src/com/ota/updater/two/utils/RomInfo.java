@@ -16,9 +16,15 @@
 
 package com.ota.updater.two.utils;
 
+import java.io.File;
 import java.util.Date;
 
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+
+import com.ota.updater.two.R;
 
 public class RomInfo {
     public String romName;
@@ -54,5 +60,18 @@ public class RomInfo {
         i.putExtra("rom_info_url", url);
         i.putExtra("rom_info_md5", md5);
         i.putExtra("rom_info_date", Utils.formatDate(date));
+    }
+
+    public long fetchFile(Context ctx) {
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        request.setTitle(ctx.getString(R.string.notif_download));
+        request.setDescription(romName);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationUri(Uri.fromFile(new File(Config.ROM_DL_PATH_FILE, romName + "__" + version + ".zip")));
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI); //TODO check config for allow 3g download setting
+        request.setVisibleInDownloadsUi(true);
+
+        DownloadManager manager = (DownloadManager) ctx.getSystemService(Context.DOWNLOAD_SERVICE);
+        return manager.enqueue(request);
     }
 }
