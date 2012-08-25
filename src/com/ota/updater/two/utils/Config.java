@@ -146,13 +146,13 @@ public class Config {
         if (Utils.isRomOtaEnabled()) {
             if (lastRomID == null || curRomID == null) romIdUpToDate = false;
             else romIdUpToDate = curRomID.equals(lastRomID);
-        }
+        } else if (lastRomID != null) romIdUpToDate = false;
 
         boolean kernelIdUpToDate = true;
         if (Utils.isKernelOtaEnabled()) {
-            if (lastKernelID == null || curKernelID == null) romIdUpToDate = false;
+            if (lastKernelID == null || curKernelID == null) kernelIdUpToDate = false;
             else kernelIdUpToDate = curKernelID.equals(lastKernelID);
-        }
+        } else if (lastKernelID != null) kernelIdUpToDate = false;
 
         return curVersion == lastVersion && curDevice.equals(lastDevice) && romIdUpToDate && kernelIdUpToDate;
     }
