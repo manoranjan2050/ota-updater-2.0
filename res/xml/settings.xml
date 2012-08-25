@@ -37,6 +37,11 @@
             android:defaultValue="true" 
             android:key="wifidl_pref" />
         
+        <Preference
+            android:title="@string/settings_resetwarn_title"
+            android:summary="@string/settings_resetwarn_summary"
+            android:key="resetwarn_pref" />
+        
         <!-- 
         <Preference
             android:key="device_settings_pref"

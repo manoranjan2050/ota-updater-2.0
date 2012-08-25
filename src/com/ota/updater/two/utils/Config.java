@@ -58,6 +58,8 @@ public class Config {
 
     private boolean showNotif = true;
     private boolean wifiOnlyDl = true;
+    private boolean ignoredUnsupportedWarn = false;
+    private boolean ignoredDataWarn = false;
 
     private int lastVersion = -1;
     private String lastDevice = null;
@@ -80,6 +82,8 @@ public class Config {
 
         showNotif = PREFS.getBoolean("showNotif", showNotif);
         wifiOnlyDl = PREFS.getBoolean("wifiOnlyDl", wifiOnlyDl);
+        ignoredUnsupportedWarn = PREFS.getBoolean("ignoredUnsupportedWarn", ignoredUnsupportedWarn);
+        ignoredDataWarn = PREFS.getBoolean("ignoredDataWarn", ignoredDataWarn);
 
         lastDevice = PREFS.getString("device", lastDevice);
         lastVersion = PREFS.getInt("version", lastVersion);
@@ -140,6 +144,32 @@ public class Config {
         synchronized (PREFS) {
             SharedPreferences.Editor editor = PREFS.edit();
             editor.putBoolean("wifiOnlyDl", wifiOnlyDl);
+            editor.commit();
+        }
+    }
+
+    public boolean getIgnoredUnsupportedWarn() {
+        return ignoredUnsupportedWarn;
+    }
+
+    public void setIgnoredUnsupportedWarn(boolean ignored) {
+        this.ignoredUnsupportedWarn = ignored;
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.putBoolean("ignoredUnsupportedWarn", ignored);
+            editor.commit();
+        }
+    }
+
+    public boolean getIgnoredDataWarn() {
+        return ignoredDataWarn;
+    }
+
+    public void setIgnoredDataWarn(boolean ignored) {
+        this.ignoredDataWarn = ignored;
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.putBoolean("ignoredDataWarn", ignored);
             editor.commit();
         }
     }

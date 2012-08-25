@@ -160,5 +160,7 @@
     <string name="settings_wifidl_title">Downloads on Wi-Fi only</string>
     <string name="settings_wifidl_summary_on">Updates will only be downloaded when a Wi-Fi connection is available</string>
     <string name="settings_wifidl_summary_off">Updates will be downloaded on whatever connection is available.\n\nWARNING: Updates will download on the mobile network if Wi-Fi is unavailable. The updates may be quite large and possibly result in overage charges.</string>
+    <string name="settings_resetwarn_title">Reset ignored warnings</string>
+    <string name="settings_resetwarn_summary">Any warnings that have been ignored will be shown again.</string>
 
 </resources>

@@ -30,6 +30,7 @@ public class Settings extends PreferenceActivity {
 
     private CheckBoxPreference notifPref;
     private CheckBoxPreference wifidlPref;
+    private Preference resetWarnPref;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -44,6 +45,8 @@ public class Settings extends PreferenceActivity {
 
         wifidlPref = (CheckBoxPreference) findPreference("wifidl_pref");
         wifidlPref.setChecked(cfg.getWifiOnlyDl());
+
+        resetWarnPref = findPreference("resetwarn_pref");
     }
 
     @Override
@@ -54,6 +57,9 @@ public class Settings extends PreferenceActivity {
         } else if (preference == wifidlPref) {
             cfg.setWifiOnlyDl(wifidlPref.isChecked());
             return true;
+        } else if (preference == resetWarnPref) {
+            cfg.setIgnoredDataWarn(false);
+            cfg.setIgnoredUnsupportedWarn(false);
         }
         return false;
     }

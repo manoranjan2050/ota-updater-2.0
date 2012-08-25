@@ -57,24 +57,27 @@ public class TabDisplay extends FragmentActivity {
         cfg = Config.getInstance(context);
 
         if (!Utils.isRomOtaEnabled() && !Utils.isKernelOtaEnabled()) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle(R.string.alert_unsupported_title);
-            alert.setMessage(R.string.alert_unsupported_message);
-            alert.setCancelable(false);
-            alert.setNegativeButton(R.string.alert_exit, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    finish();
-                }
-            });
-            alert.setPositiveButton(R.string.alert_ignore, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.dismiss();
-				}
-			});
-            alert.create().show();
+            if (!cfg.getIgnoredUnsupportedWarn()) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle(R.string.alert_unsupported_title);
+                alert.setMessage(R.string.alert_unsupported_message);
+                alert.setCancelable(false);
+                alert.setNegativeButton(R.string.alert_exit, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                });
+                alert.setPositiveButton(R.string.alert_ignore, new DialogInterface.OnClickListener() {
+    				@Override
+    				public void onClick(DialogInterface dialog, int which) {
+    				    cfg.setIgnoredUnsupportedWarn(true);
+    					dialog.dismiss();
+    				}
+    			});
+                alert.create().show();
+            }
 
             if (Utils.marketAvailable(this)) {
                 GCMRegistrar.checkDevice(context);
