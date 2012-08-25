@@ -17,6 +17,12 @@
 <resources>
 
     <string name="app_name">OTA Updater</string>
+    <string name="app_stats">Anonymous Statistics</string>
+    <string name="app_stats_preview">Preview Data</string>
+    <string name="app_license">License</string>
+    <string name="app_downloads">Downloads</string>
+    <string name="app_accounts">Accounts</string>
+    <string name="app_settings">Settings</string>
 
     <string name="notif_text_rom">OTA ROM Update Available</string>
     <string name="notif_text_kernel">OTA Kernel Update Available</string>
