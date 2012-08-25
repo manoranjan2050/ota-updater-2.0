@@ -12,7 +12,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.Spinner;
+
+import com.ota.updater.two.utils.ImageAdapter;
 
 
 public class WallsTab extends Fragment implements OnItemSelectedListener {
@@ -38,7 +41,8 @@ public class WallsTab extends Fragment implements OnItemSelectedListener {
 		deviceWH = Integer.toString(screenWidth) + "x" + Integer.toString(screenHeight);
 	}
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.walls, container, false);
 
@@ -48,7 +52,19 @@ public class WallsTab extends Fragment implements OnItemSelectedListener {
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(cx, android.R.layout.simple_expandable_list_item_1, res_values);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
+
+		//Set device width & height as default in wallpaper search dropdown.
+		ArrayAdapter<String> drop_adap = (ArrayAdapter<String>) spinner.getAdapter();
+		int spinnerPosition = drop_adap.getPosition(deviceWH);
+		spinner.setSelection(spinnerPosition);
+
+
 		spinner.setOnItemSelectedListener(this);
+
+
+
+	    GridView gridview = (GridView) v.findViewById(R.id.gridview);
+	    gridview.setAdapter(new ImageAdapter(cx));
         return v;
     }
 
