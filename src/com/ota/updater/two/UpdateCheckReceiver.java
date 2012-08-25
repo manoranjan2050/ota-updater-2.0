@@ -116,7 +116,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                                 if (cfg.getShowNotif()) {
                                     Utils.showRomUpdateNotif(context, info);
                                 } else {
-                                    Log.v(Config.LOG_TAG + "Receiver", "found update, notif not shown");
+                                    Log.v(Config.LOG_TAG + "Receiver", "found rom update, notif not shown");
                                 }
                             } else {
                                 cfg.clearStoredRomUpdate();
@@ -145,7 +145,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                                 if (cfg.getShowNotif()) {
                                     Utils.showKernelUpdateNotif(context, info);
                                 } else {
-                                    Log.v(Config.LOG_TAG + "Receiver", "found update, notif not shown");
+                                    Log.v(Config.LOG_TAG + "Receiver", "found kernel update, notif not shown");
                                 }
                             } else {
                                 cfg.clearStoredKernelUpdate();
