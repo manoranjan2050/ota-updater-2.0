@@ -23,8 +23,10 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.ota.updater.two.utils.Config;
 import com.ota.updater.two.utils.FetchKernelInfoTask;
 import com.ota.updater.two.utils.FetchKernelInfoTask.KernelInfoListener;
 import com.ota.updater.two.utils.KernelInfo;
@@ -78,6 +80,7 @@ public class KernelTab extends PreferenceFragment {
 
     private void checkForKernelUpdates() {
         if (fetching) return;
+        final Config cfg = Config.getInstance(getActivity().getApplicationContext());
         new FetchKernelInfoTask(getActivity(), new KernelInfoListener() {
             @Override
             public void onStartLoading() {
@@ -90,8 +93,15 @@ public class KernelTab extends PreferenceFragment {
                     availUpdatePref.setSummary(getString(R.string.main_updates_error, "Unknown error"));
                     Toast.makeText(getActivity(), R.string.toast_fetch_error, Toast.LENGTH_SHORT).show();
                 } else if (Utils.isKernelUpdate(info)) {
-                    //TODO show rom update dialog
+                    cfg.storeKernelUpdate(info);
+                    if (cfg.getShowNotif()) {
+                        Utils.showKernelUpdateNotif(getActivity(), info);
+                    } else {
+                        Log.v(Config.LOG_TAG + "KernelTab", "found kernel update, notif not shown");
+                    }
+                    //TODO show kernel update dialog
                 } else {
+                    cfg.clearStoredKernelUpdate();
                     availUpdatePref.setSummary(R.string.main_updates_none);
                     Toast.makeText(getActivity(), R.string.toast_no_updates, Toast.LENGTH_SHORT).show();
                 }
