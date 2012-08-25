@@ -38,6 +38,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -327,6 +328,8 @@ public class Utils {
         return false;
     }
 
+    @TargetApi(11)
+    @SuppressWarnings("deprecation")
     public static void showRomUpdateNotif(Context ctx, RomInfo info) {
         Intent i = new Intent(ctx, TabDisplay.class);
         i.setAction(TabDisplay.ROM_NOTIF_ACTION);
@@ -335,14 +338,21 @@ public class Utils {
         NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        Notification.Builder builder = new Notification.Builder(ctx);
-        builder.setContentIntent(contentIntent);
-        builder.setContentTitle(ctx.getString(R.string.notif_source));
-        builder.setContentText(ctx.getString(R.string.notif_text_rom));
-        builder.setTicker(ctx.getString(R.string.notif_text_rom));
-        builder.setWhen(System.currentTimeMillis());
-        //builder.setSmallIcon(R.drawable.updates);
-        nm.notify(Config.ROM_NOTIF_ID, builder.getNotification());
+        Notification notif = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            Notification.Builder builder = new Notification.Builder(ctx);
+            builder.setContentIntent(contentIntent);
+            builder.setContentTitle(ctx.getString(R.string.notif_source));
+            builder.setContentText(ctx.getString(R.string.notif_text_rom));
+            builder.setTicker(ctx.getString(R.string.notif_text_rom));
+            builder.setWhen(System.currentTimeMillis());
+            builder.setSmallIcon(R.drawable.updates);
+            notif = builder.getNotification();
+        } else {
+            notif = new Notification(R.drawable.updates, ctx.getString(R.string.notif_text_rom), System.currentTimeMillis());
+            notif.setLatestEventInfo(ctx, ctx.getString(R.string.notif_source), ctx.getString(R.string.notif_text_rom), contentIntent);
+        }
+        nm.notify(Config.ROM_NOTIF_ID, notif);
     }
 
     public static void clearRomUpdateNotif(Context ctx) {
@@ -350,6 +360,8 @@ public class Utils {
         nm.cancel(Config.ROM_NOTIF_ID);
     }
 
+    @TargetApi(11)
+    @SuppressWarnings("deprecation")
     public static void showKernelUpdateNotif(Context ctx, KernelInfo info) {
         Intent i = new Intent(ctx, TabDisplay.class);
         i.setAction(TabDisplay.KERNEL_NOTIF_ACTION);
@@ -358,14 +370,21 @@ public class Utils {
         NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        Notification.Builder builder = new Notification.Builder(ctx);
-        builder.setContentIntent(contentIntent);
-        builder.setContentTitle(ctx.getString(R.string.notif_source));
-        builder.setContentText(ctx.getString(R.string.notif_text_kernel));
-        builder.setTicker(ctx.getString(R.string.notif_text_kernel));
-        builder.setWhen(System.currentTimeMillis());
-        //builder.setSmallIcon(R.drawable.updates);
-        nm.notify(Config.KERNEL_NOTIF_ID, builder.getNotification());
+        Notification notif = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            Notification.Builder builder = new Notification.Builder(ctx);
+            builder.setContentIntent(contentIntent);
+            builder.setContentTitle(ctx.getString(R.string.notif_source));
+            builder.setContentText(ctx.getString(R.string.notif_text_kernel));
+            builder.setTicker(ctx.getString(R.string.notif_text_kernel));
+            builder.setWhen(System.currentTimeMillis());
+            builder.setSmallIcon(R.drawable.updates);
+            notif = builder.getNotification();
+        } else {
+            notif = new Notification(R.drawable.updates, ctx.getString(R.string.notif_text_kernel), System.currentTimeMillis());
+            notif.setLatestEventInfo(ctx, ctx.getString(R.string.notif_source), ctx.getString(R.string.notif_text_kernel), contentIntent);
+        }
+        nm.notify(Config.KERNEL_NOTIF_ID, notif);
     }
 
     public static void clearKernelUpdateNotif(Context ctx) {
