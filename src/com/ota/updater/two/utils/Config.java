@@ -57,6 +57,7 @@ public class Config {
     }
 
     private boolean showNotif = true;
+    private boolean wifiOnlyDl = true;
 
     private int lastVersion = -1;
     private String lastDevice = null;
@@ -78,6 +79,7 @@ public class Config {
         PREFS = ctx.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 
         showNotif = PREFS.getBoolean("showNotif", showNotif);
+        wifiOnlyDl = PREFS.getBoolean("wifiOnlyDl", wifiOnlyDl);
 
         lastDevice = PREFS.getString("device", lastDevice);
         lastVersion = PREFS.getInt("version", lastVersion);
@@ -125,6 +127,19 @@ public class Config {
         synchronized (PREFS) {
             SharedPreferences.Editor editor = PREFS.edit();
             editor.putBoolean("showNotif", showNotif);
+            editor.commit();
+        }
+    }
+
+    public boolean getWifiOnlyDl() {
+        return wifiOnlyDl;
+    }
+
+    public void setWifiOnlyDl(boolean wifiOnlyDl) {
+        this.wifiOnlyDl = wifiOnlyDl;
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.putBoolean("wifiOnlyDl", wifiOnlyDl);
             editor.commit();
         }
     }

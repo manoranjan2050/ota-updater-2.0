@@ -17,21 +17,45 @@
 package com.ota.updater.two;
 
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceScreen;
 
-public class Settings extends PreferenceActivity implements OnPreferenceClickListener {
+import com.ota.updater.two.utils.Config;
+
+public class Settings extends PreferenceActivity {
+
+    private Config cfg;
+
+    private CheckBoxPreference notifPref;
+    private CheckBoxPreference wifidlPref;
 
     @Override
     @SuppressWarnings("deprecation")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
+
+        cfg = Config.getInstance(getApplicationContext());
+
+        notifPref = (CheckBoxPreference) findPreference("notif_pref");
+        notifPref.setChecked(cfg.getShowNotif());
+
+        wifidlPref = (CheckBoxPreference) findPreference("wifidl_pref");
+        wifidlPref.setChecked(cfg.getWifiOnlyDl());
     }
 
     @Override
-    public boolean onPreferenceClick(Preference preference) {
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+        if (preference == notifPref) {
+            cfg.setShowNotif(notifPref.isChecked());
+            return true;
+        } else if (preference == wifidlPref) {
+            cfg.setWifiOnlyDl(wifidlPref.isChecked());
+            return true;
+        }
         return false;
     }
+
 }

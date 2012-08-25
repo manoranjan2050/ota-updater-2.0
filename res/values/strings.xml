@@ -153,8 +153,12 @@
     <string name="settings_account_title">Add account</string>
     <string name="settings_account_summary">Log into your OTA Update Center account</string>
     <string name="settings_notif_title">Notify me of new updates</string>
-    <string name="settings_notif_summary">Whether or not the application should send you a notification for new updates</string>
+    <string name="settings_notif_summary_off">Update notifications will not be shown\nYou will have to open the app manually to see if there are updates</string>
+    <string name="settings_notif_summary_on">Update notifications will be shown</string>
     <string name="settings_device_title">Device Settings</string>
     <string name="settings_device_summary">Configure device-specific settings.\n(Caution: Only for advanced users!)</string>
+    <string name="settings_wifidl_title">Downloads on Wi-Fi only</string>
+    <string name="settings_wifidl_summary_on">Updates will only be downloaded when a Wi-Fi connection is available</string>
+    <string name="settings_wifidl_summary_off">Updates will be downloaded on whatever connection is available.\n\nWARNING: Updates will download on the mobile network if Wi-Fi is unavailable. The updates may be quite large and possibly result in overage charges.</string>
 
 </resources>

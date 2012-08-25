@@ -68,8 +68,11 @@ public class RomInfo {
         request.setDescription(romName);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setDestinationUri(Uri.fromFile(new File(Config.ROM_DL_PATH_FILE, romName + "__" + version + ".zip")));
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI); //TODO check config for allow 3g download setting
         request.setVisibleInDownloadsUi(true);
+
+        int netTypes = DownloadManager.Request.NETWORK_WIFI;
+        if (!Config.getInstance(ctx).getWifiOnlyDl()) netTypes |= DownloadManager.Request.NETWORK_MOBILE;
+        request.setAllowedNetworkTypes(netTypes);
 
         DownloadManager manager = (DownloadManager) ctx.getSystemService(Context.DOWNLOAD_SERVICE);
         return manager.enqueue(request);

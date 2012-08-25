@@ -25,14 +25,25 @@
 
         <CheckBoxPreference
             android:title="@string/settings_notif_title"
-            android:summary="@string/settings_notif_summary"
-            android:defaultValue="true" />
+            android:summaryOn="@string/settings_notif_summary_on"
+            android:summaryOff="@string/settings_notif_summary_off"
+            android:defaultValue="true"
+            android:key="notif_pref" />
 
+        <CheckBoxPreference 
+            android:title="@string/settings_wifidl_title"
+            android:summaryOn="@string/settings_wifidl_summary_on"
+            android:summaryOff="@string/settings_wifidl_summary_off"
+            android:defaultValue="true" 
+            android:key="wifidl_pref" />
+        
+        <!-- 
         <Preference
             android:key="device_settings_pref"
             android:title="@string/settings_device_title"
             android:summary="@string/settings_device_summary" />
-
+        -->
+        
     </PreferenceCategory>
 
 </PreferenceScreen>
