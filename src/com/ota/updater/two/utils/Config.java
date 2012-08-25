@@ -43,10 +43,17 @@ public class Config {
     public static final int WAKE_TIMEOUT = 30000;
 
     public static final String DL_PATH = "/" + Utils.getOSSdPath() + "/OTA-Updater/download/";
-    public static final File DL_PATH_FILE = new File(Config.DL_PATH);
+    public static final String ROM_DL_PATH = DL_PATH + "ROM/";
+    public static final String KERNEL_DL_PATH = DL_PATH + "kernel/";
+
+    public static final File DL_PATH_FILE = new File(DL_PATH);
+    public static final File ROM_DL_PATH_FILE = new File(ROM_DL_PATH);
+    public static final File KERNEL_DL_PATH_FILE = new File(KERNEL_DL_PATH);
 
     static {
         DL_PATH_FILE.mkdirs();
+        ROM_DL_PATH_FILE.mkdirs();
+        KERNEL_DL_PATH_FILE.mkdirs();
     }
 
     private boolean showNotif = true;
