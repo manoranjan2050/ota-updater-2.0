@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="res_array">
-        <item>1280x720</item>
-        <item>1024x600</item>
-    </string-array>
-</resources>
