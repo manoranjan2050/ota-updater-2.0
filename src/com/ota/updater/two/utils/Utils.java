@@ -261,7 +261,7 @@ public class Utils {
             JSONObject romOtaProp = new JSONObject(catResult.stdout);
             cachedRomID = romOtaProp.getString("otaid");
             cachedRomVer = romOtaProp.getString("otaver");
-            cachedRomDate = parseDate(romOtaProp.getString("otadate"));
+            cachedRomDate = parseDate(romOtaProp.getString("otatime"));
         } catch (JSONException e) {
             Log.e(Config.LOG_TAG + "ReadOTAProp", "Error in rom.ota.prop file!");
         }
@@ -278,7 +278,7 @@ public class Utils {
             JSONObject romOtaProp = new JSONObject(catResult.stdout);
             cachedKernelID = romOtaProp.getString("otaid");
             cachedKernelVer = romOtaProp.getString("otaver");
-            cachedKernelDate = parseDate(romOtaProp.getString("otadate"));
+            cachedKernelDate = parseDate(romOtaProp.getString("otatime"));
         } catch (JSONException e) {
             Log.e(Config.LOG_TAG + "ReadOTAProp", "Error in kernel.ota.prop file!");
         }
