@@ -70,7 +70,7 @@ public class FetchRomInfoTask extends AsyncTask<Void, Void, RomInfo> {
             params.add(new BasicNameValuePair("rom", Utils.getRomOtaID()));
 
             HttpClient client = new DefaultHttpClient();
-            HttpGet get = new HttpGet(Config.PULL_URL + "?" + URLEncodedUtils.format(params, "UTF-8"));
+            HttpGet get = new HttpGet(Config.ROM_PULL_URL + "?" + URLEncodedUtils.format(params, "UTF-8"));
             HttpResponse r = client.execute(get);
             int status = r.getStatusLine().getStatusCode();
             HttpEntity e = r.getEntity();

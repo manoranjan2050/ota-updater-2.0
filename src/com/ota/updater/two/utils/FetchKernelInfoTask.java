@@ -70,7 +70,7 @@ public class FetchKernelInfoTask extends AsyncTask<Void, Void, KernelInfo> {
             params.add(new BasicNameValuePair("kernel", Utils.getKernelOtaID()));
 
             HttpClient client = new DefaultHttpClient();
-            HttpGet get = new HttpGet(Config.PULL_URL + "?" + URLEncodedUtils.format(params, "UTF-8"));
+            HttpGet get = new HttpGet(Config.KERNEL_PULL_URL + "?" + URLEncodedUtils.format(params, "UTF-8"));
             HttpResponse r = client.execute(get);
             int status = r.getStatusLine().getStatusCode();
             HttpEntity e = r.getEntity();

@@ -30,7 +30,9 @@ public class Config {
 
     public static final String GCM_SENDER_ID = "1068482628480";
     public static final String GCM_REGISTER_URL = "https://www.otaupdatecenter.pro/pages/regdevice2.php";
-    public static final String PULL_URL = "https://www.otaupdatecenter.pro/pages/romupdate.php";
+
+    public static final String ROM_PULL_URL = "https://www.otaupdatecenter.pro/pages/rominfo.php";
+    public static final String KERNEL_PULL_URL = "https://www.otaupdatecenter.pro/pages/kernelinfo.php";
 
     public static final String OTA_SD_PATH_OS_PROP = "otaupdater.sdcard.os";
     public static final String OTA_SD_PATH_RECOVERY_PROP = "otaupdater.sdcard.recovery";
