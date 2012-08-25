@@ -19,10 +19,12 @@ package com.ota.updater.two.utils;
 import java.io.File;
 import java.util.Date;
 
+import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 
 import com.ota.updater.two.R;
 
@@ -62,13 +64,18 @@ public class RomInfo {
         i.putExtra("rom_info_date", Utils.formatDate(date));
     }
 
+    @TargetApi(11)
     public long fetchFile(Context ctx) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(ctx.getString(R.string.notif_download));
         request.setDescription(romName);
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationUri(Uri.fromFile(new File(Config.ROM_DL_PATH_FILE, romName + "__" + version + ".zip")));
         request.setVisibleInDownloadsUi(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        }
+
+        request.setDestinationUri(Uri.fromFile(
+                new File(Config.ROM_DL_PATH_FILE, Utils.sanitizeName(romName + "__" + version + ".zip"))));
 
         int netTypes = DownloadManager.Request.NETWORK_WIFI;
         if (!Config.getInstance(ctx).getWifiOnlyDl()) netTypes |= DownloadManager.Request.NETWORK_MOBILE;

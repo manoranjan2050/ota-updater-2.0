@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -468,6 +469,17 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static String sanitizeName(String name) {
+        if (name == null) return "";
+
+        name = Normalizer.normalize(name, Normalizer.Form.NFD);
+        name = name.replaceAll("[^\\p{ASCII}]","");
+        name = name.replace(' ', '_');
+        name = name.toLowerCase();
+
+        return name;
     }
 
     private static final char[] HEX_DIGITS = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
