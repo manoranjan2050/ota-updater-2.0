@@ -21,6 +21,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
@@ -88,10 +89,14 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                         Log.v(Config.LOG_TAG + "GCMRegister", "Already registered");
                     } else {
                         Log.v(Config.LOG_TAG + "GCMRegister", "Already registered, out-of-date, reregistering");
-                        GCMRegistrar.unregister(context);
-                        GCMRegistrar.register(context, Config.GCM_SENDER_ID);
                         cfg.setValuesToCurrent();
-                        Log.v(Config.LOG_TAG + "GCMRegister", "GCM registered");
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                Utils.updateGCMRegistration(context, regId);
+                                return null;
+                            }
+                        }.execute();
                     }
                 } else {
                     GCMRegistrar.register(context, Config.GCM_SENDER_ID);

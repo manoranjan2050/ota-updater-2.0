@@ -23,8 +23,17 @@ import java.io.InputStream;
 import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,6 +48,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -360,6 +370,104 @@ public class Utils {
     public static void clearKernelUpdateNotif(Context ctx) {
         NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.cancel(Config.KERNEL_NOTIF_ID);
+    }
+
+    public static void updateGCMRegistration(Context ctx, String regID) {
+        Log.v(Config.LOG_TAG + "updateGCM", "updating GCM reg infos");
+        ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+
+        params.add(new BasicNameValuePair("do", "register"));
+        params.add(new BasicNameValuePair("reg_id", regID));
+        params.add(new BasicNameValuePair("device", android.os.Build.DEVICE.toLowerCase()));
+        params.add(new BasicNameValuePair("device_id",
+                md5(((TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId())));
+
+        if (Utils.isRomOtaEnabled()) params.add(new BasicNameValuePair("rom_id", Utils.getRomOtaID()));
+        if (Utils.isKernelOtaEnabled()) params.add(new BasicNameValuePair("kernel_id", Utils.getKernelOtaID()));
+
+        try {
+            HttpClient http = new DefaultHttpClient();
+            HttpPost req = new HttpPost(Config.GCM_REGISTER_URL);
+            req.setEntity(new UrlEncodedFormEntity(params));
+
+            HttpResponse r = http.execute(req);
+            int status = r.getStatusLine().getStatusCode();
+            HttpEntity e = r.getEntity();
+            if (status == 200) {
+                String data = EntityUtils.toString(e);
+                if (data.length() == 0) {
+                    Log.w(Config.LOG_TAG + "updateGCM", "No response to registration");
+                    return;
+                }
+                JSONObject json = new JSONObject(data);
+
+                if (json.length() == 0) {
+                    Log.w(Config.LOG_TAG + "updateGCM", "Empty response to registration");
+                    return;
+                }
+
+                if (json.has("error")) {
+                    Log.e(Config.LOG_TAG + "updateGCM", json.getString("error"));
+                    return;
+                }
+
+                final Context context = ctx.getApplicationContext();
+                final Config cfg = Config.getInstance(context);
+
+                if (Utils.isRomOtaEnabled()) {
+                    JSONObject jsonRom = json.getJSONObject("rom");
+
+                    RomInfo info = new RomInfo(
+                            jsonRom.getString("rom"),
+                            jsonRom.getString("version"),
+                            jsonRom.getString("changelog"),
+                            jsonRom.getString("url"),
+                            jsonRom.getString("md5"),
+                            Utils.parseDate(jsonRom.getString("date")));
+
+                    if (Utils.isRomUpdate(info)) {
+                        cfg.storeRomUpdate(info);
+                        if (cfg.getShowNotif()) {
+                            Utils.showRomUpdateNotif(context, info);
+                        } else {
+                            Log.v(Config.LOG_TAG + "updateGCM", "got rom update response, notif not shown");
+                        }
+                    } else {
+                        cfg.clearStoredRomUpdate();
+                        Utils.clearRomUpdateNotif(context);
+                    }
+                }
+
+                if (Utils.isKernelOtaEnabled()) {
+                    JSONObject jsonKernel = json.getJSONObject("rom");
+
+                    KernelInfo info = new KernelInfo(
+                            jsonKernel.getString("rom"),
+                            jsonKernel.getString("version"),
+                            jsonKernel.getString("changelog"),
+                            jsonKernel.getString("url"),
+                            jsonKernel.getString("md5"),
+                            Utils.parseDate(jsonKernel.getString("date")));
+
+                    if (Utils.isKernelUpdate(info)) {
+                        cfg.storeKernelUpdate(info);
+                        if (cfg.getShowNotif()) {
+                            Utils.showKernelUpdateNotif(context, info);
+                        } else {
+                            Log.v(Config.LOG_TAG + "updateGCM", "got kernel update response, notif not shown");
+                        }
+                    } else {
+                        cfg.clearStoredKernelUpdate();
+                        Utils.clearKernelUpdateNotif(context);
+                    }
+                }
+            } else {
+                if (e != null) e.consumeContent();
+                Log.w(Config.LOG_TAG + "updateGCM", "registration response " + status);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static final char[] HEX_DIGITS = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };

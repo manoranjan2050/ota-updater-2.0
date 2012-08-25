@@ -27,6 +27,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentActivity;
@@ -94,10 +95,14 @@ public class TabDisplay extends FragmentActivity {
                         Log.v(Config.LOG_TAG + "GCMRegister", "Already registered");
                     } else {
                         Log.v(Config.LOG_TAG + "GCMRegister", "Already registered, out-of-date, reregistering");
-                        GCMRegistrar.unregister(context);
-                        GCMRegistrar.register(context, Config.GCM_SENDER_ID);
                         cfg.setValuesToCurrent();
-                        Log.v(Config.LOG_TAG + "GCMRegister", "GCM registered");
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                Utils.updateGCMRegistration(context, regId);
+                                return null;
+                            }
+                        }.execute();
                     }
                 } else {
                     GCMRegistrar.register(context, Config.GCM_SENDER_ID);
