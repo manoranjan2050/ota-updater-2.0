@@ -48,13 +48,14 @@ public class TabDisplay extends FragmentActivity {
     private ViewPager mViewPager;
     private TabsAdapter mTabsAdapter;
     private Config cfg;
+    public static Context cx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Context context = getApplicationContext();
-        cfg = Config.getInstance(context);
+        cx = getApplicationContext();
+        cfg = Config.getInstance(cx);
 
         if (!Utils.isRomOtaEnabled() && !Utils.isKernelOtaEnabled()) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -77,39 +78,41 @@ public class TabDisplay extends FragmentActivity {
             alert.create().show();
 
             if (Utils.marketAvailable(this)) {
-                GCMRegistrar.checkDevice(context);
-                GCMRegistrar.checkManifest(context);
-                final String regId = GCMRegistrar.getRegistrationId(context);
+                GCMRegistrar.checkDevice(cx);
+                GCMRegistrar.checkManifest(cx);
+                final String regId = GCMRegistrar.getRegistrationId(cx);
                 if (regId.length() != 0) {
-                    GCMRegistrar.unregister(context);
+                    GCMRegistrar.unregister(cx);
                 }
             }
 
         } else {
             if (Utils.marketAvailable(this)) {
-                GCMRegistrar.checkDevice(context);
-                GCMRegistrar.checkManifest(context);
-                final String regId = GCMRegistrar.getRegistrationId(context);
+                GCMRegistrar.checkDevice(cx);
+                GCMRegistrar.checkManifest(cx);
+                final String regId = GCMRegistrar.getRegistrationId(cx);
                 if (regId.length() != 0) {
                     if (cfg.upToDate()) {
                         Log.v(Config.LOG_TAG + "GCMRegister", "Already registered");
                     } else {
                         Log.v(Config.LOG_TAG + "GCMRegister", "Already registered, out-of-date, reregistering");
+                        GCMRegistrar.unregister(cx);
+                        GCMRegistrar.register(cx, Config.GCM_SENDER_ID);
                         cfg.setValuesToCurrent();
                         new AsyncTask<Void, Void, Void>() {
                             @Override
                             protected Void doInBackground(Void... params) {
-                                Utils.updateGCMRegistration(context, regId);
+                                Utils.updateGCMRegistration(cx, regId);
                                 return null;
                             }
                         }.execute();
                     }
                 } else {
-                    GCMRegistrar.register(context, Config.GCM_SENDER_ID);
+                    GCMRegistrar.register(cx, Config.GCM_SENDER_ID);
                     Log.v(Config.LOG_TAG + "GCMRegister", "GCM registered");
                 }
             } else {
-                UpdateCheckReceiver.setAlarm(context);
+                UpdateCheckReceiver.setAlarm(cx);
             }
         }
 
@@ -126,6 +129,7 @@ public class TabDisplay extends FragmentActivity {
         mTabsAdapter.addTab(bar.newTab().setText(R.string.main_about), AboutTab.class, null);
         mTabsAdapter.addTab(bar.newTab().setText(R.string.main_rom), ROMTab.class, null);
         mTabsAdapter.addTab(bar.newTab().setText(R.string.main_kernel), KernelTab.class, null);
+        mTabsAdapter.addTab(bar.newTab().setText(R.string.main_walls), WallsTab.class, null);
 
         if (savedInstanceState != null) {
             bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));

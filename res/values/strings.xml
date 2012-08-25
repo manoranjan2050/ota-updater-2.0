@@ -87,7 +87,8 @@
     <string name="about_stats_summary">Help us improve the app by opting into annonymous statistics reporting</string>
     <string name="about_uptodate">Keep Up-to-Date!</string>
     <string name="about_follow_title">Follow us on Google+</string>
-
+	
+    <string name="main_walls">Wallpapers</string>
     <string name="main_device">Device</string>
     <string name="main_rom">ROM</string>
     <string name="main_rom_info">ROM Information</string>
