@@ -84,14 +84,22 @@
     <string name="about_uptodate">Keep Up-to-Date!</string>
     <string name="about_follow_title">Follow us on Google+</string>
 
-    <string name="main_device_info">Device Information</string>
     <string name="main_device">Device</string>
     <string name="main_rom">ROM</string>
+    <string name="main_rom_info">ROM Information</string>
+    <string name="main_rom_unsupported_title">Unsupported ROM</string>
+    <string name="main_rom_unsupported_summary">The ROM developer has not enabled support for the OTA Updater! Please ask them (kindly) to add support before using this app!\n\n(rom.ota.prop missing)</string>
     <string name="main_kernel">Kernel</string>
+    <string name="main_kernel_info">Kernel Information</string>
+    <string name="main_kernel_unsupported_title">Unsupported Kernel</string>
+    <string name="main_kernel_unsupported_summary">The Kernel developer has not enabled support for the OTA Updater! Please ask them (kindly) to add support before using this app!\n\n(kernel.ota.prop missing)</string>
     <string name="main_about">About</string>
-    <string name="main_version">ROM Version</string>
+    <string name="main_rom_version">ROM Version</string>
+    <string name="main_kernel_version">Kernel Version</string>
+    <string name="main_kernel_version_unknown">Unknown Kernel Version</string>
     <string name="main_otaid">OTA Updater ID</string>
-    <string name="main_updates">Updates</string>
+    <string name="main_rom_updates">ROM Updates</string>
+    <string name="main_kernel_updates">Kernel Updates</string>
     <string name="main_updates_check">Check for available updates</string>
     <string name="main_avail_updates">Available Updates</string>
     <string name="main_updates_none">No updates available</string>

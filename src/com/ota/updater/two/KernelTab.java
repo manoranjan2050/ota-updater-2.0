@@ -16,126 +16,92 @@
 
 package com.ota.updater.two;
 
-import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.widget.Toast;
 
+import com.ota.updater.two.utils.FetchKernelInfoTask;
+import com.ota.updater.two.utils.FetchKernelInfoTask.KernelInfoListener;
+import com.ota.updater.two.utils.KernelInfo;
 import com.ota.updater.two.utils.Utils;
 
-//TODO make backend, make it work, fix, fix, fix
-//XXX do not use for now...
-
-@SuppressWarnings("deprecation")
 public class KernelTab extends PreferenceFragment {
-    public final static String URL = "http://dl.dropbox.com/u/44265003/update.json";
+
+    private boolean fetching = false;
+    private Preference availUpdatePref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.kernel);
+        if (Utils.isKernelOtaEnabled()) {
+            addPreferencesFromResource(R.xml.kernel);
 
-        final String kernelVersion = System.getProperty("os.version");
-
-        Preference kernelVer = findPreference("kernel_version");
-        kernelVer.setSummary(kernelVersion);
-
-        Preference kernelCustom = findPreference("kernel_custom");
-
-        if (kernelVersion.toLowerCase().contains("ninphetamin3")) {
-            kernelCustom.setSummary("VillainROM supported kernel!\nClick here to check for updates.");
-            kernelCustom.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    new Read().execute();
-                    return false;
-                }
-            });
-        } else {
-            kernelCustom.setSummary("Not a VillainROM supported kernel." + "\n" + "What does this mean?");
-            kernelCustom.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                    alertDialog.setTitle("Why is my kernel unsupported?");
-                    alertDialog.setMessage("Unfortunately due to hosting and compatibility, not all kernels for your device can be supported in this application. While we would like to include as many as possible, it is not viable to include all custom kernels for a myriad of devices. Sorry!");
-                    alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //here you can add functions
-                        }
-                    });
-                    alertDialog.show();
-                    return false;
-                }
-            });
-        }
-    }
-
-    public class Display {
-        public String mKernel;
-        public String mUrl;
-
-        public Display (String rom, String downurl) {
-            mKernel = rom;
-            mUrl = downurl;
-        }
-    }
-
-    public JSONObject getKernelV() throws ClientProtocolException, IOException, JSONException{
-        HttpClient client = new DefaultHttpClient();
-        StringBuilder url = new StringBuilder(URL);
-        HttpGet get = new HttpGet(url.toString());
-        HttpResponse r = client.execute(get);
-        int status = r.getStatusLine().getStatusCode();
-        if (status == 200) {
-            HttpEntity e = r.getEntity();
-            String data = EntityUtils.toString(e);
-            JSONObject stream = new JSONObject(data);
-            JSONObject tweaks = stream.getJSONObject("avail-tweaks");
-            return tweaks;
-        } else {
-            return null;
-        }
-    }
-
-    public class Read extends AsyncTask<String, Integer, Display> {
-        @Override
-        protected Display doInBackground(String... params) {
-            final String device = params[0];
-            try {
-                JSONObject json = getKernelV().getJSONObject("device").getJSONArray(device).getJSONObject(0);
-                String downurl = json.getString("url");
-                String build = json.getString("rom");
-
-                return new Display(downurl, build);
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-                Utils.toastWrapper(getActivity(), "A server issue occured, please try again.", Toast.LENGTH_LONG);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Utils.toastWrapper(getActivity(), "Error whilst reading content.", Toast.LENGTH_LONG);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Utils.toastWrapper(getActivity(), "No content for your device.", Toast.LENGTH_LONG);
+            String kernelVersion = Utils.getKernelOtaVersion();
+            if (kernelVersion == null) kernelVersion = getString(R.string.main_kernel_version_unknown);
+            Date kernelDate = Utils.getKernelOtaDate();
+            if (kernelDate != null) {
+                kernelVersion += " (" + DateFormat.getDateTimeInstance().format(kernelDate) + ")";
             }
-            return null;
+
+            final Preference device = findPreference("device_view");
+            device.setSummary(android.os.Build.DEVICE.toLowerCase());
+            final Preference kernel = findPreference("kernel_view");
+            kernel.setSummary(Utils.getKernelVersion());
+            final Preference version = findPreference("version_view");
+            version.setSummary(kernelVersion);
+            final Preference build = findPreference("otaid_view");
+            build.setSummary(Utils.getKernelOtaID());
+
+            availUpdatePref = findPreference("avail_updates");
+        } else {
+            addPreferencesFromResource(R.xml.kernel_unsupported);
+
+            final Preference device = findPreference("device_view");
+            device.setSummary(android.os.Build.DEVICE.toLowerCase());
+            final Preference kernel = findPreference("kernel_view");
+            kernel.setSummary(Utils.getKernelVersion());
         }
+    }
+
+    @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+        if (preference == availUpdatePref) {
+            if (!fetching) checkForKernelUpdates();
+        }
+        return false;
+    }
+
+    private void checkForKernelUpdates() {
+        if (fetching) return;
+        new FetchKernelInfoTask(getActivity(), new KernelInfoListener() {
+            @Override
+            public void onStartLoading() {
+                fetching = true;
+            }
+            @Override
+            public void onLoaded(KernelInfo info) {
+                fetching = false;
+                if (info == null) {
+                    availUpdatePref.setSummary(getString(R.string.main_updates_error, "Unknown error"));
+                    Toast.makeText(getActivity(), R.string.toast_fetch_error, Toast.LENGTH_SHORT).show();
+                } else if (Utils.isKernelUpdate(info)) {
+                    //TODO show rom update dialog
+                } else {
+                    availUpdatePref.setSummary(R.string.main_updates_none);
+                    Toast.makeText(getActivity(), R.string.toast_no_updates, Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onError(String error) {
+                fetching = false;
+                availUpdatePref.setSummary(getString(R.string.main_updates_error, error));
+                Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+            }
+        }).execute();
     }
 }

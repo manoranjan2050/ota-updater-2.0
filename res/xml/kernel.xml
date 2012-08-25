@@ -17,16 +17,38 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/kernel_title">
+        android:title="@string/main_kernel_info">
 
         <Preference
-            android:key="kernel_version"
-            android:title="@string/kernel_ver_title" />
+            android:title="@string/main_device"
+            android:icon="@drawable/device"
+            android:key="device_view" />
 
         <Preference
-            android:key="kernel_custom"
-            android:title="@string/kernel_supported_title" />
+            android:title="@string/main_kernel"
+            android:icon="@drawable/hammer"
+            android:key="rom_view" />
 
+        <Preference
+            android:title="@string/main_kernel_version"
+            android:icon="@drawable/version"
+            android:key="version_view" />
+
+        <Preference
+            android:title="@string/main_otaid"
+            android:icon="@drawable/key"
+            android:key="otaid_view" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/main_kernel_updates">
+        
+        <Preference
+            android:title="@string/main_avail_updates"
+            android:icon="@drawable/cloud"
+            android:key="avail_updates" />
+            
     </PreferenceCategory>
 
 </PreferenceScreen>

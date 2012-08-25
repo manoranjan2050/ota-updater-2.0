@@ -55,6 +55,7 @@ public class Utils {
     private static String cachedKernelID = null;
     private static Date cachedKernelDate = null;
     private static String cachedKernelVer = null;
+    private static String cachedKernelUname = null;
 
     private static String cachedOSSdPath = null;
     private static String cachedRcvrySdPath = null;
@@ -94,20 +95,6 @@ public class Utils {
             }
         }
         return "";
-    }
-
-    public static String getVersion() {
-        ShellCommand cmd = new ShellCommand();
-        CommandResult modversion = cmd.sh.runWaitFor("getprop ro.modversion");
-        if (modversion.stdout.length() != 0) return modversion.stdout;
-
-        CommandResult cmversion = cmd.sh.runWaitFor("getprop ro.cm.version");
-        if (cmversion.stdout.length() != 0) return cmversion.stdout;
-
-        CommandResult aokpversion = cmd.sh.runWaitFor("getprop ro.aokp.version");
-        if (aokpversion.stdout.length() != 0) return aokpversion.stdout;
-
-        return Build.DISPLAY;
     }
 
     public static void toastWrapper(final Activity activity, final CharSequence text, final int duration) {
@@ -184,6 +171,20 @@ public class Utils {
         return cachedRomVer;
     }
 
+    public static String getRomVersion() {
+        ShellCommand cmd = new ShellCommand();
+        CommandResult modversion = cmd.sh.runWaitFor("getprop ro.modversion");
+        if (modversion.stdout.length() != 0) return modversion.stdout;
+
+        CommandResult cmversion = cmd.sh.runWaitFor("getprop ro.cm.version");
+        if (cmversion.stdout.length() != 0) return cmversion.stdout;
+
+        CommandResult aokpversion = cmd.sh.runWaitFor("getprop ro.aokp.version");
+        if (aokpversion.stdout.length() != 0) return aokpversion.stdout;
+
+        return Build.DISPLAY;
+    }
+
     public static String getKernelOtaID() {
         if (!isKernelOtaEnabled()) return null;
         if (cachedKernelID == null) {
@@ -206,6 +207,16 @@ public class Utils {
             readKernelOtaProp();
         }
         return cachedKernelVer;
+    }
+
+    public static String getKernelVersion() {
+        if (cachedKernelUname == null) {
+            ShellCommand cmd = new ShellCommand();
+            CommandResult propResult = cmd.sh.runWaitFor("uname -r -v");
+            if (propResult.stdout.length() == 0) return null;
+            cachedKernelUname = propResult.stdout;
+        }
+        return cachedKernelUname;
     }
 
     public static String getOSSdPath() {

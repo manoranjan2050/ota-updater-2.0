@@ -117,7 +117,7 @@ public class TabDisplay extends FragmentActivity {
         bar.setTitle(R.string.app_name);
 
         mTabsAdapter = new TabsAdapter(this, mViewPager);
-        //mTabsAdapter.addTab(bar.newTab().setText(R.string.main_kernel), KernelTab.class, null);
+        mTabsAdapter.addTab(bar.newTab().setText(R.string.main_kernel), KernelTab.class, null);
         mTabsAdapter.addTab(bar.newTab().setText(R.string.main_rom), ROMTab.class, null);
         mTabsAdapter.addTab(bar.newTab().setText(R.string.main_about), AboutTab.class, null);
 

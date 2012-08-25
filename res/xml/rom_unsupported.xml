@@ -23,31 +23,26 @@
             android:title="@string/main_device"
             android:icon="@drawable/device"
             android:key="device_view" />
-
+        
         <Preference
             android:title="@string/main_rom"
             android:icon="@drawable/hammer"
             android:key="rom_view" />
-
+        
         <Preference
             android:title="@string/main_rom_version"
             android:icon="@drawable/version"
             android:key="version_view" />
 
-        <Preference
-            android:title="@string/main_otaid"
-            android:icon="@drawable/key"
-            android:key="otaid_view" />
-
     </PreferenceCategory>
-
+    
     <PreferenceCategory
-        android:title="@string/main_rom_updates">
+        android:title="@string/main_rom_unsupported_title">
         
         <Preference
-            android:title="@string/main_avail_updates"
-            android:icon="@drawable/cloud"
-            android:key="avail_updates" />
+            android:title="@string/main_rom_unsupported_title"
+            android:summary="@string/main_rom_unsupported_summary"
+            android:icon="@drawable/cloud" />
             
     </PreferenceCategory>
 
