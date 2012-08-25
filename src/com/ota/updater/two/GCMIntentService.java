@@ -63,6 +63,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             if (!Utils.isRomUpdate(info)) {
                 Log.v(Config.LOG_TAG + "GCM", "got rom GCM message, not update");
                 cfg.clearStoredRomUpdate();
+                Utils.clearRomUpdateNotif(getApplicationContext());
                 return;
             }
 
@@ -81,6 +82,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             if (!Utils.isKernelUpdate(info)) {
                 Log.v(Config.LOG_TAG + "GCM", "got kernel GCM message, not update");
                 cfg.clearStoredKernelUpdate();
+                Utils.clearKernelUpdateNotif(getApplicationContext());
                 return;
             }
 
@@ -153,6 +155,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                         }
                     } else {
                         cfg.clearStoredRomUpdate();
+                        Utils.clearRomUpdateNotif(getApplicationContext());
                     }
                 }
 
@@ -176,6 +179,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                         }
                     } else {
                         cfg.clearStoredKernelUpdate();
+                        Utils.clearKernelUpdateNotif(getApplicationContext());
                     }
                 }
             } else {

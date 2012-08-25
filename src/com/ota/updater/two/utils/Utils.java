@@ -331,7 +331,12 @@ public class Utils {
         builder.setTicker(ctx.getString(R.string.notif_text_rom));
         builder.setWhen(System.currentTimeMillis());
         //builder.setSmallIcon(R.drawable.updates);
-        nm.notify(1, builder.getNotification());
+        nm.notify(Config.ROM_NOTIF_ID, builder.getNotification());
+    }
+
+    public static void clearRomUpdateNotif(Context ctx) {
+        NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.cancel(Config.ROM_NOTIF_ID);
     }
 
     public static void showKernelUpdateNotif(Context ctx, KernelInfo info) {
@@ -349,7 +354,12 @@ public class Utils {
         builder.setTicker(ctx.getString(R.string.notif_text_kernel));
         builder.setWhen(System.currentTimeMillis());
         //builder.setSmallIcon(R.drawable.updates);
-        nm.notify(1, builder.getNotification());
+        nm.notify(Config.KERNEL_NOTIF_ID, builder.getNotification());
+    }
+
+    public static void clearKernelUpdateNotif(Context ctx) {
+        NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.cancel(Config.KERNEL_NOTIF_ID);
     }
 
     private static final char[] HEX_DIGITS = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };

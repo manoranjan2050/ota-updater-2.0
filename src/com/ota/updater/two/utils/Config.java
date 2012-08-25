@@ -37,6 +37,9 @@ public class Config {
     public static final String OTA_SD_PATH_OS_PROP = "otaupdater.sdcard.os";
     public static final String OTA_SD_PATH_RECOVERY_PROP = "otaupdater.sdcard.recovery";
 
+    public static final int ROM_NOTIF_ID = 1;
+    public static final int KERNEL_NOTIF_ID = 2;
+
     public static final int WAKE_TIMEOUT = 30000;
 
     public static final String DL_PATH = "/" + Utils.getOSSdPath() + "/OTA-Updater/download/";

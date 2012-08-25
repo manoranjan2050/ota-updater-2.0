@@ -52,6 +52,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
             } else {
                 Log.v(Config.LOG_TAG + "Receiver", "Found invalid stored rom update");
                 cfg.clearStoredRomUpdate();
+                Utils.clearRomUpdateNotif(context);
             }
         } else {
             Log.v(Config.LOG_TAG + "Receiver", "No stored rom update");
@@ -69,6 +70,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
             } else {
                 Log.v(Config.LOG_TAG + "Receiver", "Found invalid stored kernel update");
                 cfg.clearStoredKernelUpdate();
+                Utils.clearKernelUpdateNotif(context);
             }
         } else {
             Log.v(Config.LOG_TAG + "Receiver", "No stored kernel update");
@@ -120,6 +122,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                                 }
                             } else {
                                 cfg.clearStoredRomUpdate();
+                                Utils.clearRomUpdateNotif(context);
                             }
 
                             romWL.release();
@@ -149,6 +152,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                                 }
                             } else {
                                 cfg.clearStoredKernelUpdate();
+                                Utils.clearKernelUpdateNotif(context);
                             }
 
                             kernelWL.release();

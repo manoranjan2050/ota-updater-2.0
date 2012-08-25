@@ -102,6 +102,7 @@ public class KernelTab extends PreferenceFragment {
                     //TODO show kernel update dialog
                 } else {
                     cfg.clearStoredKernelUpdate();
+                    Utils.clearKernelUpdateNotif(getActivity());
                     availUpdatePref.setSummary(R.string.main_updates_none);
                     Toast.makeText(getActivity(), R.string.toast_no_updates, Toast.LENGTH_SHORT).show();
                 }

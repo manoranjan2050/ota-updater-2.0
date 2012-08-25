@@ -104,6 +104,7 @@ public class ROMTab extends PreferenceFragment {
                     //TODO show rom update dialog
                 } else {
                     cfg.clearStoredRomUpdate();
+                    Utils.clearRomUpdateNotif(getActivity());
                     availUpdatePref.setSummary(R.string.main_updates_none);
                     Toast.makeText(getActivity(), R.string.toast_no_updates, Toast.LENGTH_SHORT).show();
                 }
