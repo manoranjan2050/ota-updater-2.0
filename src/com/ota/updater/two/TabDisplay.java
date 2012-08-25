@@ -97,9 +97,7 @@ public class TabDisplay extends FragmentActivity {
                     if (cfg.upToDate()) {
                         Log.v(Config.LOG_TAG + "GCMRegister", "Already registered");
                     } else {
-                        Log.v(Config.LOG_TAG + "GCMRegister", "Already registered, out-of-date, reregistering");
-                        GCMRegistrar.unregister(context);
-                        GCMRegistrar.register(context, Config.GCM_SENDER_ID);
+                        Log.v(Config.LOG_TAG + "GCMRegister", "Already registered, out-of-date");
                         cfg.setValuesToCurrent();
                         new AsyncTask<Void, Void, Void>() {
                             @Override

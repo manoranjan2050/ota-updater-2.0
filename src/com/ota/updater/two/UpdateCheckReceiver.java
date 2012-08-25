@@ -88,7 +88,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                     if (cfg.upToDate()) {
                         Log.v(Config.LOG_TAG + "GCMRegister", "Already registered");
                     } else {
-                        Log.v(Config.LOG_TAG + "GCMRegister", "Already registered, out-of-date, reregistering");
+                        Log.v(Config.LOG_TAG + "GCMRegister", "Already registered, out-of-date");
                         cfg.setValuesToCurrent();
                         new AsyncTask<Void, Void, Void>() {
                             @Override
