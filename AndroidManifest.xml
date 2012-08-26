@@ -67,21 +67,6 @@
         </receiver>
 
         <activity
-            android:name=".KernelTab"
-            android:label="@string/app_name">
-        </activity>
-        
-        <activity 
-            android:name=".WallsTab"
-            android:label="@string/app_name">
-        </activity>
-        
-        <activity
-            android:name=".FeedbackTab"
-            android:label="@string/app_name">
-        </activity>
-
-        <activity
             android:name=".License"
             android:label="@string/app_license">
         </activity>
