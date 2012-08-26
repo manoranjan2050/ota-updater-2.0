@@ -15,7 +15,7 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ota.updater.two"
+    package="com.otaupdater"
     android:versionCode="1"
     android:versionName="1.90-alpha">
 
@@ -87,17 +87,17 @@
         </activity>
 
         <activity
-            android:name="com.ota.updater.two.stats.AnonymousStats"
+            android:name=".stats.AnonymousStats"
             android:label="@string/app_stats">
         </activity>
 
         <activity
-            android:name="com.ota.updater.two.stats.PreviewData"
+            android:name=".stats.PreviewData"
             android:label="@string/app_stats_preview">
         </activity>
 
         <receiver
-            android:name="com.ota.updater.two.stats.ReportingServiceManager"
+            android:name=".stats.ReportingServiceManager"
             android:enabled="true"
             android:exported="false"
             android:label="ReportingServiceManager">
@@ -112,7 +112,7 @@
            	android:label="ReportingService"
            	android:enabled="true"
            	android:exported="false"
-           	android:name="com.ota.updater.two.stats.ReportingService">
+           	android:name=".stats.ReportingService">
         </service>
 
         <activity
