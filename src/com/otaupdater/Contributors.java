@@ -27,7 +27,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-public class License extends Activity {
+public class Contributors extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +38,7 @@ public class License extends Activity {
             data = new StringBuilder();
             char[] buf = new char[4096];
             int numRead;
-            in = new BufferedReader(new InputStreamReader(getAssets().open("license.txt")));
+            in = new BufferedReader(new InputStreamReader(getAssets().open("contrib.txt")));
             while ((numRead = in.read(buf)) >= 0) {
                 data.append(buf, 0, numRead);
             }
@@ -71,7 +71,7 @@ public class License extends Activity {
     }
 
     private void showErrorAndFinish() {
-        Toast.makeText(this, R.string.toast_license_file_error, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.toast_contrib_file_error, Toast.LENGTH_LONG).show();
         finish();
     }
 }

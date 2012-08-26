@@ -33,6 +33,7 @@ public class AboutTab extends PreferenceFragment implements OnPreferenceClickLis
 
     private Preference aboutOtaUpdater;
     private Preference license;
+    private Preference contribPref;
     private Preference stats;
     private Preference followGPlus;
 
@@ -64,6 +65,9 @@ public class AboutTab extends PreferenceFragment implements OnPreferenceClickLis
 
         followGPlus = findPreference("follow_gplus_pref");
         followGPlus.setOnPreferenceClickListener(this);
+
+        contribPref = findPreference("contrib_pref");
+        contribPref.setOnPreferenceClickListener(this);
     }
 
     @Override
@@ -87,6 +91,11 @@ public class AboutTab extends PreferenceFragment implements OnPreferenceClickLis
         } else if (preference == followGPlus) {
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(Config.GPLUS_URL));
+            startActivity(i);
+
+            return true;
+        } else if (preference == contribPref) {
+            Intent i = new Intent(getActivity(), Contributors.class);
             startActivity(i);
 
             return true;

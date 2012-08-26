@@ -85,6 +85,11 @@
             android:name=".License"
             android:label="@string/app_license">
         </activity>
+        
+        <activity 
+            android:name=".Contributors"
+            android:label="@string/app_contrib">
+        </activity>
 
         <activity
             android:name=".stats.AnonymousStats"

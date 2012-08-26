@@ -20,6 +20,7 @@
     <string name="app_stats">Anonymous Statistics</string>
     <string name="app_stats_preview">Preview Data</string>
     <string name="app_license">License</string>
+    <string name="app_contrib">Contributors</string>
     <string name="app_downloads">Downloads</string>
     <string name="app_accounts">Accounts</string>
     <string name="app_settings">Settings</string>
@@ -76,6 +77,8 @@
     <string name="toast_download_interrupted">The download was interrupted!</string>
     <string name="toast_download_md5_mismatch">MD5 error - downloaded file invalid!</string>
     <string name="toast_download_error">There was an error with the download!</string>
+    <string name="toast_contrib_file_error">Error loading contributors file</string>
+    <string name="toast_license_file_error">Error loading contributors file</string>
 
     <string name="about_title">About</string>
     <string name="about_ota_title">OTA Updater</string>
@@ -83,6 +86,7 @@
     <string name="about_version_title">Version</string>
     <string name="about_version_unknown">Unkown Version (error in package manager)</string>
     <string name="about_license_title">Open-Source License</string>
+    <string name="about_contrib_title">Contributors</string>
     <string name="about_stats_title">Statistics</string>
     <string name="about_stats_summary">Help us improve the app by opting into annonymous statistics reporting</string>
     <string name="about_uptodate">Keep Up-to-Date!</string>
@@ -147,8 +151,6 @@
 
     <string name="loading_dialog_title">Loading&#8230;</string>
 
-    <string name="contributors_title">Contributors</string>
-    <string name="contributors_error">Error loading file.</string>
 
     <string name="settings_title">OTA Updater Settings</string>
     <string name="settings_account_title">Add account</string>
