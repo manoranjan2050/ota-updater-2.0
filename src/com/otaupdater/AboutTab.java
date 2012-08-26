@@ -23,13 +23,13 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 
 import com.otaupdater.stats.AnonymousStats;
 import com.otaupdater.utils.Config;
 
-public class AboutTab extends PreferenceFragment implements OnPreferenceClickListener {
+public class AboutTab extends PreferenceFragment {
 
     private Preference aboutOtaUpdater;
     private Preference license;
@@ -42,9 +42,6 @@ public class AboutTab extends PreferenceFragment implements OnPreferenceClickLis
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.about);
 
-        aboutOtaUpdater = findPreference("about_toolkit");
-        aboutOtaUpdater.setOnPreferenceClickListener(this);
-
         PackageInfo pInfo = null;
         try {
             Context ctx = getActivity().getApplicationContext();
@@ -54,52 +51,39 @@ public class AboutTab extends PreferenceFragment implements OnPreferenceClickLis
         }
         String version = pInfo == null ? getString(R.string.about_version_unknown) : pInfo.versionName;
 
-        Preference aboutAppVersion = findPreference("about_app");
+        Preference aboutAppVersion = findPreference("version_pref");
         aboutAppVersion.setSummary(version);
 
-        license = findPreference("opensource_license");
-        license.setOnPreferenceClickListener(this);
-
-        Preference stats = findPreference("toolkit_stats");
-        stats.setOnPreferenceClickListener(this);
-
-        followGPlus = findPreference("follow_gplus_pref");
-        followGPlus.setOnPreferenceClickListener(this);
-
+        aboutOtaUpdater = findPreference("about_pref");
+        license = findPreference("license_pref");
         contribPref = findPreference("contrib_pref");
-        contribPref.setOnPreferenceClickListener(this);
+        stats = findPreference("stats_pref");
+        followGPlus = findPreference("follow_gplus_pref");
     }
 
     @Override
-    public boolean onPreferenceClick(Preference preference) {
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         if (preference == aboutOtaUpdater) {
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(Config.WEB_HOME_URL));
             startActivity(i);
-
-            return true;
         } else if (preference == license) {
             Intent i = new Intent(getActivity(), License.class);
             startActivity(i);
-
-            return true;
         } else if (preference == stats) {
             Intent i = new Intent(getActivity(), AnonymousStats.class);
             startActivity(i);
-
-            return true;
         } else if (preference == followGPlus) {
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(Config.GPLUS_URL));
             startActivity(i);
-
-            return true;
         } else if (preference == contribPref) {
             Intent i = new Intent(getActivity(), Contributors.class);
             startActivity(i);
-
-            return true;
+        } else {
+            return super.onPreferenceTreeClick(preferenceScreen, preference);
         }
-        return false;
+
+        return true;
     }
 }

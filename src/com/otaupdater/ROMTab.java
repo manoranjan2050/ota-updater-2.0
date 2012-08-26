@@ -76,8 +76,11 @@ public class ROMTab extends PreferenceFragment {
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         if (preference == availUpdatePref) {
             if (!fetching) checkForRomUpdates();
+        } else {
+            return super.onPreferenceTreeClick(preferenceScreen, preference);
         }
-        return false;
+
+        return true;
     }
 
     private void checkForRomUpdates() {

@@ -54,13 +54,12 @@ public class Settings extends PreferenceActivity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         if (preference == notifPref) {
             cfg.setShowNotif(notifPref.isChecked());
-            return true;
         } else if (preference == wifidlPref) {
             cfg.setWifiOnlyDl(wifidlPref.isChecked());
-            return true;
         } else if (preference == resetWarnPref) {
             cfg.setIgnoredDataWarn(false);
             cfg.setIgnoredUnsupportedWarn(false);
@@ -68,8 +67,11 @@ public class Settings extends PreferenceActivity {
             //TODO in-app billing
         } else if (preference == donatePref) {
             //TODO paypal donate
+        } else {
+            return super.onPreferenceTreeClick(preferenceScreen, preference);
         }
-        return false;
+
+        return true;
     }
 
 }

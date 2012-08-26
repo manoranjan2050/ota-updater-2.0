@@ -19,16 +19,15 @@
     <PreferenceCategory
         android:title="@string/about_title">
 
-        <Preference android:key="about_toolkit"
+        <Preference android:key="about_pref"
             android:title="@string/about_ota_title"
             android:summary="@string/about_ota_summary" />
 
-        <Preference android:key="about_app"
-            android:title="@string/about_version_title"
-            android:summary="" />
+        <Preference android:key="version_pref"
+            android:title="@string/about_version_title" />
 
         <Preference
-            android:key="opensource_license"
+            android:key="license_pref"
             android:title="@string/about_license_title" />
         
         <Preference
@@ -36,7 +35,7 @@
             android:title="@string/about_contrib_title" />
 
         <Preference
-            android:key="toolkit_stats"
+            android:key="stats_pref"
             android:title="@string/about_stats_title"
             android:summary="@string/about_stats_summary" />
 
