@@ -50,5 +50,20 @@
         -->
         
     </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:title="@string/settings_support">
+        
+        <Preference 
+            android:title="@string/settings_prokey_title" 
+            android:summary="@string/settings_prokey_summary" 
+            android:key="prokey_pref" />
+        
+        <Preference 
+            android:title="@string/settings_donate_title"
+            android:summary="@string/settings_donate_summary"
+            android:key="donate_pref" />
+        
+    </PreferenceCategory>
 
 </PreferenceScreen>

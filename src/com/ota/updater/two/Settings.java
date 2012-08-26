@@ -31,6 +31,8 @@ public class Settings extends PreferenceActivity {
     private CheckBoxPreference notifPref;
     private CheckBoxPreference wifidlPref;
     private Preference resetWarnPref;
+    private Preference prokeyPref;
+    private Preference donatePref;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -47,6 +49,8 @@ public class Settings extends PreferenceActivity {
         wifidlPref.setChecked(cfg.getWifiOnlyDl());
 
         resetWarnPref = findPreference("resetwarn_pref");
+        prokeyPref = findPreference("prokey_pref");
+        donatePref = findPreference("donate_pref");
     }
 
     @Override
@@ -60,6 +64,10 @@ public class Settings extends PreferenceActivity {
         } else if (preference == resetWarnPref) {
             cfg.setIgnoredDataWarn(false);
             cfg.setIgnoredUnsupportedWarn(false);
+        } else if (preference == prokeyPref) {
+            //TODO in-app billing
+        } else if (preference == donatePref) {
+            //TODO paypal donate
         }
         return false;
     }
