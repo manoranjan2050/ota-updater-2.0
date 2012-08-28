@@ -114,6 +114,11 @@
             android:name=".Downloads"
             android:label="@string/app_downloads">
         </activity>
+        
+        <activity
+            android:name=".Accounts"
+            android:label="@string/app_accounts">
+        </activity>        
 
         <activity
             android:name=".AccountsScreen"
