@@ -34,12 +34,16 @@ import com.otaupdater.utils.Utils;
 
 public class ROMTab extends PreferenceFragment {
 
+    private Config cfg;
     private boolean fetching = false;
     private Preference availUpdatePref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        cfg = Config.getInstance(getActivity().getApplicationContext());
+
         if (Utils.isRomOtaEnabled()) {
             addPreferencesFromResource(R.xml.rom);
 
@@ -60,7 +64,18 @@ public class ROMTab extends PreferenceFragment {
             build.setSummary(Utils.getRomOtaID());
 
             availUpdatePref = findPreference("avail_updates");
+            if (cfg.hasStoredRomUpdate()) {
+                RomInfo info = cfg.getStoredRomUpdate();
+                if (Utils.isRomUpdate(info)) {
+                    availUpdatePref.setSummary(getString(R.string.main_updates_new, info.romName, info.version));
+                } else {
+                    availUpdatePref.setSummary(R.string.main_updates_none);
+                    cfg.clearStoredRomUpdate();
+                }
+            }
         } else {
+            if (cfg.hasStoredRomUpdate()) cfg.clearStoredRomUpdate();
+
             addPreferencesFromResource(R.xml.rom_unsupported);
 
             final Preference device = findPreference("device_view");

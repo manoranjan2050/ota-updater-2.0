@@ -34,12 +34,16 @@ import com.otaupdater.utils.Utils;
 
 public class KernelTab extends PreferenceFragment {
 
+    private Config cfg;
     private boolean fetching = false;
     private Preference availUpdatePref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        cfg = Config.getInstance(getActivity().getApplicationContext());
+
         if (Utils.isKernelOtaEnabled()) {
             addPreferencesFromResource(R.xml.kernel);
 
@@ -60,7 +64,18 @@ public class KernelTab extends PreferenceFragment {
             build.setSummary(Utils.getKernelOtaID());
 
             availUpdatePref = findPreference("avail_updates");
+            if (cfg.hasStoredKernelUpdate()) {
+                KernelInfo info = cfg.getStoredKernelUpdate();
+                if (Utils.isKernelUpdate(info)) {
+                    availUpdatePref.setSummary(getString(R.string.main_updates_new, info.kernelName, info.version));
+                } else {
+                    availUpdatePref.setSummary(R.string.main_updates_none);
+                    cfg.clearStoredKernelUpdate();
+                }
+            }
         } else {
+            if (cfg.hasStoredKernelUpdate()) cfg.clearStoredKernelUpdate();
+
             addPreferencesFromResource(R.xml.kernel_unsupported);
 
             final Preference device = findPreference("device_view");

@@ -29,12 +29,12 @@ import android.util.Log;
 import com.google.android.gcm.GCMRegistrar;
 import com.otaupdater.utils.Config;
 import com.otaupdater.utils.FetchKernelInfoTask;
+import com.otaupdater.utils.FetchKernelInfoTask.KernelInfoListener;
 import com.otaupdater.utils.FetchRomInfoTask;
+import com.otaupdater.utils.FetchRomInfoTask.RomInfoListener;
 import com.otaupdater.utils.KernelInfo;
 import com.otaupdater.utils.RomInfo;
 import com.otaupdater.utils.Utils;
-import com.otaupdater.utils.FetchKernelInfoTask.KernelInfoListener;
-import com.otaupdater.utils.FetchRomInfoTask.RomInfoListener;
 
 public class UpdateCheckReceiver extends BroadcastReceiver {
     @Override
@@ -43,36 +43,46 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
         final Config cfg = Config.getInstance(context);
 
         if (cfg.hasStoredRomUpdate()) {
-            RomInfo info = cfg.getStoredRomUpdate();
-            if (Utils.isRomUpdate(info)) {
-                if (cfg.getShowNotif()) {
-                    Utils.showRomUpdateNotif(context, info);
-                    Log.v(Config.LOG_TAG + "Receiver", "Found stored rom update");
-                } else {
-                    Log.v(Config.LOG_TAG + "Receiver", "Found stored rom update, notif not shown");
-                }
-            } else {
-                Log.v(Config.LOG_TAG + "Receiver", "Found invalid stored rom update");
+            if (Utils.isRomOtaEnabled()) {
+                Log.v(Config.LOG_TAG + "Receiver", "Found stored rom update, not OTA-rom");
                 cfg.clearStoredRomUpdate();
-                Utils.clearRomUpdateNotif(context);
+            } else {
+                RomInfo info = cfg.getStoredRomUpdate();
+                if (Utils.isRomUpdate(info)) {
+                    if (cfg.getShowNotif()) {
+                        Utils.showRomUpdateNotif(context, info);
+                        Log.v(Config.LOG_TAG + "Receiver", "Found stored rom update");
+                    } else {
+                        Log.v(Config.LOG_TAG + "Receiver", "Found stored rom update, notif not shown");
+                    }
+                } else {
+                    Log.v(Config.LOG_TAG + "Receiver", "Found invalid stored rom update");
+                    cfg.clearStoredRomUpdate();
+                    Utils.clearRomUpdateNotif(context);
+                }
             }
         } else {
             Log.v(Config.LOG_TAG + "Receiver", "No stored rom update");
         }
 
         if (cfg.hasStoredKernelUpdate()) {
-            KernelInfo info = cfg.getStoredKernelUpdate();
-            if (Utils.isKernelUpdate(info)) {
-                if (cfg.getShowNotif()) {
-                    Utils.showKernelUpdateNotif(context, info);
-                    Log.v(Config.LOG_TAG + "Receiver", "Found stored kernel update");
-                } else {
-                    Log.v(Config.LOG_TAG + "Receiver", "Found stored kernel update, notif not shown");
-                }
-            } else {
-                Log.v(Config.LOG_TAG + "Receiver", "Found invalid stored kernel update");
+            if (Utils.isKernelOtaEnabled()) {
+                Log.v(Config.LOG_TAG + "Receiver", "Found stored kernel update, not OTA-kernel");
                 cfg.clearStoredKernelUpdate();
-                Utils.clearKernelUpdateNotif(context);
+            } else {
+                KernelInfo info = cfg.getStoredKernelUpdate();
+                if (Utils.isKernelUpdate(info)) {
+                    if (cfg.getShowNotif()) {
+                        Utils.showKernelUpdateNotif(context, info);
+                        Log.v(Config.LOG_TAG + "Receiver", "Found stored kernel update");
+                    } else {
+                        Log.v(Config.LOG_TAG + "Receiver", "Found stored kernel update, notif not shown");
+                    }
+                } else {
+                    Log.v(Config.LOG_TAG + "Receiver", "Found invalid stored kernel update");
+                    cfg.clearStoredKernelUpdate();
+                    Utils.clearKernelUpdateNotif(context);
+                }
             }
         } else {
             Log.v(Config.LOG_TAG + "Receiver", "No stored kernel update");
