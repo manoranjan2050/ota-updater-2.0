@@ -20,8 +20,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import android.app.Fragment;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +38,8 @@ import com.otaupdater.utils.ImageAdapter;
 public class WallsTab extends Fragment implements OnItemSelectedListener {
 	private int screenHeight;
 	private int screenWidth;
-	private String deviceRes;
+	String deviceRes;
+	private String TAG = "WallsTab";
 
     public int getShownIndex() {
         return getArguments().getInt("index", 0);
@@ -52,7 +55,34 @@ public class WallsTab extends Fragment implements OnItemSelectedListener {
         screenWidth = metrics.widthPixels;
         screenHeight = metrics.heightPixels;
 
-		deviceRes = Integer.toString(screenWidth) + "x" + Integer.toString(screenHeight);
+
+		int ot = getScreenOrientation();
+		Log.d(TAG, Integer.toString(ot));
+		switch(ot) {
+			case  Configuration.ORIENTATION_LANDSCAPE:
+				Log.d(TAG ,"ORIENTATION_LANDSCAPE");
+			break;
+			case Configuration.ORIENTATION_PORTRAIT:
+				Log.d(TAG, "ORIENTATION_PORTRAIT");
+				deviceRes = Integer.toString(screenWidth) + "x" + Integer.toString(screenHeight);
+            break;
+			case Configuration.ORIENTATION_SQUARE:
+				Log.d(TAG ,"ORIENTATION_SQUARE");
+				deviceRes = Integer.toString(screenWidth) + "x" + Integer.toString(screenHeight);
+            break;
+			case Configuration.ORIENTATION_UNDEFINED:
+				Log.d(TAG,"ORIENTATION_UNDEFINED");
+            break;
+            default:
+            	Log.d(TAG, "DEFAULT");
+            	deviceRes = Integer.toString(screenWidth) + "x" + Integer.toString(screenHeight);
+            break;
+        }
+	}
+
+
+	private int getScreenOrientation(){
+	    return getResources().getConfiguration().orientation;
 	}
 
 	@Override
