@@ -47,7 +47,7 @@ public class KernelTab extends PreferenceFragment {
             addPreferencesFromResource(R.xml.kernel);
 
             String kernelVersion = Utils.getKernelOtaVersion();
-            if (kernelVersion == null) kernelVersion = getString(R.string.main_kernel_version_unknown);
+            if (kernelVersion == null) kernelVersion = getString(R.string.kernel_version_unknown);
             Date kernelDate = Utils.getKernelOtaDate();
             if (kernelDate != null) {
                 kernelVersion += " (" + DateFormat.getDateTimeInstance().format(kernelDate) + ")";
@@ -66,9 +66,9 @@ public class KernelTab extends PreferenceFragment {
             if (cfg.hasStoredKernelUpdate()) {
                 KernelInfo info = cfg.getStoredKernelUpdate();
                 if (Utils.isKernelUpdate(info)) {
-                    availUpdatePref.setSummary(getString(R.string.main_updates_new, info.kernelName, info.version));
+                    availUpdatePref.setSummary(getString(R.string.updates_new, info.kernelName, info.version));
                 } else {
-                    availUpdatePref.setSummary(R.string.main_updates_none);
+                    availUpdatePref.setSummary(R.string.updates_none);
                     cfg.clearStoredKernelUpdate();
                 }
             }
@@ -107,7 +107,7 @@ public class KernelTab extends PreferenceFragment {
             public void onLoaded(KernelInfo info) {
                 fetching = false;
                 if (info == null) {
-                    availUpdatePref.setSummary(getString(R.string.main_updates_error, "Unknown error"));
+                    availUpdatePref.setSummary(getString(R.string.updates_error, "Unknown error"));
                     Toast.makeText(getActivity(), R.string.toast_fetch_error, Toast.LENGTH_SHORT).show();
                 } else if (Utils.isKernelUpdate(info)) {
                     cfg.storeKernelUpdate(info);
@@ -120,14 +120,14 @@ public class KernelTab extends PreferenceFragment {
                 } else {
                     cfg.clearStoredKernelUpdate();
                     Utils.clearKernelUpdateNotif(getActivity());
-                    availUpdatePref.setSummary(R.string.main_updates_none);
+                    availUpdatePref.setSummary(R.string.updates_none);
                     Toast.makeText(getActivity(), R.string.toast_no_updates, Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onError(String error) {
                 fetching = false;
-                availUpdatePref.setSummary(getString(R.string.main_updates_error, error));
+                availUpdatePref.setSummary(getString(R.string.updates_error, error));
                 Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
             }
         });

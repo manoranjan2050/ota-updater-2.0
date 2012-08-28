@@ -17,7 +17,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/main_rom_info">
+        android:title="@string/rom_info_title">
 
         <Preference
             android:title="@string/main_device"
@@ -30,7 +30,7 @@
             android:key="rom_view" />
 
         <Preference
-            android:title="@string/main_rom_version"
+            android:title="@string/rom_version"
             android:icon="@drawable/version"
             android:key="version_view" />
 
@@ -42,10 +42,10 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/main_rom_updates">
+        android:title="@string/rom_updates">
         
         <Preference
-            android:title="@string/main_avail_updates"
+            android:title="@string/updates_avail_title"
             android:icon="@drawable/cloud"
             android:key="avail_updates" />
             

@@ -17,7 +17,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/main_kernel_info">
+        android:title="@string/kernel_info_title">
 
         <Preference
             android:title="@string/main_device"
@@ -32,11 +32,11 @@
     </PreferenceCategory>
     
     <PreferenceCategory
-        android:title="@string/main_kernel_unsupported_title">
+        android:title="@string/kernel_unsupported_title">
         
         <Preference
-            android:title="@string/main_kernel_unsupported_title"
-            android:summary="@string/main_kernel_unsupported_summary"
+            android:title="@string/kernel_unsupported_title"
+            android:summary="@string/kernel_unsupported_summary"
             android:icon="@drawable/cloud" />
             
     </PreferenceCategory>

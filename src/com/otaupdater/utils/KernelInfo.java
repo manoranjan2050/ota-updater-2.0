@@ -124,7 +124,7 @@ public class KernelInfo {
         @Override
         protected KernelInfo doInBackground(Void... notused) {
             if (!Utils.isKernelOtaEnabled()) {
-                error = context.getString(R.string.main_kernel_unsupported_title);
+                error = context.getString(R.string.kernel_unsupported_title);
                 return null;
             }
             if (!Utils.dataAvailable(context)) {

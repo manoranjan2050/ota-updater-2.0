@@ -124,7 +124,7 @@ public class RomInfo {
         @Override
         protected RomInfo doInBackground(Void... notused) {
             if (!Utils.isRomOtaEnabled()) {
-                error = context.getString(R.string.main_rom_unsupported_title);
+                error = context.getString(R.string.rom_unsupported_title);
                 return null;
             }
             if (!Utils.dataAvailable(context)) {

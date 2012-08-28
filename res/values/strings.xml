@@ -41,8 +41,6 @@
     <string name="alert_options_title">Options</string>
     <string name="alert_rename_title">Rename file</string>
     <string name="alert_rename_message">Enter new file name</string>
-    <string name="alert_ok">OK</string>
-    <string name="alert_cancel">Cancel</string>
     <string name="alert_close">Close</string>
     <string name="alert_rename">Rename</string>
     <string name="alert_install_title">Install ZIP</string>
@@ -97,25 +95,30 @@
     <string name="main_res_walls">Wallpaper Resolution</string>
     <string name="main_device">Device</string>
     <string name="main_rom">ROM</string>
-    <string name="main_rom_info">ROM Information</string>
-    <string name="main_rom_unsupported_title">Unsupported ROM</string>
-    <string name="main_rom_unsupported_summary">The ROM developer has not enabled support for the OTA Updater! Please ask them (kindly) to add support before using this app!\n\n(rom.ota.prop missing)</string>
     <string name="main_kernel">Kernel</string>
-    <string name="main_kernel_info">Kernel Information</string>
-    <string name="main_kernel_unsupported_title">Unsupported Kernel</string>
-    <string name="main_kernel_unsupported_summary">The Kernel developer has not enabled support for the OTA Updater! Please ask them (kindly) to add support before using this app!\n\n(kernel.ota.prop missing)</string>
     <string name="main_about">About</string>
-    <string name="main_rom_version">ROM Version</string>
-    <string name="main_kernel_version">Kernel Version</string>
-    <string name="main_kernel_version_unknown">Unknown Kernel Version</string>
     <string name="main_otaid">OTA Updater ID</string>
-    <string name="main_rom_updates">ROM Updates</string>
-    <string name="main_kernel_updates">Kernel Updates</string>
-    <string name="main_updates_check">Check for available updates</string>
-    <string name="main_avail_updates">Available Updates</string>
-    <string name="main_updates_none">No updates available</string>
-    <string name="main_updates_error">Error fetching update info: %1$s</string>
-    <string name="main_updates_new">New update: %1$s (version %2$s)</string>
+    
+    <string name="updates_avail_title">Available Updates</string>
+    <string name="updates_check">Check for available updates</string>
+    <string name="updates_none">No updates available</string>
+    <string name="updates_error">Error fetching update info: %1$s</string>
+    <string name="updates_new">New update: %1$s (version %2$s)</string>
+
+    <string name="rom_title">ROM</string>
+    <string name="rom_updates">ROM Updates</string>
+    <string name="rom_version">ROM Version</string>
+    <string name="rom_info_title">ROM Information</string>
+    <string name="rom_unsupported_title">Unsupported ROM</string>
+    <string name="rom_unsupported_summary">The ROM developer has not enabled support for the OTA Updater! Please ask them (kindly) to add support before using this app!\n\n(rom.ota.prop missing)</string>
+    
+    <string name="kernel_title">Kernel</string>
+    <string name="kernel_updates">Kernel Updates</string>
+    <string name="kernel_version">Kernel Version</string>
+    <string name="kernel_version_unknown">Unknown Kernel Version</string>
+    <string name="kernel_info_title">Kernel Information</string>
+    <string name="kernel_unsupported_title">Unsupported Kernel</string>
+    <string name="kernel_unsupported_summary">The Kernel developer has not enabled support for the OTA Updater! Please ask them (kindly) to add support before using this app!\n\n(kernel.ota.prop missing)</string>
 
     <string name="account_screen_title">Account</string>
     <string name="account_profile_view_title">View your profile.</string>
@@ -141,10 +144,6 @@
     <string name="downloads_pending_title">Pending Downloads</string>
 
     <string name="feedback_title">Feedback</string>
-
-    <string name="kernel_title">Kernel</string>
-    <string name="kernel_ver_title">Kernel Version</string>
-    <string name="kernel_supported_title">Supported Kernel</string>
 
     <string name="license_title">License</string>
     <string name="license_apache_title">Apache License</string>

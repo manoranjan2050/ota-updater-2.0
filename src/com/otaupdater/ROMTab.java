@@ -66,9 +66,9 @@ public class ROMTab extends PreferenceFragment {
             if (cfg.hasStoredRomUpdate()) {
                 RomInfo info = cfg.getStoredRomUpdate();
                 if (Utils.isRomUpdate(info)) {
-                    availUpdatePref.setSummary(getString(R.string.main_updates_new, info.romName, info.version));
+                    availUpdatePref.setSummary(getString(R.string.updates_new, info.romName, info.version));
                 } else {
-                    availUpdatePref.setSummary(R.string.main_updates_none);
+                    availUpdatePref.setSummary(R.string.updates_none);
                     cfg.clearStoredRomUpdate();
                 }
             }
@@ -109,7 +109,7 @@ public class ROMTab extends PreferenceFragment {
             public void onLoaded(RomInfo info) {
                 fetching = false;
                 if (info == null) {
-                    availUpdatePref.setSummary(getString(R.string.main_updates_error, "Unknown error"));
+                    availUpdatePref.setSummary(getString(R.string.updates_error, "Unknown error"));
                     Toast.makeText(getActivity(), R.string.toast_fetch_error, Toast.LENGTH_SHORT).show();
                 } else if (Utils.isRomUpdate(info)) {
                     cfg.storeRomUpdate(info);
@@ -122,14 +122,14 @@ public class ROMTab extends PreferenceFragment {
                 } else {
                     cfg.clearStoredRomUpdate();
                     Utils.clearRomUpdateNotif(getActivity());
-                    availUpdatePref.setSummary(R.string.main_updates_none);
+                    availUpdatePref.setSummary(R.string.updates_none);
                     Toast.makeText(getActivity(), R.string.toast_no_updates, Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onError(String error) {
                 fetching = false;
-                availUpdatePref.setSummary(getString(R.string.main_updates_error, error));
+                availUpdatePref.setSummary(getString(R.string.updates_error, error));
                 Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
             }
         });
