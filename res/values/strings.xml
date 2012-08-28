@@ -43,6 +43,7 @@
     <string name="alert_rename_message">Enter new file name</string>
     <string name="alert_ok">OK</string>
     <string name="alert_cancel">Cancel</string>
+    <string name="alert_close">Close</string>
     <string name="alert_rename">Rename</string>
     <string name="alert_install_title">Install ZIP</string>
     <string name="alert_install">Install</string>
@@ -151,7 +152,6 @@
 
     <string name="loading_dialog_title">Loading&#8230;</string>
 
-
     <string name="settings_title">OTA Updater Settings</string>
     <string name="settings_account_title">Add account</string>
     <string name="settings_account_summary">Log into your OTA Update Center account</string>
@@ -170,8 +170,18 @@
     <string name="settings_prokey_summary">Buying a PRO Key will disable ads and help us pay the costs of running this service</string>
     <string name="settings_prokey_summary_pro">THank you for buying the PRO Key.\nWe appreciate your support!</string>
     <string name="settings_prokey_summary_nomarket">Unfortunately, you cannot buy a PRO Key because you do not have the Play Store installed.</string>
-    <string name="settings_prokey_summary_redeemed">You have already redeemed a PRO Key code!</string>
+    <string name="settings_prokey_summary_redeemed">You have redeemed a PRO Key code!</string>
+    <string name="settings_prokey_summary_verify">Thank you for buying the PRO Key!\nVerification did not complete last time, tap to try again..</string>
+    <string name="settings_prokey_summary_verifying">Thank you for buying the PRO Key!\nKey verification in progress&#8230;</string>
     <string name="settings_donate_title">Donate</string>
     <string name="settings_donate_summary">Any donations are greatly accepted and go directly to pay hosting costs</string>
+    
+    <string name="prokey_verified">Verified PRO Key! Thanks for your support!</string>
+    <string name="prokey_noverify">Unable to verify PRO Key. Will try again later</string>
+    <string name="prokey_invalid">You have a pirated PRO Key! Please buy a PRO Key from the Play Store!</string>
+    <string name="prokey_thanks">Thank you for buying the PRO Key!!!\n\nAll of the money goes to pay for hosting costs in order to provide you with the best possible service.\n\nPlease enjoy all of the features of our app, along with no ads!\nThanks again for the support!</string>
+    <string name="prokey_verify_error_nodata">Unable to verify PRO Key - no data connection</string>
+    <string name="prokey_verify_error_nomarket">Unable to verify PRO Key - Play Store not installed</string>
+    <string name="prokey_verify_error_other">Unable to verify PRO Key - Unknown error</string>
 
 </resources>

@@ -56,6 +56,18 @@ public class TabDisplay extends FragmentActivity {
         final Context context = getApplicationContext();
         cfg = Config.getInstance(context);
 
+        if (!Utils.haveProKey(context)) {
+            cfg.setKeyExpiry(0);
+        } else if (!cfg.hasValidProKey()) {
+            if (cfg.isProKeyTemporary()) {
+                if (cfg.getKeyExpires() < System.currentTimeMillis()) {
+                    Utils.verifyProKey(context);
+                }
+            } else {
+                Utils.verifyProKey(context);
+            }
+        }
+
         if (!Utils.isRomOtaEnabled() && !Utils.isKernelOtaEnabled()) {
             if (!cfg.getIgnoredUnsupportedWarn()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);

@@ -37,6 +37,9 @@ public class Config {
     public static final String OTA_SD_PATH_OS_PROP = "otaupdater.sdcard.os";
     public static final String OTA_SD_PATH_RECOVERY_PROP = "otaupdater.sdcard.recovery";
 
+    public static final String KEY_PACKAGE = "com.otaupdater.key";
+    public static final String KEY_VERIFY_ACTION = "com.otaupdater.key.action.VERIFY";
+
     public static final int ROM_NOTIF_ID = 1;
     public static final int KERNEL_NOTIF_ID = 2;
 
@@ -55,6 +58,8 @@ public class Config {
         ROM_DL_PATH_FILE.mkdirs();
         KERNEL_DL_PATH_FILE.mkdirs();
     }
+
+    private long keyExpires = 0;
 
     private boolean showNotif = true;
     private boolean wifiOnlyDl = true;
@@ -79,6 +84,8 @@ public class Config {
 
     private Config(Context ctx) {
         PREFS = ctx.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+
+        keyExpires = PREFS.getLong("keyExpires", keyExpires);
 
         showNotif = PREFS.getBoolean("showNotif", showNotif);
         wifiOnlyDl = PREFS.getBoolean("wifiOnlyDl", wifiOnlyDl);
@@ -120,6 +127,31 @@ public class Config {
     public static synchronized Config getInstance(Context ctx) {
         if (instance == null) instance = new Config(ctx);
         return instance;
+    }
+
+    public boolean hasValidProKey() {
+        return keyExpires == -1;
+    }
+
+    public boolean isProKeyTemporary() {
+        return keyExpires > 0;
+    }
+
+    public boolean isVerifyingProKey() {
+        return keyExpires == -2;
+    }
+
+    public long getKeyExpires() {
+        return keyExpires;
+    }
+
+    public void setKeyExpiry(long expiry) {
+        this.keyExpires = expiry;
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.putLong("keyExpires", keyExpires);
+            editor.commit();
+        }
     }
 
     public boolean getShowNotif() {

@@ -16,6 +16,8 @@
 
 package com.otaupdater;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -23,6 +25,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 
 import com.otaupdater.utils.Config;
+import com.otaupdater.utils.Utils;
 
 public class Settings extends PreferenceActivity {
 
@@ -38,9 +41,15 @@ public class Settings extends PreferenceActivity {
     @SuppressWarnings("deprecation")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.settings);
 
         cfg = Config.getInstance(getApplicationContext());
+        if (Utils.haveProKey(getApplicationContext()) && !cfg.hasValidProKey() &&
+                (!cfg.isProKeyTemporary() || cfg.getKeyExpires() < System.currentTimeMillis())) {
+            Utils.verifyProKey(getApplicationContext());
+        }
+
+        addPreferencesFromResource(R.xml.settings);
+
 
         notifPref = (CheckBoxPreference) findPreference("notif_pref");
         notifPref.setChecked(cfg.getShowNotif());
@@ -48,8 +57,22 @@ public class Settings extends PreferenceActivity {
         wifidlPref = (CheckBoxPreference) findPreference("wifidl_pref");
         wifidlPref.setChecked(cfg.getWifiOnlyDl());
 
-        resetWarnPref = findPreference("resetwarn_pref");
         prokeyPref = findPreference("prokey_pref");
+        if (Utils.haveProKey(getApplicationContext())) {
+            if (cfg.hasValidProKey()) {
+                prokeyPref.setSummary(R.string.settings_prokey_summary_pro);
+            } else if (cfg.isVerifyingProKey()) {
+                prokeyPref.setSummary(R.string.settings_prokey_summary_verifying);
+            } else {
+                prokeyPref.setSummary(R.string.settings_prokey_summary_verify);
+            }
+        } else if (cfg.hasValidProKey()) {
+            prokeyPref.setSummary(R.string.settings_prokey_summary_redeemed);
+        } else if (!Utils.marketAvailable(getApplicationContext())) {
+            prokeyPref.setSummary(R.string.settings_prokey_summary_nomarket);
+        }
+
+        resetWarnPref = findPreference("resetwarn_pref");
         donatePref = findPreference("donate_pref");
     }
 
@@ -64,7 +87,21 @@ public class Settings extends PreferenceActivity {
             cfg.setIgnoredDataWarn(false);
             cfg.setIgnoredUnsupportedWarn(false);
         } else if (preference == prokeyPref) {
-            //TODO in-app billing
+            if (Utils.haveProKey(getApplicationContext())) {
+                if (cfg.hasValidProKey()) {
+                    AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+                    dlg.setMessage(R.string.prokey_thanks);
+                    dlg.setNeutralButton(R.string.alert_close, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dlg.create().show();
+                } else {
+                    Utils.verifyProKey(getApplicationContext());
+                }
+            }
         } else if (preference == donatePref) {
             //TODO paypal donate
         } else {
@@ -73,5 +110,4 @@ public class Settings extends PreferenceActivity {
 
         return true;
     }
-
 }

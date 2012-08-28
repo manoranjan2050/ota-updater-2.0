@@ -19,7 +19,7 @@
     <PreferenceCategory
         android:title="@string/settings_title">
 
-        <com.ota.updater.two.Accounts
+        <com.otaupdater.Accounts
             android:title="@string/settings_account_title"
             android:summary="@string/settings_account_summary" />
 

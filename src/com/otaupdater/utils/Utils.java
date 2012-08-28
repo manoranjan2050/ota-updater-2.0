@@ -151,6 +151,31 @@ public class Utils {
         return true;
     }
 
+    public static boolean haveProKey(Context ctx) {
+        PackageManager pm = ctx.getPackageManager();
+        try {
+            pm.getPackageInfo(ctx.getPackageName() + ".key", 0);
+        } catch (NameNotFoundException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static void verifyProKey(Context ctx) {
+        if (Config.getInstance(ctx).isVerifyingProKey()) return;
+        if (ctx.getPackageManager().checkSignatures(ctx.getPackageName(), Config.KEY_PACKAGE) != PackageManager.SIGNATURE_MATCH) {
+            Log.w(Config.LOG_TAG + "Key", "signatures don't match!");
+            return;
+        }
+        Log.v(Config.LOG_TAG + "Key", "sending verify intent");
+        Config.getInstance(ctx).setKeyExpiry(-2);
+        Intent i = new Intent(Config.KEY_VERIFY_ACTION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            i.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        }
+        ctx.sendBroadcast(i);
+    }
+
     public static boolean isRomOtaEnabled() {
         return new File("/system/rom.ota.prop").exists();
     }
