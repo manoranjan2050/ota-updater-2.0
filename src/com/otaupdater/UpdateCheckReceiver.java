@@ -28,12 +28,10 @@ import android.util.Log;
 
 import com.google.android.gcm.GCMRegistrar;
 import com.otaupdater.utils.Config;
-import com.otaupdater.utils.FetchKernelInfoTask;
-import com.otaupdater.utils.FetchKernelInfoTask.KernelInfoListener;
-import com.otaupdater.utils.FetchRomInfoTask;
-import com.otaupdater.utils.FetchRomInfoTask.RomInfoListener;
 import com.otaupdater.utils.KernelInfo;
+import com.otaupdater.utils.KernelInfo.KernelInfoListener;
 import com.otaupdater.utils.RomInfo;
+import com.otaupdater.utils.RomInfo.RomInfoListener;
 import com.otaupdater.utils.Utils;
 
 public class UpdateCheckReceiver extends BroadcastReceiver {
@@ -124,7 +122,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                     final WakeLock romWL = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, UpdateCheckReceiver.class.getName());
                     romWL.acquire();
 
-                    new FetchRomInfoTask(context, new RomInfoListener() {
+                    RomInfo.fetchInfo(context, new RomInfoListener() {
                         @Override
                         public void onStartLoading() { }
                         @Override
@@ -147,14 +145,14 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                         public void onError(String error) {
                             romWL.release();
                         }
-                    }).execute();
+                    });
                 }
 
                 if (Utils.isKernelOtaEnabled()) {
                     final WakeLock kernelWL = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, UpdateCheckReceiver.class.getName());
                     kernelWL.acquire();
 
-                    new FetchKernelInfoTask(context, new KernelInfoListener() {
+                    KernelInfo.fetchInfo(context, new KernelInfoListener() {
                         @Override
                         public void onStartLoading() { }
                         @Override
@@ -177,7 +175,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                         public void onError(String error) {
                             kernelWL.release();
                         }
-                    }).execute();
+                    });
                 }
             }
         } else {

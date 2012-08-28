@@ -27,9 +27,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.otaupdater.utils.Config;
-import com.otaupdater.utils.FetchRomInfoTask;
-import com.otaupdater.utils.FetchRomInfoTask.RomInfoListener;
 import com.otaupdater.utils.RomInfo;
+import com.otaupdater.utils.RomInfo.RomInfoListener;
 import com.otaupdater.utils.Utils;
 
 public class ROMTab extends PreferenceFragment {
@@ -101,7 +100,7 @@ public class ROMTab extends PreferenceFragment {
     private void checkForRomUpdates() {
         if (fetching) return;
         final Config cfg = Config.getInstance(getActivity().getApplicationContext());
-        new FetchRomInfoTask(getActivity(), new RomInfoListener() {
+        RomInfo.fetchInfo(getActivity(), new RomInfoListener() {
             @Override
             public void onStartLoading() {
                 fetching = true;
@@ -133,6 +132,6 @@ public class ROMTab extends PreferenceFragment {
                 availUpdatePref.setSummary(getString(R.string.main_updates_error, error));
                 Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
             }
-        }).execute();
+        });
     }
 }

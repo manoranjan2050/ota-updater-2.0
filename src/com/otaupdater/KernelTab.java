@@ -27,9 +27,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.otaupdater.utils.Config;
-import com.otaupdater.utils.FetchKernelInfoTask;
-import com.otaupdater.utils.FetchKernelInfoTask.KernelInfoListener;
 import com.otaupdater.utils.KernelInfo;
+import com.otaupdater.utils.KernelInfo.KernelInfoListener;
 import com.otaupdater.utils.Utils;
 
 public class KernelTab extends PreferenceFragment {
@@ -99,7 +98,7 @@ public class KernelTab extends PreferenceFragment {
     private void checkForKernelUpdates() {
         if (fetching) return;
         final Config cfg = Config.getInstance(getActivity().getApplicationContext());
-        new FetchKernelInfoTask(getActivity(), new KernelInfoListener() {
+        KernelInfo.fetchInfo(getActivity(), new KernelInfoListener() {
             @Override
             public void onStartLoading() {
                 fetching = true;
@@ -131,6 +130,6 @@ public class KernelTab extends PreferenceFragment {
                 availUpdatePref.setSummary(getString(R.string.main_updates_error, error));
                 Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
             }
-        }).execute();
+        });
     }
 }
