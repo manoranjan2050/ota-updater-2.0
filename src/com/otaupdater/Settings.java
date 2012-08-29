@@ -19,6 +19,7 @@ package com.otaupdater;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -26,6 +27,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 import android.view.MenuItem;
 
+import com.otaupdater.stats.AnonymousStats;
 import com.otaupdater.utils.Config;
 import com.otaupdater.utils.Utils;
 
@@ -36,6 +38,7 @@ public class Settings extends PreferenceActivity {
     private CheckBoxPreference notifPref;
     private CheckBoxPreference wifidlPref;
     private Preference resetWarnPref;
+    private Preference statsPref;
     private Preference prokeyPref;
     private Preference donatePref;
 
@@ -78,6 +81,7 @@ public class Settings extends PreferenceActivity {
         }
 
         resetWarnPref = findPreference("resetwarn_pref");
+        statsPref = findPreference("stats_pref");
         donatePref = findPreference("donate_pref");
     }
 
@@ -101,6 +105,9 @@ public class Settings extends PreferenceActivity {
         } else if (preference == resetWarnPref) {
             cfg.setIgnoredDataWarn(false);
             cfg.setIgnoredUnsupportedWarn(false);
+        } else if (preference == statsPref) {
+            Intent i = new Intent(this, AnonymousStats.class);
+            startActivity(i);
         } else if (preference == prokeyPref) {
             if (Utils.haveProKey(getApplicationContext())) {
                 if (cfg.hasValidProKey()) {

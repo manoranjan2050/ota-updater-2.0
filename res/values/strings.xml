@@ -86,8 +86,6 @@
     <string name="about_version_unknown">Unkown Version (error in package manager)</string>
     <string name="about_license_title">Open-Source License</string>
     <string name="about_contrib_title">Contributors</string>
-    <string name="about_stats_title">Statistics</string>
-    <string name="about_stats_summary">Help us improve the app by opting into annonymous statistics reporting</string>
     <string name="about_uptodate">Keep Up-to-Date!</string>
     <string name="about_follow_title">Follow us on Google+</string>
 	
@@ -166,6 +164,8 @@
     <string name="settings_wifidl_summary_off">Updates will be downloaded on whatever connection is available.\n\nWARNING: Updates will download on the mobile network if Wi-Fi is unavailable. The updates may be quite large and possibly result in overage charges.</string>
     <string name="settings_resetwarn_title">Reset ignored warnings</string>
     <string name="settings_resetwarn_summary">Any warnings that have been ignored will be shown again.</string>
+    <string name="settings_stats_title">Statistics</string>
+    <string name="settings_stats_summary">Help us improve the app by opting into annonymous statistics reporting</string>
     <string name="settings_support">Support Development</string>
     <string name="settings_prokey_title">Buy PRO Key</string>
     <string name="settings_prokey_summary">Buying a PRO Key will disable ads and help us pay the costs of running this service</string>

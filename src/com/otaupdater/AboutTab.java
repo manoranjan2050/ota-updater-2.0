@@ -26,7 +26,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 
-import com.otaupdater.stats.AnonymousStats;
 import com.otaupdater.utils.Config;
 
 public class AboutTab extends PreferenceFragment {
@@ -34,7 +33,6 @@ public class AboutTab extends PreferenceFragment {
     private Preference aboutOtaUpdater;
     private Preference license;
     private Preference contribPref;
-    private Preference stats;
     private Preference followGPlus;
 
     @Override
@@ -57,7 +55,6 @@ public class AboutTab extends PreferenceFragment {
         aboutOtaUpdater = findPreference("about_pref");
         license = findPreference("license_pref");
         contribPref = findPreference("contrib_pref");
-        stats = findPreference("stats_pref");
         followGPlus = findPreference("follow_gplus_pref");
     }
 
@@ -69,9 +66,6 @@ public class AboutTab extends PreferenceFragment {
             startActivity(i);
         } else if (preference == license) {
             Intent i = new Intent(getActivity(), License.class);
-            startActivity(i);
-        } else if (preference == stats) {
-            Intent i = new Intent(getActivity(), AnonymousStats.class);
             startActivity(i);
         } else if (preference == followGPlus) {
             Intent i = new Intent(Intent.ACTION_VIEW);

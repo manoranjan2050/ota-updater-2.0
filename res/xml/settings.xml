@@ -41,6 +41,11 @@
             android:title="@string/settings_resetwarn_title"
             android:summary="@string/settings_resetwarn_summary"
             android:key="resetwarn_pref" />
+
+        <Preference
+            android:key="stats_pref"
+            android:title="@string/settings_stats_title"
+            android:summary="@string/settings_stats_summary" />
         
         <!-- 
         <Preference

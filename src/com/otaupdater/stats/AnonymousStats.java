@@ -28,7 +28,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 import android.view.MenuItem;
@@ -75,15 +74,17 @@ public class AnonymousStats extends PreferenceActivity
             nm.cancel(1);
         }
 
-        Preference view = findPreference("preview");
-        view.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent i = new Intent(AnonymousStats.this, PreviewData.class);
-                startActivity(i);
-                return false;
-            }
-        });
+        Preference mId = findPreference("preview_id");
+        mId.setSummary(Utilities.getUniqueID(getApplicationContext()));
+
+        Preference mDevice = findPreference("preview_device");
+        mDevice.setSummary(Utilities.getDevice());
+
+        Preference mCountry = findPreference("preview_country");
+        mCountry.setSummary(Utilities.getCountryCode(getApplicationContext()));
+
+        Preference mCarrier = findPreference("preview_carrier");
+        mCarrier.setSummary(Utilities.getCarrier(getApplicationContext()));
     }
 
     @Override

@@ -34,11 +34,6 @@
             android:key="contrib_pref"
             android:title="@string/about_contrib_title" />
 
-        <Preference
-            android:key="stats_pref"
-            android:title="@string/about_stats_title"
-            android:summary="@string/about_stats_summary" />
-
     </PreferenceCategory>
 
     <PreferenceCategory

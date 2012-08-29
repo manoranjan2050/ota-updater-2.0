@@ -23,12 +23,38 @@
         android:defaultValue="true"
         android:title="@string/stats_optin_title" />
 
-    <PreferenceScreen
-        android:key="preview"
-        android:title="@string/stats_preview_title" />
-
     <Preference
         android:key="pref_view_stats"
         android:title="@string/stats_view_title" />
+    
+    <PreferenceCategory
+        android:title="@string/stats_preview_title">
+        
+        <Preference
+            android:key="preview_id"
+            style="?android:preferenceInformationStyle"
+            android:title="@string/stats_preview_device_id_title"
+            android:summary="%s" />
+    
+        <Preference
+            android:key="preview_device"
+            style="?android:preferenceInformationStyle"
+            android:title="@string/stats_preview_device_title"
+            android:summary="%s" />
+    
+    
+        <Preference
+            android:key="preview_country"
+            style="?android:preferenceInformationStyle"
+            android:title="@string/stats_preview_country_title"
+            android:summary="%s" />
+    
+        <Preference
+            android:key="preview_carrier"
+            style="?android:preferenceInformationStyle"
+            android:title="@string/stats_preview_carrier_title"
+            android:summary="%s" />
+        
+    </PreferenceCategory>
 
 </PreferenceScreen>
