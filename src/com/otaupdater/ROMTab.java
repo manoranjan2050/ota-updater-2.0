@@ -90,6 +90,15 @@ public class ROMTab extends PreferenceFragment {
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         if (preference == availUpdatePref) {
             if (!fetching) checkForRomUpdates();
+            else if (cfg.hasStoredRomUpdate()) {
+                RomInfo info = cfg.getStoredRomUpdate();
+                if (Utils.isRomUpdate(info)) {
+                    info.showUpdateDialog(getActivity());
+                } else {
+                    cfg.clearStoredRomUpdate();
+                    availUpdatePref.setSummary(R.string.updates_none);
+                }
+            }
         } else {
             return super.onPreferenceTreeClick(preferenceScreen, preference);
         }
@@ -113,12 +122,12 @@ public class ROMTab extends PreferenceFragment {
                     Toast.makeText(getActivity(), R.string.toast_fetch_error, Toast.LENGTH_SHORT).show();
                 } else if (Utils.isRomUpdate(info)) {
                     cfg.storeRomUpdate(info);
+                    availUpdatePref.setSummary(getString(R.string.updates_new, info.romName, info.version));
                     if (cfg.getShowNotif()) {
                         Utils.showRomUpdateNotif(getActivity(), info);
                     } else {
                         Log.v(Config.LOG_TAG + "RomTab", "found rom update, notif not shown");
                     }
-                    //TODO show rom update dialog
                 } else {
                     cfg.clearStoredRomUpdate();
                     Utils.clearRomUpdateNotif(getActivity());

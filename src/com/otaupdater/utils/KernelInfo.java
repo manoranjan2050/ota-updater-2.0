@@ -98,6 +98,10 @@ public class KernelInfo {
         return manager.enqueue(request);
     }
 
+    public void showUpdateDialog(Context ctx) {
+        //TODO show dialog
+    }
+
     public static void fetchInfo(Context ctx) {
         fetchInfo(ctx, null);
     }

@@ -98,6 +98,10 @@ public class RomInfo {
         return manager.enqueue(request);
     }
 
+    public void showUpdateDialog(Context ctx) {
+        //TODO show dialog (+kernel if necessary)
+    }
+
     public static void fetchInfo(Context ctx) {
         fetchInfo(ctx, null);
     }

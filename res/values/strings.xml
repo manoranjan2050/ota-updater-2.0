@@ -101,9 +101,10 @@
     
     <string name="updates_avail_title">Available Updates</string>
     <string name="updates_check">Check for available updates</string>
-    <string name="updates_none">No updates available</string>
+    <string name="updates_checking">Checking for available updates&#8230;</string>
+    <string name="updates_none">No updates available. Tap to check manually.</string>
     <string name="updates_error">Error fetching update info: %1$s</string>
-    <string name="updates_new">New update: %1$s (version %2$s)</string>
+    <string name="updates_new">New update: %1$s (version %2$s)\nTap to download/flash!</string>
 
     <string name="rom_title">ROM</string>
     <string name="rom_updates">ROM Updates</string>

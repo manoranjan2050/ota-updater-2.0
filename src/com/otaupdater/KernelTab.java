@@ -88,6 +88,15 @@ public class KernelTab extends PreferenceFragment {
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         if (preference == availUpdatePref) {
             if (!fetching) checkForKernelUpdates();
+            else if (cfg.hasStoredKernelUpdate()) {
+                KernelInfo info = cfg.getStoredKernelUpdate();
+                if (Utils.isKernelUpdate(info)) {
+                    info.showUpdateDialog(getActivity());
+                } else {
+                    cfg.clearStoredKernelUpdate();
+                    availUpdatePref.setSummary(R.string.updates_none);
+                }
+            }
         } else {
             return super.onPreferenceTreeClick(preferenceScreen, preference);
         }
@@ -102,6 +111,7 @@ public class KernelTab extends PreferenceFragment {
             @Override
             public void onStartLoading() {
                 fetching = true;
+                availUpdatePref.setSummary(R.string.updates_checking);
             }
             @Override
             public void onLoaded(KernelInfo info) {
@@ -111,12 +121,12 @@ public class KernelTab extends PreferenceFragment {
                     Toast.makeText(getActivity(), R.string.toast_fetch_error, Toast.LENGTH_SHORT).show();
                 } else if (Utils.isKernelUpdate(info)) {
                     cfg.storeKernelUpdate(info);
+                    availUpdatePref.setSummary(getString(R.string.updates_new, info.kernelName, info.version));
                     if (cfg.getShowNotif()) {
                         Utils.showKernelUpdateNotif(getActivity(), info);
                     } else {
                         Log.v(Config.LOG_TAG + "KernelTab", "found kernel update, notif not shown");
                     }
-                    //TODO show kernel update dialog
                 } else {
                     cfg.clearStoredKernelUpdate();
                     Utils.clearKernelUpdateNotif(getActivity());
