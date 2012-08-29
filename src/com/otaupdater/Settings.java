@@ -16,6 +16,7 @@
 
 package com.otaupdater;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
+import android.view.MenuItem;
 
 import com.otaupdater.utils.Config;
 import com.otaupdater.utils.Utils;
@@ -41,6 +43,9 @@ public class Settings extends PreferenceActivity {
     @SuppressWarnings("deprecation")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final ActionBar bar = getActionBar();
+        bar.setDisplayHomeAsUpEnabled(true);
 
         cfg = Config.getInstance(getApplicationContext());
         if (Utils.haveProKey(getApplicationContext()) && !cfg.hasValidProKey() &&
@@ -74,6 +79,16 @@ public class Settings extends PreferenceActivity {
 
         resetWarnPref = findPreference("resetwarn_pref");
         donatePref = findPreference("donate_pref");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            finish();
+            return true;
+        }
+        return false;
     }
 
     @Override

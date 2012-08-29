@@ -16,14 +16,30 @@
 
 package com.otaupdater;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.view.MenuItem;
 
 public class Downloads extends PreferenceActivity {
     @Override
     @SuppressWarnings("deprecation")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final ActionBar bar = getActionBar();
+        bar.setDisplayHomeAsUpEnabled(true);
+
         addPreferencesFromResource(R.xml.downloads);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            finish();
+            return true;
+        }
+        return false;
     }
 }

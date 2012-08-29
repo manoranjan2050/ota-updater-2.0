@@ -16,6 +16,7 @@
 
 package com.otaupdater.stats;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.NotificationManager;
@@ -30,6 +31,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
+import android.view.MenuItem;
 
 import com.otaupdater.R;
 
@@ -54,6 +56,10 @@ public class AnonymousStats extends PreferenceActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final ActionBar bar = getActionBar();
+        bar.setDisplayHomeAsUpEnabled(true);
+
         if (getPreferenceManager() != null) {
             addPreferencesFromResource(R.xml.annonymous_stats);
             PreferenceScreen prefSet = getPreferenceScreen();
@@ -78,6 +84,16 @@ public class AnonymousStats extends PreferenceActivity
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home:
+            finish();
+            return true;
+        }
+        return false;
     }
 
     @Override
