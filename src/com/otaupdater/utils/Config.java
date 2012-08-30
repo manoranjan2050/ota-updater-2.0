@@ -26,17 +26,17 @@ public class Config {
     public static final String LOG_TAG = "OTA::";
 
     public static final String WEB_HOME_URL = "https://www.otaupdatecenter.pro/";
-    public static final String WEB_FEEDBACK_URL = "https://www.otaupdatecenter.pro/?page=feedback";
+    public static final String WEB_FEEDBACK_URL = WEB_HOME_URL + "?page=feedback";
     public static final String GPLUS_URL = "https://plus.google.com/102074511541445644953/posts";
 
     public static final String GCM_SENDER_ID = "1068482628480";
-    public static final String GCM_REGISTER_URL = "https://www.otaupdatecenter.pro/pages/regdevice2.php";
+    public static final String GCM_REGISTER_URL = WEB_HOME_URL + "pages/regdevice2.php";
 
-    public static final String ROM_PULL_URL = "https://www.otaupdatecenter.pro/pages/rominfo.php";
-    public static final String KERNEL_PULL_URL = "https://www.otaupdatecenter.pro/pages/kernelinfo.php";
+    public static final String ROM_PULL_URL = WEB_HOME_URL + "pages/rominfo.php";
+    public static final String KERNEL_PULL_URL = WEB_HOME_URL + "pages/kernelinfo.php";
 
-    public static final String STATS_VIEW_URL = "https://www.otaupdatecenter.pro/?page=stats";
-    public static final String STATS_REPORT_URL = "https://www.otaupdatecenter.pro/pages/statsreport.php";
+    public static final String STATS_VIEW_URL = WEB_HOME_URL + "?page=stats";
+    public static final String STATS_REPORT_URL = WEB_HOME_URL + "pages/statsreport.php";
 
     public static final String OTA_SD_PATH_OS_PROP = "otaupdater.sdcard.os";
     public static final String OTA_SD_PATH_RECOVERY_PROP = "otaupdater.sdcard.recovery";
