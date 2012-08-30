@@ -34,6 +34,9 @@ public class Config {
     public static final String ROM_PULL_URL = "https://www.otaupdatecenter.pro/pages/rominfo.php";
     public static final String KERNEL_PULL_URL = "https://www.otaupdatecenter.pro/pages/kernelinfo.php";
 
+    public static final String STATS_VIEW_URL = "https://www.otaupdatecenter.pro/?page=stats";
+    public static final String STATS_REPORT_URL = "https://www.otaupdatecenter.pro/pages/statsreport.php";
+
     public static final String OTA_SD_PATH_OS_PROP = "otaupdater.sdcard.os";
     public static final String OTA_SD_PATH_RECOVERY_PROP = "otaupdater.sdcard.recovery";
 
@@ -79,6 +82,11 @@ public class Config {
     private RomInfo storedRomUpdate = null;
     private KernelInfo storedKernelUpdate = null;
 
+    private boolean statsOptIn = false;
+    private boolean statsFirstRun = true;
+    private long statsLastReport = 0;
+    private boolean statsAlarmSet = false;
+
     private static final String PREFS_NAME = "prefs";
     private final SharedPreferences PREFS;
 
@@ -86,6 +94,11 @@ public class Config {
         PREFS = ctx.getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
 
         keyExpires = PREFS.getLong("keyExpires", keyExpires);
+
+        statsOptIn = PREFS.getBoolean("statsOptIn", statsOptIn);
+        statsFirstRun = PREFS.getBoolean("statsFirstRun", statsFirstRun);
+        statsLastReport = PREFS.getLong("statsLastReport", statsLastReport);
+        statsAlarmSet = PREFS.getBoolean("statsAlarmSet", statsAlarmSet);
 
         showNotif = PREFS.getBoolean("showNotif", showNotif);
         wifiOnlyDl = PREFS.getBoolean("wifiOnlyDl", wifiOnlyDl);
@@ -310,6 +323,59 @@ public class Config {
             editor.remove("kernel_info_url");
             editor.remove("kernel_info_md5");
             editor.remove("kernel_info_date");
+            editor.commit();
+        }
+    }
+
+    public boolean isStatsOptedIn() {
+        return statsOptIn;
+    }
+
+    public void setStatsOptIn(boolean statsOptIn) {
+        this.statsOptIn = statsOptIn;
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.putBoolean("statsOptIn", statsOptIn);
+            editor.commit();
+        }
+    }
+
+    public boolean isStatsFirstRun() {
+        return statsFirstRun;
+    }
+
+    public void setStatsFirstRun(boolean firstRun) {
+        this.statsFirstRun = firstRun;
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.putBoolean("statsFirstRun", statsFirstRun);
+            editor.commit();
+        }
+    }
+
+    public long getStatsLastReport() {
+        return statsLastReport;
+    }
+
+    public void setStatsLastReport(long lastReport) {
+        this.statsLastReport = lastReport;
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.putLong("statsLastReport", statsLastReport);
+            editor.commit();
+
+        }
+    }
+
+    public boolean isStatsAlarmSet() {
+        return statsAlarmSet;
+    }
+
+    public void setStatsAlarmSet(boolean alarmSet) {
+        this.statsAlarmSet = alarmSet;
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.putBoolean("statsAlarmSet", statsAlarmSet);
             editor.commit();
         }
     }

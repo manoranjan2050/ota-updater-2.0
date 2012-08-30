@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The CyanogenMod Project
+ * Copyright (C) 2012 The CyanogenMod Project, OTA Update Center
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,74 +22,70 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
+
+import com.otaupdater.utils.Config;
+import com.otaupdater.utils.Utils;
 
 public class ReportingServiceManager extends BroadcastReceiver {
 
-    public static final long dMill = 24 * 60 * 60 * 1000;
-    public static final long tFrame = 7 * dMill;
-    public static Context cx;
+    public static final long dMill = 86400000; // ms in 1 day - 24 * 60 * 60 * 1000;
+    public static final long tFrame = 604800000; // ms in 1 week - 7 * dMill;
 
     @Override
     public void onReceive(Context ctx, Intent intent) {
+        final Context context = ctx.getApplicationContext();
+
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-            setAlarm(ctx);
+            setAlarm(context);
         } else {
-            launchService(ctx);
+            launchService(context);
         }
     }
 
-    protected static void setAlarm (Context ctx) {
-        SharedPreferences prefs = ctx.getSharedPreferences("VRToolkit", Context.MODE_PRIVATE);
-        prefs.edit().putBoolean(AnonymousStats.ANONYMOUS_ALARM_SET, false).apply();
-        boolean optedIn = prefs.getBoolean(AnonymousStats.ANONYMOUS_OPT_IN, true);
-        boolean firstBoot = prefs.getBoolean(AnonymousStats.ANONYMOUS_FIRST_BOOT, true);
-        if (!optedIn || firstBoot) {
-            return;
-        }
-        long lastSynced = prefs.getLong(AnonymousStats.ANONYMOUS_LAST_CHECKED, 0);
+    protected static void setAlarm(Context ctx) {
+        final Config cfg = Config.getInstance(ctx);
+
+        cfg.setStatsAlarmSet(false);
+
+        if (!cfg.isStatsOptedIn() || cfg.isStatsFirstRun()) return;
+
+        long lastSynced = cfg.getStatsLastReport();
         if (lastSynced == 0) {
             return;
         }
 
         long timeLeft = (lastSynced + tFrame) - System.currentTimeMillis();
-        Intent sIntent = new Intent(ConnectivityManager.CONNECTIVITY_ACTION);
-        sIntent.setComponent(new ComponentName(ctx.getPackageName(), ReportingServiceManager.class.getName()));
-        AlarmManager alarmManager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeLeft, PendingIntent.getBroadcast(ctx, 0, sIntent, 0));
+        Intent i = new Intent(ConnectivityManager.CONNECTIVITY_ACTION);
+        i.setComponent(new ComponentName(ctx.getPackageName(), ReportingServiceManager.class.getName()));
+        AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+        am.set(AlarmManager.RTC, System.currentTimeMillis() + timeLeft, PendingIntent.getBroadcast(ctx, 0, i, 0));
         Log.d(ReportingService.TAG, "Next sync attempt in : " + timeLeft / dMill + " days");
-        prefs.edit().putBoolean(AnonymousStats.ANONYMOUS_ALARM_SET, true).apply();
+        cfg.setStatsAlarmSet(true);
     }
 
-    public static void launchService (Context ctx) {
-        ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            SharedPreferences prefs = ctx.getSharedPreferences("VRToolkit", 0);
-            long lastSynced = prefs.getLong(AnonymousStats.ANONYMOUS_LAST_CHECKED, 0);
-            boolean firstBoot = prefs.getBoolean(AnonymousStats.ANONYMOUS_FIRST_BOOT, true);
-            boolean optedIn = prefs.getBoolean(AnonymousStats.ANONYMOUS_OPT_IN, true);
-            boolean alarmSet = prefs.getBoolean(AnonymousStats.ANONYMOUS_ALARM_SET, false);
-            if (alarmSet) {
-                return;
-            }
-            boolean shouldSync = false;
-            if (lastSynced == 0) {
-                shouldSync = true;
-            } else if (System.currentTimeMillis() - lastSynced >= tFrame) {
-                shouldSync = true;
-            }
+    public static void launchService(Context ctx) {
+        final Config cfg = Config.getInstance(ctx);
+        if (Utils.dataAvailable(ctx)) {
+            if (cfg.isStatsAlarmSet()) return;
 
-            if ((shouldSync && optedIn) || firstBoot) {
-                Intent sIntent = new Intent();
-                sIntent.setComponent(new ComponentName(ctx.getPackageName(), ReportingService.class.getName()));
-                sIntent.putExtra("firstBoot", firstBoot);
-                ctx.startService(sIntent);
-            } else if (optedIn) {
-                setAlarm(ctx);
+            if (cfg.isStatsOptedIn()) {
+                long lastSynced = cfg.getStatsLastReport();
+                boolean shouldSync = false;
+                if (lastSynced == 0) {
+                    shouldSync = true;
+                } else if (System.currentTimeMillis() - lastSynced >= tFrame) {
+                    shouldSync = true;
+                }
+
+                if (shouldSync) {
+                    Intent sIntent = new Intent();
+                    sIntent.setComponent(new ComponentName(ctx.getPackageName(), ReportingService.class.getName()));
+                    ctx.startService(sIntent);
+                } else {
+                    setAlarm(ctx);
+                }
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The CyanogenMod Project
+ * Copyright (C) 2012 The CyanogenMod Project, OTA Update Center
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
@@ -39,7 +35,7 @@ import android.util.Log;
 import com.otaupdater.utils.Config;
 
 public class ReportingService extends Service {
-    protected static final String TAG = Config.LOG_TAG + "OTAStats";
+    protected static final String TAG = Config.LOG_TAG + "Stats";
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -47,29 +43,27 @@ public class ReportingService extends Service {
     }
 
     @Override
-    public int onStartCommand (Intent intent, int flags, int startId) {
-        if (intent.getBooleanExtra("firstBoot", false)) {
-            promptUser();
-            Log.d(TAG, "Prompting user for opt-in.");
-        } else {
-            Log.d(TAG, "User has opted in -- reporting.");
-            Thread thread = new Thread() {
-                @Override
-                public void run() {
-                    report();
-                }
-            };
-            thread.start();
-        }
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "User has opted in -- reporting.");
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                report();
+            }
+        };
+        thread.start();
+
         return Service.START_REDELIVER_INTENT;
     }
 
     private void report() {
-        String deviceId = Utilities.getUniqueID(getApplicationContext());
+        final Context context = getApplicationContext();
+
+        String deviceId = Utilities.getUniqueID(context);
         String deviceName = Utilities.getDevice();
-        String deviceCountry = Utilities.getCountryCode(getApplicationContext());
-        String deviceCarrier = Utilities.getCarrier(getApplicationContext());
-        String deviceCarrierId = Utilities.getCarrierId(getApplicationContext());
+        String deviceCountry = Utilities.getCountryCode(context);
+        String deviceCarrier = Utilities.getCarrier(context);
+        String deviceCarrierId = Utilities.getCarrierId(context);
 
         Log.d(TAG, "SERVICE: Device ID=" + deviceId);
         Log.d(TAG, "SERVICE: Device Name=" + deviceName);
@@ -77,9 +71,6 @@ public class ReportingService extends Service {
         Log.d(TAG, "SERVICE: Carrier=" + deviceCarrier);
         Log.d(TAG, "SERVICE: Carrier ID=" + deviceCarrierId);
 
-        HttpClient httpclient = new DefaultHttpClient();
-        // will add later
-        HttpPost httppost = new HttpPost("");
         try {
             List<NameValuePair> kv = new ArrayList<NameValuePair>(5);
             kv.add(new BasicNameValuePair("hash", deviceId));
@@ -87,29 +78,18 @@ public class ReportingService extends Service {
             kv.add(new BasicNameValuePair("country", deviceCountry));
             kv.add(new BasicNameValuePair("carrier", deviceCarrier));
             kv.add(new BasicNameValuePair("carrier_id", deviceCarrierId));
-            httppost.setEntity(new UrlEncodedFormEntity(kv));
-            httpclient.execute(httppost);
-            getSharedPreferences("VRToolkit", 0).edit().putLong(AnonymousStats.ANONYMOUS_LAST_CHECKED,
-                    System.currentTimeMillis()).apply();
+
+            HttpPost post = new HttpPost(Config.STATS_REPORT_URL);
+            post.setEntity(new UrlEncodedFormEntity(kv));
+
+            HttpClient httpc = new DefaultHttpClient();
+            httpc.execute(post);
+
+            Config.getInstance(context).setStatsLastReport(System.currentTimeMillis());
         } catch (Exception e) {
             Log.e(TAG, "Got Exception", e);
         }
-        ReportingServiceManager.setAlarm(this);
+        ReportingServiceManager.setAlarm(context);
         stopSelf();
-    }
-
-    private void promptUser() {
-        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent nI = new Intent();
-        nI.setComponent(new ComponentName(getPackageName(),AnonymousStats.class.getName()));
-        PendingIntent pI = PendingIntent.getActivity(this, 0, nI, 0);
-        Notification.Builder builder = new Notification.Builder(this)
-        .setAutoCancel(true)
-        .setTicker("Annonymous Statistics")
-        .setContentIntent(pI)
-        .setWhen(0)
-        .setContentTitle("Annonymous Statistics")
-        .setContentText("Enable Reporting");
-        nm.notify(1, builder.getNotification());
     }
 }
