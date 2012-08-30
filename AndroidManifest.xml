@@ -92,11 +92,6 @@
             android:label="@string/app_stats">
         </activity>
 
-        <activity
-            android:name=".stats.PreviewData"
-            android:label="@string/app_stats_preview">
-        </activity>
-
         <receiver
             android:name=".stats.ReportingServiceManager"
             android:enabled="true"
@@ -126,11 +121,6 @@
             android:label="@string/app_downloads">
         </activity>
         
-        <activity
-            android:name=".Accounts"
-            android:label="@string/app_accounts">
-        </activity>        
-
         <activity
             android:name=".AccountsScreen"
             android:label="@string/app_accounts">

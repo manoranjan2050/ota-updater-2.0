@@ -18,7 +18,6 @@
 
     <string name="app_name">OTA Updater</string>
     <string name="app_stats">Anonymous Statistics</string>
-    <string name="app_stats_preview">Preview Data</string>
     <string name="app_license">License</string>
     <string name="app_contrib">Contributors</string>
     <string name="app_downloads">Downloads</string>
