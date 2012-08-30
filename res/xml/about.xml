@@ -33,6 +33,10 @@
         <Preference
             android:key="contrib_pref"
             android:title="@string/about_contrib_title" />
+        
+        <Preference
+            android:key="feedback_pref"
+            android:title="@string/about_feedback_title" />
 
     </PreferenceCategory>
 

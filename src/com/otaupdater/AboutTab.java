@@ -33,6 +33,7 @@ public class AboutTab extends PreferenceFragment {
     private Preference aboutOtaUpdater;
     private Preference license;
     private Preference contribPref;
+    private Preference feedbackPref;
     private Preference followGPlus;
 
     @Override
@@ -55,6 +56,7 @@ public class AboutTab extends PreferenceFragment {
         aboutOtaUpdater = findPreference("about_pref");
         license = findPreference("license_pref");
         contribPref = findPreference("contrib_pref");
+        feedbackPref = findPreference("feedback_pref");
         followGPlus = findPreference("follow_gplus_pref");
     }
 
@@ -73,6 +75,10 @@ public class AboutTab extends PreferenceFragment {
             startActivity(i);
         } else if (preference == contribPref) {
             Intent i = new Intent(getActivity(), Contributors.class);
+            startActivity(i);
+        } else if (preference == feedbackPref) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(Config.WEB_FEEDBACK_URL));
             startActivity(i);
         } else {
             return super.onPreferenceTreeClick(preferenceScreen, preference);

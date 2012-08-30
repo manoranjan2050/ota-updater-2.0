@@ -85,6 +85,7 @@
     <string name="about_version_unknown">Unkown Version (error in package manager)</string>
     <string name="about_license_title">Open-Source License</string>
     <string name="about_contrib_title">Contributors</string>
+    <string name="about_feedback_title">Feedback</string>
     <string name="about_uptodate">Keep Up-to-Date!</string>
     <string name="about_follow_title">Follow us on Google+</string>
 	
@@ -140,8 +141,6 @@
 
     <string name="downloads_recent_title">Recent Downloads</string>
     <string name="downloads_pending_title">Pending Downloads</string>
-
-    <string name="feedback_title">Feedback</string>
 
     <string name="license_title">License</string>
     <string name="license_apache_title">Apache License</string>

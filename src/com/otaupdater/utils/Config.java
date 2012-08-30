@@ -26,6 +26,7 @@ public class Config {
     public static final String LOG_TAG = "OTA::";
 
     public static final String WEB_HOME_URL = "https://www.otaupdatecenter.pro/";
+    public static final String WEB_FEEDBACK_URL = "https://www.otaupdatecenter.pro/?page=feedback";
     public static final String GPLUS_URL = "https://plus.google.com/102074511541445644953/posts";
 
     public static final String GCM_SENDER_ID = "1068482628480";
