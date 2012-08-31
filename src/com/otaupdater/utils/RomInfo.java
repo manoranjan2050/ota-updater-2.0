@@ -17,6 +17,9 @@
 package com.otaupdater.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -31,8 +34,12 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -87,8 +94,7 @@ public class RomInfo {
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         }
 
-        request.setDestinationUri(Uri.fromFile(
-                new File(Config.ROM_DL_PATH_FILE, Utils.sanitizeName(romName + "__" + version + ".zip"))));
+        request.setDestinationUri(Uri.fromFile(new File(Config.ROM_DL_PATH_FILE, getDownloadFileName())));
 
         int netTypes = DownloadManager.Request.NETWORK_WIFI;
         if (!Config.getInstance(ctx).getWifiOnlyDl()) netTypes |= DownloadManager.Request.NETWORK_MOBILE;
@@ -98,8 +104,91 @@ public class RomInfo {
         return manager.enqueue(request);
     }
 
-    public void showUpdateDialog(Context ctx) {
-        //TODO show dialog (+kernel if necessary)
+    public String getDownloadFileName() {
+        return Utils.sanitizeName(romName + "__" + version + ".zip");
+    }
+
+    public void showUpdateDialog(final Context ctx) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
+        alert.setTitle(R.string.alert_update_title);
+        alert.setMessage(ctx.getString(R.string.alert_update_to, romName, version));
+
+        alert.setPositiveButton(R.string.alert_download, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.dismiss();
+
+                final File file = new File(Config.ROM_DL_PATH_FILE, getDownloadFileName());
+                if (file.exists()) {
+                    Log.v("OTA::Download", "Found old zip, checking md5");
+
+                    InputStream is = null;
+                    try {
+                        is = new FileInputStream(file);
+                        MessageDigest digest = MessageDigest.getInstance("MD5");
+                        byte[] data = new byte[4096];
+                        int nRead = -1;
+                        while ((nRead = is.read(data)) != -1) {
+                            digest.update(data, 0, nRead);
+                        }
+                        String oldMd5 = Utils.byteArrToStr(digest.digest());
+                        Log.v("OTA::Download", "old zip md5: " + oldMd5);
+                        if (!md5.equalsIgnoreCase(oldMd5)) {
+                            file.delete();
+                        } else {
+                            //TODO show flash dialog
+                            return;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        file.delete();
+                    } finally {
+                        if (is != null) {
+                            try { is.close(); }
+                            catch (Exception e) { }
+                        }
+                    }
+                }
+
+                final long dlID = fetchFile(ctx);
+
+                final ProgressDialog progressDialog = new ProgressDialog(ctx);
+                progressDialog.setTitle(R.string.alert_downloading);
+                progressDialog.setMessage("Changelog: " + changelog);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progressDialog.setCancelable(false);
+                progressDialog.setProgress(0);
+
+                //TODO update progress bar
+
+                progressDialog.setButton(Dialog.BUTTON_POSITIVE, ctx.getString(R.string.alert_hide),
+                        new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        progressDialog.dismiss();
+                    }
+                });
+
+                progressDialog.setButton(Dialog.BUTTON_NEGATIVE, ctx.getString(android.R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        progressDialog.dismiss();
+
+                        DownloadManager dm = (DownloadManager) ctx.getSystemService(Context.DOWNLOAD_SERVICE);
+                        dm.remove(dlID);
+                    }
+                });
+            }
+        });
+
+        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        alert.create().show();
     }
 
     public static void fetchInfo(Context ctx) {
