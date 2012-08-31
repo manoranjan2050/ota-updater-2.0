@@ -121,6 +121,15 @@
             android:label="@string/app_downloads">
         </activity>
         
+        <receiver
+            android:name=".DownloadReceiver">
+            
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
+            </intent-filter>
+        </receiver>
+        
         <activity
             android:name=".AccountsScreen"
             android:label="@string/app_accounts">

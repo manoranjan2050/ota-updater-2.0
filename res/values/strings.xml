@@ -141,6 +141,22 @@
 
     <string name="downloads_recent_title">Recent Downloads</string>
     <string name="downloads_pending_title">Pending Downloads</string>
+    <string name="downloads_alt_zip">Zip</string>
+    <string name="downloads_size_progress_b">%1$d / %2$d bytes</string>
+    <string name="downloads_size_progress_kb">%1$d / %2$d KB</string>
+    <string name="downloads_size_progress_mb">%1$d / %2$d MB</string>
+    <string name="downloads_size_progress_gb">%1$d / %2$d GB</string>
+    <string name="downloads_pct_progress">%1$d%</string>
+    <string name="downloads_paused_wifi">Waiting for Wi-Fi&#8230;</string>
+    <string name="downloads_paused_network">Waiting for Data connection&#8230;</string>
+    <string name="downloads_paused_retry">Waiting to retry download&#8230;</string>
+    <string name="downloads_paused_unknown">Waiting for download to proceed&#8230;</string>
+    <string name="downloads_failed_http">Download failed: HTTP Error</string>
+    <string name="downloads_failed_mount">Download failed: SD Card not mounted</string>
+    <string name="downloads_failed_space">Download failed: Not enough space</string>
+    <string name="downloads_failed_unknown">Download failed</string>
+    <string name="downloads_failed_fileexists">Download failed: file already exists</string>
+    <string name="downloads_failed_resume">Download failed: cannot resume download</string>
 
     <string name="license_title">License</string>
     <string name="license_apache_title">Apache License</string>
