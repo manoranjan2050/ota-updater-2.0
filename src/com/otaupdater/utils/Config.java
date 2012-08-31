@@ -161,11 +161,7 @@ public class Config {
 
     public void setKeyExpiry(long expiry) {
         this.keyExpires = expiry;
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            editor.putLong("keyExpires", keyExpires);
-            editor.commit();
-        }
+        putLong("keyExpires", keyExpires);
     }
 
     public boolean getShowNotif() {
@@ -174,11 +170,7 @@ public class Config {
 
     public void setShowNotif(boolean showNotif) {
         this.showNotif = showNotif;
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            editor.putBoolean("showNotif", showNotif);
-            editor.commit();
-        }
+        putBoolean("showNotif", showNotif);
     }
 
     public boolean getWifiOnlyDl() {
@@ -187,11 +179,7 @@ public class Config {
 
     public void setWifiOnlyDl(boolean wifiOnlyDl) {
         this.wifiOnlyDl = wifiOnlyDl;
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            editor.putBoolean("wifiOnlyDl", wifiOnlyDl);
-            editor.commit();
-        }
+        putBoolean("wifiOnlyDl", wifiOnlyDl);
     }
 
     public boolean getIgnoredUnsupportedWarn() {
@@ -200,11 +188,7 @@ public class Config {
 
     public void setIgnoredUnsupportedWarn(boolean ignored) {
         this.ignoredUnsupportedWarn = ignored;
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            editor.putBoolean("ignoredUnsupportedWarn", ignored);
-            editor.commit();
-        }
+        putBoolean("ignoredUnsupportedWarn", ignored);
     }
 
     public boolean getIgnoredDataWarn() {
@@ -213,11 +197,7 @@ public class Config {
 
     public void setIgnoredDataWarn(boolean ignored) {
         this.ignoredDataWarn = ignored;
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            editor.putBoolean("ignoredDataWarn", ignored);
-            editor.commit();
-        }
+        putBoolean("ignoredDataWarn", ignored);
     }
 
     public int getLastVersion() {
@@ -334,11 +314,7 @@ public class Config {
 
     public void setStatsOptIn(boolean statsOptIn) {
         this.statsOptIn = statsOptIn;
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            editor.putBoolean("statsOptIn", statsOptIn);
-            editor.commit();
-        }
+        putBoolean("statsOptIn", statsOptIn);
     }
 
     public boolean isStatsFirstRun() {
@@ -347,11 +323,7 @@ public class Config {
 
     public void setStatsFirstRun(boolean firstRun) {
         this.statsFirstRun = firstRun;
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            editor.putBoolean("statsFirstRun", statsFirstRun);
-            editor.commit();
-        }
+        putBoolean("statsFirstRun", statsFirstRun);
     }
 
     public long getStatsLastReport() {
@@ -360,12 +332,7 @@ public class Config {
 
     public void setStatsLastReport(long lastReport) {
         this.statsLastReport = lastReport;
-        synchronized (PREFS) {
-            SharedPreferences.Editor editor = PREFS.edit();
-            editor.putLong("statsLastReport", statsLastReport);
-            editor.commit();
-
-        }
+        putLong("statsLastReport", statsLastReport);
     }
 
     public boolean isStatsAlarmSet() {
@@ -374,9 +341,21 @@ public class Config {
 
     public void setStatsAlarmSet(boolean alarmSet) {
         this.statsAlarmSet = alarmSet;
+        putBoolean("statsAlarmSet", statsAlarmSet);
+    }
+
+    private void putBoolean(String name, boolean value) {
         synchronized (PREFS) {
             SharedPreferences.Editor editor = PREFS.edit();
-            editor.putBoolean("statsAlarmSet", statsAlarmSet);
+            editor.putBoolean(name, value);
+            editor.commit();
+        }
+    }
+
+    private void putLong(String name, long value) {
+        synchronized (PREFS) {
+            SharedPreferences.Editor editor = PREFS.edit();
+            editor.putLong(name, value);
             editor.commit();
         }
     }
