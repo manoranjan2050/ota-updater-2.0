@@ -154,7 +154,7 @@ public class Utils {
     public static boolean haveProKey(Context ctx) {
         PackageManager pm = ctx.getPackageManager();
         try {
-            pm.getPackageInfo(ctx.getPackageName() + ".key", 0);
+            pm.getPackageInfo(Config.KEY_PACKAGE, 0);
         } catch (NameNotFoundException e) {
             return false;
         }
