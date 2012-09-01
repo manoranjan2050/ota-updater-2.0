@@ -196,6 +196,7 @@
     <string name="prokey_noverify">Unable to verify PRO Key. Will try again later</string>
     <string name="prokey_invalid">You have a pirated PRO Key! Please buy a PRO Key from the Play Store!</string>
     <string name="prokey_thanks">Thank you for buying the PRO Key!!!\n\nAll of the money goes to pay for hosting costs in order to provide you with the best possible service.\n\nPlease enjoy all of the features of our app, along with no ads!\nThanks again for the support!</string>
+    <string name="prokey_redeemed_thanks">You have redeemed a PRO Key code!\n\nThank you for your support. Please spread the word about this app so we can continue to grow and provide the best possible OTA service!</string>
     <string name="prokey_verify_error_nodata">Unable to verify PRO Key - no data connection</string>
     <string name="prokey_verify_error_nomarket">Unable to verify PRO Key - Play Store not installed</string>
     <string name="prokey_verify_error_other">Unable to verify PRO Key - Unknown error</string>

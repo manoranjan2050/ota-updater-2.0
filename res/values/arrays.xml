@@ -26,4 +26,15 @@
         <item>Pending Downloads</item>
         <item>Recent Downloads</item>
     </string-array>
+    
+    <string-array name="prokey_ops">
+        <item>Buy from Play Store</item>
+        <item>Redeem Code</item>
+        <item>Donate (PayPal)</item>
+    </string-array>
+    
+    <string-array name="prokey_ops_nomarket">
+        <item>Redeem Code</item>
+        <item>Donate (PayPal)</item>
+    </string-array>
 </resources>

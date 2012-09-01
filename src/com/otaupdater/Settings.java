@@ -20,6 +20,7 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -123,9 +124,43 @@ public class Settings extends PreferenceActivity {
                 } else {
                     Utils.verifyProKey(getApplicationContext());
                 }
+            } else if (cfg.hasValidProKey()) {
+                AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+                dlg.setMessage(R.string.prokey_redeemed_thanks);
+                dlg.setNeutralButton(R.string.alert_close, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dlg.create().show();
+            } else {
+                AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+                dlg.setTitle(R.string.settings_prokey_title);
+
+                final boolean market = Utils.marketAvailable(this);
+                dlg.setItems(market ? R.array.prokey_ops : R.array.prokey_ops_nomarket, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        which -= market ? 1 : 0;
+                        switch (which) {
+                        case -1:
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + Config.KEY_PACKAGE)));
+                            break;
+                        case 0:
+                            //TODO code redeem
+                            break;
+                        case 1:
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Config.PP_DONATE_URL)));
+                            break;
+                        }
+                    }
+                });
+
+                dlg.create().show();
             }
         } else if (preference == donatePref) {
-            //TODO paypal donate
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(Config.PP_DONATE_URL)));
         } else {
             return super.onPreferenceTreeClick(preferenceScreen, preference);
         }
