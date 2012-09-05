@@ -22,7 +22,7 @@
     <TextView android:id="@+id/filename"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_download_default"
+        android:drawableLeft="@drawable/zip"
         android:textSize="20dip" />
 
 </LinearLayout>

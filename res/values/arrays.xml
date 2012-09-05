@@ -25,6 +25,15 @@
     <string-array name="download_types">
         <item>Pending Downloads</item>
         <item>Recent Downloads</item>
+        <item>All ROM Downloads</item>
+        <item>All Kernel Downloads</item>
+    </string-array>
+    
+    <string-array name="download_types_empty">
+        <item>No Pending Downloads</item>
+        <item>No Recent Downloads</item>
+        <item>No ROM Downloads</item>
+        <item>No Kernel Downloads</item>
     </string-array>
     
     <string-array name="prokey_ops">

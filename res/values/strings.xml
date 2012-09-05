@@ -78,6 +78,8 @@
     <string name="toast_download_error">There was an error with the download!</string>
     <string name="toast_contrib_file_error">Error loading contributors file</string>
     <string name="toast_license_file_error">Error loading contributors file</string>
+    <string name="toast_nosd_shared">Your SD card is unavailable - mounted as USB Storage</string>
+    <string name="toast_nosd_error">You SD card is unavailable</string>
 
     <string name="about_title">About</string>
     <string name="about_ota_title">OTA Updater</string>
@@ -158,6 +160,7 @@
     <string name="downloads_failed_unknown">Download failed</string>
     <string name="downloads_failed_fileexists">Download failed: file already exists</string>
     <string name="downloads_failed_resume">Download failed: cannot resume download</string>
+    <string name="downloads_none">No Downloads Found</string>
 
     <string name="license_title">License</string>
     <string name="license_apache_title">Apache License</string>

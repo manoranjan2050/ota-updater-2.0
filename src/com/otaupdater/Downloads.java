@@ -16,7 +16,9 @@
 
 package com.otaupdater;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import android.app.ActionBar;
 import android.app.DownloadManager;
@@ -24,8 +26,10 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,12 +37,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.otaupdater.utils.Config;
 
 public class Downloads extends ListActivity implements ActionBar.OnNavigationListener {
 
-    private DownloadAdapter adapter = null;
+    private ArrayList<String> fileList = new ArrayList<String>();
+    private DownloadAdapter dmAdapter = null;
+    private ArrayAdapter<String> fileAdapter = null;
     private int state = 0;
 
     private static final int REFRESH_DELAY = 1000;
@@ -59,6 +69,14 @@ public class Downloads extends ListActivity implements ActionBar.OnNavigationLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        String extState = Environment.getExternalStorageState();
+        if (!extState.equals(Environment.MEDIA_MOUNTED) && !extState.equals(Environment.MEDIA_MOUNTED_READ_ONLY)) {
+            Toast.makeText(this, extState.equals(Environment.MEDIA_SHARED) ? R.string.toast_nosd_shared : R.string.toast_nosd_error, Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+        setContentView(R.layout.downloads);
 
         final ActionBar bar = getActionBar();
         bar.setDisplayHomeAsUpEnabled(true);
@@ -92,8 +110,24 @@ public class Downloads extends ListActivity implements ActionBar.OnNavigationLis
 
     @Override
     protected void onDestroy() {
-        adapter.getCursor().close();
+        if (dmAdapter != null) {
+            dmAdapter.getCursor().close();
+            dmAdapter = null;
+        }
+        if (fileAdapter != null) {
+            fileList.clear();
+            fileAdapter = null;
+        }
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+        state = itemPosition;
+        ((TextView) getListView().getEmptyView()).setText(
+                getResources().getStringArray(R.array.download_types_empty)[itemPosition]);
+        updateFileList();
+        return true;
     }
 
     @Override
@@ -106,32 +140,67 @@ public class Downloads extends ListActivity implements ActionBar.OnNavigationLis
         return false;
     }
 
-    private void updateFileList() {
-        DownloadManager.Query query = new DownloadManager.Query();
-        if (state == 0) {
-            query.setFilterByStatus(DownloadManager.STATUS_PAUSED | DownloadManager.STATUS_PENDING | DownloadManager.STATUS_RUNNING);
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        String path;
+        if (state < 2) {
+            Cursor c = dmAdapter.getCursor();
+            c.moveToPosition(position);
+            path = c.getString(c.getColumnIndexOrThrow(DownloadManager.COLUMN_LOCAL_FILENAME));
         } else {
-            query.setFilterByStatus(DownloadManager.STATUS_FAILED | DownloadManager.STATUS_SUCCESSFUL);
+            path = fileList.get(position);
+            path = (state == 2 ? Config.ROM_DL_PATH : Config.KERNEL_DL_PATH) + path;
         }
-
-        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-        Cursor c = dm.query(query);
-
-        if (adapter == null) {
-            adapter = new DownloadAdapter(this, c, 0);
-            getListView().setAdapter(adapter);
-        } else {
-            adapter.changeCursor(c);
-        }
-
-        REFRESH_HANDLER.sendMessageDelayed(REFRESH_HANDLER.obtainMessage(), REFRESH_DELAY);
+        Log.v(Config.LOG_TAG + "DL", "clicked on " + path);
+        //TODO show install dialog if necessary
     }
 
-    @Override
-    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-        state = itemPosition;
-        updateFileList();
-        return true;
+    private void updateFileList() {
+        if (state < 2) {
+            DownloadManager.Query query = new DownloadManager.Query();
+            if (state == 0) {
+                query.setFilterByStatus(DownloadManager.STATUS_PAUSED | DownloadManager.STATUS_PENDING | DownloadManager.STATUS_RUNNING);
+            } else {
+                query.setFilterByStatus(DownloadManager.STATUS_FAILED | DownloadManager.STATUS_SUCCESSFUL);
+            }
+
+            DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+            Cursor c = dm.query(query);
+
+            if (dmAdapter == null) {
+                dmAdapter = new DownloadAdapter(this, c, 0);
+                getListView().setAdapter(dmAdapter);
+
+                if (fileAdapter != null) {
+                    fileList.clear();
+                    fileAdapter = null;
+                }
+            } else {
+                dmAdapter.changeCursor(c);
+            }
+
+            REFRESH_HANDLER.sendMessageDelayed(REFRESH_HANDLER.obtainMessage(), REFRESH_DELAY);
+        } else {
+            File dir = state == 2 ? Config.ROM_DL_PATH_FILE : Config.KERNEL_DL_PATH_FILE;
+            File[] files = dir.listFiles();
+            fileList.clear();
+            for (File file : files) {
+                if (file.isDirectory()) continue;
+                fileList.add(file.getName());
+            }
+
+            if (fileAdapter == null) {
+                fileAdapter = new ArrayAdapter<String>(this, R.layout.download_file, R.id.filename, fileList);
+                getListView().setAdapter(fileAdapter);
+
+                if (dmAdapter != null) {
+                    dmAdapter.getCursor().close();
+                    dmAdapter = null;
+                }
+            } else {
+                fileAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     protected static class DownloadAdapter extends CursorAdapter {
