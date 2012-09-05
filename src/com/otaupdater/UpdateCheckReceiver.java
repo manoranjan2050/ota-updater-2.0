@@ -48,7 +48,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                 RomInfo info = cfg.getStoredRomUpdate();
                 if (Utils.isRomUpdate(info)) {
                     if (cfg.getShowNotif()) {
-                        Utils.showRomUpdateNotif(context, info);
+                        info.showUpdateNotif(context);
                         Log.v(Config.LOG_TAG + "Receiver", "Found stored rom update");
                     } else {
                         Log.v(Config.LOG_TAG + "Receiver", "Found stored rom update, notif not shown");
@@ -56,7 +56,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                 } else {
                     Log.v(Config.LOG_TAG + "Receiver", "Found invalid stored rom update");
                     cfg.clearStoredRomUpdate();
-                    Utils.clearRomUpdateNotif(context);
+                    RomInfo.clearUpdateNotif(context);
                 }
             }
         } else {
@@ -71,7 +71,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                 KernelInfo info = cfg.getStoredKernelUpdate();
                 if (Utils.isKernelUpdate(info)) {
                     if (cfg.getShowNotif()) {
-                        Utils.showKernelUpdateNotif(context, info);
+                        info.showUpdateNotif(context);
                         Log.v(Config.LOG_TAG + "Receiver", "Found stored kernel update");
                     } else {
                         Log.v(Config.LOG_TAG + "Receiver", "Found stored kernel update, notif not shown");
@@ -79,7 +79,7 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                 } else {
                     Log.v(Config.LOG_TAG + "Receiver", "Found invalid stored kernel update");
                     cfg.clearStoredKernelUpdate();
-                    Utils.clearKernelUpdateNotif(context);
+                    KernelInfo.clearUpdateNotif(context);
                 }
             }
         } else {
@@ -130,13 +130,13 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                             if (Utils.isRomUpdate(info)) {
                                 cfg.storeRomUpdate(info);
                                 if (cfg.getShowNotif()) {
-                                    Utils.showRomUpdateNotif(context, info);
+                                    info.showUpdateNotif(context);
                                 } else {
                                     Log.v(Config.LOG_TAG + "Receiver", "found rom update, notif not shown");
                                 }
                             } else {
                                 cfg.clearStoredRomUpdate();
-                                Utils.clearRomUpdateNotif(context);
+                                RomInfo.clearUpdateNotif(context);
                             }
 
                             romWL.release();
@@ -160,13 +160,13 @@ public class UpdateCheckReceiver extends BroadcastReceiver {
                             if (Utils.isKernelUpdate(info)) {
                                 cfg.storeKernelUpdate(info);
                                 if (cfg.getShowNotif()) {
-                                    Utils.showKernelUpdateNotif(context, info);
+                                    info.showUpdateNotif(context);
                                 } else {
                                     Log.v(Config.LOG_TAG + "Receiver", "found kernel update, notif not shown");
                                 }
                             } else {
                                 cfg.clearStoredKernelUpdate();
-                                Utils.clearKernelUpdateNotif(context);
+                                KernelInfo.clearUpdateNotif(context);
                             }
 
                             kernelWL.release();

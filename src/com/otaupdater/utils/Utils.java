@@ -38,11 +38,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -55,8 +51,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.otaupdater.R;
-import com.otaupdater.TabDisplay;
 import com.otaupdater.utils.ShellCommand.CommandResult;
 
 public class Utils {
@@ -353,70 +347,6 @@ public class Utils {
         return false;
     }
 
-    @TargetApi(11)
-    @SuppressWarnings("deprecation")
-    public static void showRomUpdateNotif(Context ctx, RomInfo info) {
-        Intent i = new Intent(ctx, TabDisplay.class);
-        i.setAction(TabDisplay.ROM_NOTIF_ACTION);
-        info.addToIntent(i);
-
-        NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        Notification notif = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            Notification.Builder builder = new Notification.Builder(ctx);
-            builder.setContentIntent(contentIntent);
-            builder.setContentTitle(ctx.getString(R.string.notif_source));
-            builder.setContentText(ctx.getString(R.string.notif_text_rom));
-            builder.setTicker(ctx.getString(R.string.notif_text_rom));
-            builder.setWhen(System.currentTimeMillis());
-            builder.setSmallIcon(R.drawable.updates);
-            notif = builder.getNotification();
-        } else {
-            notif = new Notification(R.drawable.updates, ctx.getString(R.string.notif_text_rom), System.currentTimeMillis());
-            notif.setLatestEventInfo(ctx, ctx.getString(R.string.notif_source), ctx.getString(R.string.notif_text_rom), contentIntent);
-        }
-        nm.notify(Config.ROM_NOTIF_ID, notif);
-    }
-
-    public static void clearRomUpdateNotif(Context ctx) {
-        NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.cancel(Config.ROM_NOTIF_ID);
-    }
-
-    @TargetApi(11)
-    @SuppressWarnings("deprecation")
-    public static void showKernelUpdateNotif(Context ctx, KernelInfo info) {
-        Intent i = new Intent(ctx, TabDisplay.class);
-        i.setAction(TabDisplay.KERNEL_NOTIF_ACTION);
-        info.addToIntent(i);
-
-        NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        Notification notif = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            Notification.Builder builder = new Notification.Builder(ctx);
-            builder.setContentIntent(contentIntent);
-            builder.setContentTitle(ctx.getString(R.string.notif_source));
-            builder.setContentText(ctx.getString(R.string.notif_text_kernel));
-            builder.setTicker(ctx.getString(R.string.notif_text_kernel));
-            builder.setWhen(System.currentTimeMillis());
-            builder.setSmallIcon(R.drawable.updates);
-            notif = builder.getNotification();
-        } else {
-            notif = new Notification(R.drawable.updates, ctx.getString(R.string.notif_text_kernel), System.currentTimeMillis());
-            notif.setLatestEventInfo(ctx, ctx.getString(R.string.notif_source), ctx.getString(R.string.notif_text_kernel), contentIntent);
-        }
-        nm.notify(Config.KERNEL_NOTIF_ID, notif);
-    }
-
-    public static void clearKernelUpdateNotif(Context ctx) {
-        NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.cancel(Config.KERNEL_NOTIF_ID);
-    }
-
     public static void updateGCMRegistration(Context ctx, String regID) {
         Log.v(Config.LOG_TAG + "updateGCM", "updating GCM reg infos");
         ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
@@ -473,13 +403,13 @@ public class Utils {
                     if (Utils.isRomUpdate(info)) {
                         cfg.storeRomUpdate(info);
                         if (cfg.getShowNotif()) {
-                            Utils.showRomUpdateNotif(context, info);
+                            info.showUpdateNotif(context);
                         } else {
                             Log.v(Config.LOG_TAG + "updateGCM", "got rom update response, notif not shown");
                         }
                     } else {
                         cfg.clearStoredRomUpdate();
-                        Utils.clearRomUpdateNotif(context);
+                        RomInfo.clearUpdateNotif(context);
                     }
                 }
 
@@ -497,13 +427,13 @@ public class Utils {
                     if (Utils.isKernelUpdate(info)) {
                         cfg.storeKernelUpdate(info);
                         if (cfg.getShowNotif()) {
-                            Utils.showKernelUpdateNotif(context, info);
+                            info.showUpdateNotif(context);
                         } else {
                             Log.v(Config.LOG_TAG + "updateGCM", "got kernel update response, notif not shown");
                         }
                     } else {
                         cfg.clearStoredKernelUpdate();
-                        Utils.clearKernelUpdateNotif(context);
+                        KernelInfo.clearUpdateNotif(context);
                     }
                 }
             } else {

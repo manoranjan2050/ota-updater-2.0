@@ -123,13 +123,13 @@ public class KernelTab extends PreferenceFragment {
                     cfg.storeKernelUpdate(info);
                     availUpdatePref.setSummary(getString(R.string.updates_new, info.kernelName, info.version));
                     if (cfg.getShowNotif()) {
-                        Utils.showKernelUpdateNotif(getActivity(), info);
+                        info.showUpdateNotif(getActivity());
                     } else {
                         Log.v(Config.LOG_TAG + "KernelTab", "found kernel update, notif not shown");
                     }
                 } else {
                     cfg.clearStoredKernelUpdate();
-                    Utils.clearKernelUpdateNotif(getActivity());
+                    KernelInfo.clearUpdateNotif(getActivity());
                     availUpdatePref.setSummary(R.string.updates_none);
                     Toast.makeText(getActivity(), R.string.toast_no_updates, Toast.LENGTH_SHORT).show();
                 }

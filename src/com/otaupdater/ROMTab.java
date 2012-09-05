@@ -124,13 +124,13 @@ public class ROMTab extends PreferenceFragment {
                     cfg.storeRomUpdate(info);
                     availUpdatePref.setSummary(getString(R.string.updates_new, info.romName, info.version));
                     if (cfg.getShowNotif()) {
-                        Utils.showRomUpdateNotif(getActivity(), info);
+                        info.showUpdateNotif(getActivity());
                     } else {
                         Log.v(Config.LOG_TAG + "RomTab", "found rom update, notif not shown");
                     }
                 } else {
                     cfg.clearStoredRomUpdate();
-                    Utils.clearRomUpdateNotif(getActivity());
+                    RomInfo.clearUpdateNotif(getActivity());
                     availUpdatePref.setSummary(R.string.updates_none);
                     Toast.makeText(getActivity(), R.string.toast_no_updates, Toast.LENGTH_SHORT).show();
                 }

@@ -37,6 +37,8 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DownloadManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -44,9 +46,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.otaupdater.R;
+import com.otaupdater.TabDisplay;
 
 public class KernelInfo {
     public String kernelName;
@@ -82,6 +86,30 @@ public class KernelInfo {
         i.putExtra("kernel_info_url", url);
         i.putExtra("kernel_info_md5", md5);
         i.putExtra("kernel_info_date", Utils.formatDate(date));
+    }
+
+    public void showUpdateNotif(Context ctx) {
+        Intent i = new Intent(ctx, TabDisplay.class);
+        i.setAction(TabDisplay.KERNEL_NOTIF_ACTION);
+        this.addToIntent(i);
+
+        NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
+        builder.setContentIntent(contentIntent);
+        builder.setContentTitle(ctx.getString(R.string.notif_source));
+        builder.setContentText(ctx.getString(R.string.notif_text_kernel));
+        builder.setTicker(ctx.getString(R.string.notif_text_kernel));
+        builder.setWhen(System.currentTimeMillis());
+        builder.setSmallIcon(R.drawable.updates);
+
+        nm.notify(Config.KERNEL_NOTIF_ID, builder.build());
+    }
+
+    public static void clearUpdateNotif(Context ctx) {
+        NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.cancel(Config.KERNEL_NOTIF_ID);
     }
 
     @TargetApi(11)
