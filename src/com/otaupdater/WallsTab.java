@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import android.app.Fragment;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,8 +38,7 @@ import com.otaupdater.utils.ImageAdapter;
 public class WallsTab extends Fragment implements OnItemSelectedListener {
 	private int screenHeight;
 	private int screenWidth;
-	String deviceRes;
-	private String TAG = "WallsTab";
+	private String deviceRes;
 
     public int getShownIndex() {
         return getArguments().getInt("index", 0);
@@ -49,40 +48,20 @@ public class WallsTab extends Fragment implements OnItemSelectedListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		//TODO something that checks orientation??
 		DisplayMetrics metrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        screenWidth = metrics.widthPixels;
-        screenHeight = metrics.heightPixels;
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        display.getMetrics(metrics);
 
-
-		int ot = getScreenOrientation();
-		Log.d(TAG, Integer.toString(ot));
-		switch(ot) {
-			case  Configuration.ORIENTATION_LANDSCAPE:
-				Log.d(TAG ,"ORIENTATION_LANDSCAPE");
-			break;
-			case Configuration.ORIENTATION_PORTRAIT:
-				Log.d(TAG, "ORIENTATION_PORTRAIT");
-				deviceRes = Integer.toString(screenWidth) + "x" + Integer.toString(screenHeight);
-            break;
-			case Configuration.ORIENTATION_SQUARE:
-				Log.d(TAG ,"ORIENTATION_SQUARE");
-				deviceRes = Integer.toString(screenWidth) + "x" + Integer.toString(screenHeight);
-            break;
-			case Configuration.ORIENTATION_UNDEFINED:
-				Log.d(TAG,"ORIENTATION_UNDEFINED");
-            break;
-            default:
-            	Log.d(TAG, "DEFAULT");
-            	deviceRes = Integer.toString(screenWidth) + "x" + Integer.toString(screenHeight);
-            break;
+        int orient = display.getRotation();
+        if (orient == Surface.ROTATION_90 || orient == Surface.ROTATION_270) {
+            screenWidth = metrics.heightPixels;
+            screenHeight = metrics.widthPixels;
+        } else {
+            screenWidth = metrics.widthPixels;
+            screenHeight = metrics.heightPixels;
         }
-	}
 
-
-	private int getScreenOrientation(){
-	    return getResources().getConfiguration().orientation;
+        deviceRes = Integer.toString(screenWidth) + "x" + Integer.toString(screenHeight);
 	}
 
 	@Override
@@ -108,11 +87,9 @@ public class WallsTab extends Fragment implements OnItemSelectedListener {
 
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-		// TODO Auto-generated method stub
+		// TODO fetch wallpapers from server
 	}
 
 	@Override
-	public void onNothingSelected(AdapterView<?> parent) {
-		// TODO Auto-generated method stub
-	}
+	public void onNothingSelected(AdapterView<?> parent) { }
 }
