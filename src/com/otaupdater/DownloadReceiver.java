@@ -21,8 +21,10 @@ public class DownloadReceiver extends BroadcastReceiver {
         } else if (action.equals(DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
             //TODO show flash dialog if necessary, otherwise go to Downloads
         } else if (action.equals(DL_ROM_ACTION)) {
+            RomInfo.clearUpdateNotif(context);
             RomInfo.fromIntent(intent).fetchFile(context);
         } else if (action.equals(DL_KERNEL_ACTION)) {
+            KernelInfo.clearUpdateNotif(context);
             KernelInfo.fromIntent(intent).fetchFile(context);
         }
     }
