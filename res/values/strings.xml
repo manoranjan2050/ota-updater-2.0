@@ -28,7 +28,8 @@
     <string name="notif_text_kernel">OTA Kernel Update Available</string>
     <string name="notif_text_app">OTA App Update Available</string>
     <string name="notif_source">OTA Updater</string>
-    <string name="notif_download">OTA Update Downloading</string>
+    <string name="notif_downloading">OTA Update Downloading</string>
+    <string name="notif_download">Download</string>
 
     <string name="alert_nodata_title">No Data Connection!</string>
     <string name="alert_nodata_message">You have no data connection\nPlease turn on Wi-Fi or Mobile Data in order to check for and download OTA updates.</string>
@@ -52,7 +53,8 @@
     <string name="alert_downloading">Downloading&#8230;</string>
     <string name="alert_unsupported_title">Unsupported ROM/Kernel</string>
     <string name="alert_unsupported_message">The ROM or Kernel developer has not enabled support in the ROM and/or Kernel for the OTA Updater! Please ask them (kindly) to add support before using this app!\n\n(rom.ota.prop and kernel.ota.prop missing)</string>
-    <string name="alert_update_to">This update will update your ROM (%1$s) to version %2$s</string>
+    <string name="alert_update_kernel_to">This update will update your ROM (%1$s) to version %2$s</string>
+    <string name="alert_update_rom_to">This update will update your kernel (%1$s) to version %2$s</string>
     <string name="alert_prune_title">Delete files older than</string>
     <string name="alert_retrieving">Retrieving Data&#8230;</string>
     <string name="alert_profile_title">Profile</string>

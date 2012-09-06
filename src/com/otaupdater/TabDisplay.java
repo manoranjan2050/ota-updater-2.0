@@ -42,8 +42,8 @@ import com.otaupdater.utils.Config;
 import com.otaupdater.utils.Utils;
 
 public class TabDisplay extends FragmentActivity {
-    public static final String ROM_NOTIF_ACTION = "com.updater.ota.two.action.ROM_NOTIF_ACTION";
-    public static final String KERNEL_NOTIF_ACTION = "com.updater.ota.two.action.KERNEL_NOTIF_ACTION";
+    public static final String ROM_NOTIF_ACTION = "com.otaupdater.action.ROM_NOTIF_ACTION";
+    public static final String KERNEL_NOTIF_ACTION = "com.otaupdater.action.KERNEL_NOTIF_ACTION";
 
     private ViewPager mViewPager;
     private TabsAdapter mTabsAdapter;

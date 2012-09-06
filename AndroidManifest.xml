@@ -127,6 +127,8 @@
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
                 <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
+                <action android:name="com.otaupdater.action.DL_ROM_ACTION" />
+                <action android:name="com.otaupdater.action.DL_KERNEL_ACTION" />
             </intent-filter>
         </receiver>
         

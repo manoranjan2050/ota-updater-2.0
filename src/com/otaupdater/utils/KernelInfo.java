@@ -49,6 +49,7 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.otaupdater.DownloadReceiver;
 import com.otaupdater.R;
 import com.otaupdater.TabDisplay;
 
@@ -89,21 +90,28 @@ public class KernelInfo {
     }
 
     public void showUpdateNotif(Context ctx) {
-        Intent i = new Intent(ctx, TabDisplay.class);
-        i.setAction(TabDisplay.KERNEL_NOTIF_ACTION);
-        this.addToIntent(i);
+        Intent mainInent = new Intent(ctx, TabDisplay.class);
+        mainInent.setAction(TabDisplay.KERNEL_NOTIF_ACTION);
+        this.addToIntent(mainInent);
+        PendingIntent mainPIntent = PendingIntent.getActivity(ctx, 0, mainInent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
+        Intent dlInent = new Intent(ctx, DownloadReceiver.class);
+        dlInent.setAction(DownloadReceiver.DL_KERNEL_ACTION);
+        this.addToIntent(dlInent);
+        PendingIntent dlPIntent = PendingIntent.getBroadcast(ctx, 0, dlInent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
-        builder.setContentIntent(contentIntent);
+        builder.setContentIntent(mainPIntent);
         builder.setContentTitle(ctx.getString(R.string.notif_source));
         builder.setContentText(ctx.getString(R.string.notif_text_kernel));
         builder.setTicker(ctx.getString(R.string.notif_text_kernel));
         builder.setWhen(System.currentTimeMillis());
         builder.setSmallIcon(R.drawable.updates);
+        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(changelog));
+        builder.setPriority(NotificationCompat.PRIORITY_LOW);
+        builder.addAction(R.drawable.ic_download_default, ctx.getString(R.string.notif_download), dlPIntent);
 
+        NotificationManager nm = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(Config.KERNEL_NOTIF_ID, builder.build());
     }
 
@@ -115,7 +123,7 @@ public class KernelInfo {
     @TargetApi(11)
     public long fetchFile(Context ctx) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.setTitle(ctx.getString(R.string.notif_download));
+        request.setTitle(ctx.getString(R.string.notif_downloading));
         request.setDescription(kernelName);
         request.setVisibleInDownloadsUi(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -139,7 +147,7 @@ public class KernelInfo {
     public void showUpdateDialog(final Context ctx) {
         AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
         alert.setTitle(R.string.alert_update_title);
-        alert.setMessage(ctx.getString(R.string.alert_update_to, kernelName, version));
+        alert.setMessage(ctx.getString(R.string.alert_update_kernel_to, kernelName, version));
 
         alert.setPositiveButton(R.string.alert_download, new DialogInterface.OnClickListener() {
             @Override
