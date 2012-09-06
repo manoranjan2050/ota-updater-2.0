@@ -339,8 +339,8 @@ public class Downloads extends ListActivity implements ActionBar.OnNavigationLis
 
             bytesView.setText(ctx.getString(bytesTxtRes, scaledDone, scaledTotal));
             pctView.setText(ctx.getString(R.string.downloads_pct_progress, Math.round(100 * ((float) done) / total)));
-            bar.setMax(scaledTotal);
-            bar.setProgress(scaledDone);
+            bar.setMax(total);
+            bar.setProgress(done);
         }
 
         @Override
