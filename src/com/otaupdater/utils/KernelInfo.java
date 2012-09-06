@@ -35,11 +35,9 @@ import org.json.JSONObject;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -188,28 +186,20 @@ public class KernelInfo {
 
                 final long dlID = fetchFile(ctx);
 
-                final ProgressDialog progressDialog = new ProgressDialog(ctx);
-                progressDialog.setTitle(R.string.alert_downloading);
-                progressDialog.setMessage("Changelog: " + changelog);
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                progressDialog.setCancelable(false);
-                progressDialog.setProgress(0);
-
-                //TODO update progress bar
-
-                progressDialog.setButton(Dialog.BUTTON_POSITIVE, ctx.getString(R.string.alert_hide),
-                        new DialogInterface.OnClickListener() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                builder.setTitle(R.string.alert_downloading);
+                builder.setMessage(ctx.getString(R.string.alert_downloading_changelog, changelog));
+                builder.setCancelable(true);
+                builder.setPositiveButton(R.string.alert_hide, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        progressDialog.dismiss();
+                        dialog.dismiss();
                     }
                 });
-
-                progressDialog.setButton(Dialog.BUTTON_NEGATIVE, ctx.getString(android.R.string.cancel),
-                        new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        progressDialog.dismiss();
+                        dialog.dismiss();
 
                         DownloadManager dm = (DownloadManager) ctx.getSystemService(Context.DOWNLOAD_SERVICE);
                         dm.remove(dlID);
